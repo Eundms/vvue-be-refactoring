@@ -1,0 +1,20 @@
+# local test
+version: '3.1'
+services:
+  database:
+    image: mysql:8.0
+    container_name: vvue-mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD : ssafy
+      MYSQL_DATABASE : vvue
+      TZ: Asia/Seoul
+    ports:
+      - 3306:3306
+  redis:
+    image: redis:latest
+    container_name: vvue-redis-container
+    restart: always
+    ports:
+      - 6379:6379
+
