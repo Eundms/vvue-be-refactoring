@@ -25,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
     public JwtDto createTokens(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getId());
-        //claims.put("email", user.getEmail());
+        claims.put("email", user.getEmail());
         claims.put("nickname",user.getNickname());
         String accessToken = jwtUtil.generateToken("access-token", claims, 1000 * 60 * 60 * 1);//1시간
         String refreshToken = jwtUtil.generateToken("refresh-token", claims,

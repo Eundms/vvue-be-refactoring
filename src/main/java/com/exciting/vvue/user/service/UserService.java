@@ -11,13 +11,11 @@ public interface UserService {
 
     UserDto getUserDto(Long userId) throws UserNotFoundException;
 
-    User getUserByProviderId(String provider, String providerId);
-
-    User addOAuthUser(OAuthUserInfo oauthUser);
-
     void modifyUser(Long userId, UserModifyDto userModifyDto) throws UserNotFoundException;
 
     void delete(Long userId) throws UserNotFoundException;
+
+    User getUserByEmailPassword(String email, String password);
 
     User getUserById(Long userId);
 

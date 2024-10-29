@@ -33,9 +33,8 @@ public class MemoryPlaceController {
     @Deprecated
     @Operation(summary="[TODO] (특정 장소의) 모든 추억 조회")
     @GetMapping("/{placeId}")
-    public ResponseEntity<?> searchMemoryPlace(@RequestHeader("Authorization")String token, @PathVariable Long placeId) {
+    public ResponseEntity<?> searchMemoryPlace(@RequestHeader("Authorization") String token, @PathVariable Long placeId) {
         log.debug("[GET] /memory-place/" + placeId);
-        //TODO: 모든 추억 조회
         return ResponseEntity.ok().build();
     }
 }

@@ -31,22 +31,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByProviderId(String provider, String providerId) {
-        return userRepository.findByProviderAndProviderId(provider, providerId);
-    }
-
-    @Override
-    public User addOAuthUser(OAuthUserInfo oauthUser) {
-        User newUser = User.builder()
-                .email(oauthUser.getEmail())
-                .provider(oauthUser.getProvider())
-                .providerId(oauthUser.getProviderId())
-                .nickname(oauthUser.getNickName())
-                .build();
-        return userRepository.save(newUser);
-    }
-
-    @Override
     public void modifyUser(Long userId, UserModifyDto user) throws UserNotFoundException {
         log.debug("modifyUser " + userId + " " +user.getGender()+" "+ user.getNickname() + " " + user.getBirthday());
         User prev = userRepository.findById(userId).orElseThrow(
@@ -79,7 +63,15 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
+	@Override
+	public User getUserByEmailPassword(String email, String password) {
+		User user = userRepository.findByEmailAndPassword(email, password).orElseThrow(
+			() -> new UserNotFoundException("" + email));
+
+		return null;
+	}
+
+	@Override
     public User getUserById(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
             () -> new UserNotFoundException("" + userId));

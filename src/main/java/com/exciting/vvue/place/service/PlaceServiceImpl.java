@@ -75,14 +75,13 @@ public class PlaceServiceImpl implements PlaceService{
         if(recommendPlaceReqDtoList.size() <= size) {
             hasNext = false;
         }else{
-            if(recommendPlaceReqDtoList.size() > 0)
+            if(!recommendPlaceReqDtoList.isEmpty())
                 recommendPlaceReqDtoList.remove(recommendPlaceReqDtoList.size() - 1);
         }
         String lastId = "";
-        if(recommendPlaceReqDtoList.size() > 0)
+        if(!recommendPlaceReqDtoList.isEmpty())
             lastId = recommendPlaceReqDtoList.get(recommendPlaceReqDtoList.size() - 1).getId();
-        RecommendPlaceListResDto recommendPlaceListResDto = RecommendPlaceListResDto.builder().recommendPlaceResDtoList(recommendPlaceReqDtoList).hasNext(hasNext).lastId(lastId).build();
 
-        return recommendPlaceListResDto;
+		return RecommendPlaceListResDto.builder().recommendPlaceResDtoList(recommendPlaceReqDtoList).hasNext(hasNext).lastId(lastId).build();
     }
 }

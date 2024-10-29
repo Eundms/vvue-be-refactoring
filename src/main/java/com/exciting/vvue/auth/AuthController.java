@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.exciting.vvue.auth.jwt.exception.InvalidTokenException;
 import com.exciting.vvue.auth.jwt.model.JwtDto;
 import com.exciting.vvue.auth.model.Auth;
+import com.exciting.vvue.auth.model.dto.LoginReq;
 import com.exciting.vvue.auth.service.AuthService;
 import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.service.UserService;
@@ -31,26 +32,11 @@ public class AuthController {
     private final AuthService authService;
     @Operation(summary = "로그인/회원 가입",description = "토큰 발급 됨")
     @PostMapping
-    public ResponseEntity<JwtDto> loginOrRegister(@RequestBody User user) {
-        log.debug("[POST] /auth/" + user.getId());
-
-        //        OAuthUserInfo oauthUser = null;
-        //        OAuthUserInfoDto userInitialInfo = OAuthUserInfoDto.builder()
-        //            .email(socialUser.getEmail()==null?null:socialUser.getEmail())
-        //            .providerId(socialUser.getProviderId())
-        //            .provider(socialUser.getProvider().getProviderName())
-        //            .nickName(socialUser.getNickname())
-        //            .build();
-        //        if (socialUser.getProvider().equals(OAuthProvider.GOOGLE)) {
-        //            oauthUser = new GoogleUserInfo(userInitialInfo);
-        //        } else if (socialUser.getProvider().equals(OAuthProvider.KAKAO)) {
-        //            oauthUser = new KakaoUserInfo(userInitialInfo);
-        //        }
-        //
-        //        // provider 랑 providerId로 User 있는지 확인
-        User userEntity = userService.getUserById(user.getId());
+    public ResponseEntity<JwtDto> loginOrRegister(@RequestBody LoginReq user) {
+        log.debug("[POST] /auth/" + user.getEmail());
+        User userEntity = userService.getUserByEmailPassword(user.getEmail(), user.getPassword());
         if (userEntity == null) { // 새로운 유저 -> User 테이블에 저장
-            userEntity = userService.createUser(user);
+            userEntity = userService.createUser(User.builder().email(user.getEmail()).password(user.getPassword()).build());
         }
         JwtDto jwtDto = authService.createTokens(userEntity);
         Auth authEntity = authService.getSavedTokenByUserId(userEntity.getId());
