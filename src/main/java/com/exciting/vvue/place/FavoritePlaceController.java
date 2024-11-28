@@ -1,9 +1,8 @@
 package com.exciting.vvue.place;
 
-import com.exciting.vvue.auth.service.AuthService;
+import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.place.model.dto.PlaceReqDto;
-import com.exciting.vvue.place.service.FavoritePlaceService;
-import com.exciting.vvue.place.service.PlaceService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

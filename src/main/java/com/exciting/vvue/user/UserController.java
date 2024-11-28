@@ -10,15 +10,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.exciting.vvue.auth.service.AuthService;
+import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.married.service.MarriedService;
+import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.model.dto.UserAuthenticated;
 import com.exciting.vvue.user.model.dto.UserDto;
 import com.exciting.vvue.user.model.dto.UserInfoUpdated;
 import com.exciting.vvue.user.model.dto.UserModifyDto;
-import com.exciting.vvue.user.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

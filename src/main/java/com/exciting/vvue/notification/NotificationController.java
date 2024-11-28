@@ -1,11 +1,11 @@
 package com.exciting.vvue.notification;
 
-import com.exciting.vvue.auth.service.AuthService;
+import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.notification.model.dto.NotReadNotificationDto;
 import com.exciting.vvue.notification.model.dto.NotificationReqDto;
 import com.exciting.vvue.notification.model.dto.SubscribeReqDto;
 import com.exciting.vvue.notification.model.dto.VvueNotificationListDto;
-import com.exciting.vvue.notification.service.NotificationService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

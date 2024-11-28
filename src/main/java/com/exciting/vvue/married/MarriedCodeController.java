@@ -16,15 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.exciting.vvue.auth.service.AuthService;
+import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.married.exception.AlreadyMarriedException;
 import com.exciting.vvue.married.exception.MarriedCodeNotGeneratedException;
 import com.exciting.vvue.married.exception.MarriedWithSameIdException;
 import com.exciting.vvue.married.model.dto.MarriedCode;
 import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
-import com.exciting.vvue.married.service.MarriedCodeService;
-import com.exciting.vvue.married.service.MarriedService;
-import com.exciting.vvue.user.service.UserService;
+import com.exciting.vvue.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,8 +2,9 @@ package com.exciting.vvue.schedule.service;
 
 import com.exciting.vvue.auth.exception.UserUnAuthorizedException;
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.married.repository.MarriedRepository;
-import com.exciting.vvue.memory.repository.UserMemoryRepository;
+import com.exciting.vvue.married.service.MarriedRepository;
+import com.exciting.vvue.memory.service.UserMemoryRepository;
+import com.exciting.vvue.schedule.ScheduleService;
 import com.exciting.vvue.schedule.exception.ScheduleNotFoundException;
 import com.exciting.vvue.schedule.model.DateType;
 import com.exciting.vvue.schedule.model.RepeatCycle;
@@ -12,10 +13,9 @@ import com.exciting.vvue.schedule.model.dto.ScheduleDailyResDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleListResDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
-import com.exciting.vvue.schedule.repository.ScheduleRepository;
 import com.exciting.vvue.user.exception.UserNotFoundException;
 import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.repository.UserRepository;
+import com.exciting.vvue.user.repository.UserRepositoryImpl;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +29,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ScheduleServiceImpl implements ScheduleService{
+public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final MarriedRepository marriedRepository;
-    private final UserRepository userRepository;
+    private final UserRepositoryImpl userRepository;
     private final UserMemoryRepository userMemoryRepository;
     @Override
     public List<Schedule> getAllAfterNDaySchedule(int dayAfter){

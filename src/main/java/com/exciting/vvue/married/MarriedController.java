@@ -1,7 +1,6 @@
 package com.exciting.vvue.married;
 
 import com.exciting.vvue.married.model.dto.res.MarriedInfoExist;
-import javax.transaction.Transactional;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,23 +10,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.exciting.vvue.auth.service.AuthService;
-import com.exciting.vvue.married.exception.AlreadyMarriedException;
+import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.married.exception.MarriedInfoNotFoundException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.model.dto.MarriedDto;
 import com.exciting.vvue.married.model.dto.MarriedModifyDto;
-import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
-import com.exciting.vvue.married.service.MarriedService;
-import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
-import com.exciting.vvue.schedule.service.ScheduleService;
+import com.exciting.vvue.schedule.ScheduleService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

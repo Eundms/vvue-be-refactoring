@@ -23,7 +23,7 @@
 //import org.springframework.web.bind.annotation.RestController;
 //import org.springframework.web.multipart.MultipartFile;
 //
-//import com.exciting.vvue.auth.service.AuthService;
+//import com.exciting.vvue.auth.AuthService;
 //import com.exciting.vvue.picture.exception.FileDeleteFailException;
 //import com.exciting.vvue.picture.exception.FileUploadFailException;
 //import com.exciting.vvue.picture.model.dto.MetaReqDto;
@@ -32,7 +32,7 @@
 //import com.exciting.vvue.picture.model.dto.PictureSingleUploadResDto;
 //import com.exciting.vvue.picture.service.PictureService;
 //import com.exciting.vvue.user.exception.UserNotFoundException;
-//import com.exciting.vvue.user.service.UserService;
+//import com.exciting.vvue.user.UserService;
 //
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;

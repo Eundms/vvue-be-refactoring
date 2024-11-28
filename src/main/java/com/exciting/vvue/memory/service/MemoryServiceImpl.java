@@ -2,6 +2,7 @@ package com.exciting.vvue.memory.service;
 
 import com.exciting.vvue.auth.exception.UserUnAuthorizedException;
 import com.exciting.vvue.married.model.Married;
+import com.exciting.vvue.memory.MemoryService;
 import com.exciting.vvue.memory.exception.MemoryNotFoundException;
 import com.exciting.vvue.memory.exception.UserMemoryAlreadyExists;
 import com.exciting.vvue.memory.model.PlaceMemory;
@@ -13,18 +14,13 @@ import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
 import com.exciting.vvue.memory.model.dto.req.PlaceMemoryReqDto;
 import com.exciting.vvue.memory.model.dto.res.MemoryAlbumResDto;
 import com.exciting.vvue.memory.model.dto.res.MemoryResDto;
-import com.exciting.vvue.memory.repository.PlaceMemoryImageRepository;
-import com.exciting.vvue.memory.repository.PlaceMemoryRepository;
-import com.exciting.vvue.memory.repository.ScheduleMemoryRepository;
-import com.exciting.vvue.memory.repository.UserMemoryRepository;
 import com.exciting.vvue.picture.exception.PictureNotFoundException;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
 import com.exciting.vvue.place.model.Place;
-import com.exciting.vvue.place.repository.PlaceRepository;
+import com.exciting.vvue.place.repository.PlaceRepositoryImpl;
 import com.exciting.vvue.schedule.exception.ScheduleNotFoundException;
-import com.exciting.vvue.schedule.model.Schedule;
-import com.exciting.vvue.schedule.repository.ScheduleRepository;
+import com.exciting.vvue.schedule.repository.ScheduleRepositoryImpl;
 import com.exciting.vvue.user.model.User;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MemoryServiceImpl implements MemoryService {
 
-    private final ScheduleRepository scheduleRepository;
+    private final ScheduleRepositoryImpl scheduleRepository;
 
     private final ScheduleMemoryRepository scheduleMemoryRepository;
     private final UserMemoryRepository userMemoryRepository;
@@ -48,7 +44,7 @@ public class MemoryServiceImpl implements MemoryService {
     private final PlaceMemoryImageRepository placeMemoryImageRepository;
 
     private final PictureRepository pictureRepository;
-    private final PlaceRepository placeRepository;
+    private final PlaceRepositoryImpl placeRepository;
 
     @Override
     @Transactional

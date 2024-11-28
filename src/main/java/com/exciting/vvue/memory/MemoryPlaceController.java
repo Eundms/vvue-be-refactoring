@@ -1,9 +1,9 @@
 package com.exciting.vvue.memory;
 
-import com.exciting.vvue.auth.service.AuthService;
+import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.memory.model.PlaceMemory;
 import com.exciting.vvue.memory.model.dto.MemoryPlaceFindDto;
-import com.exciting.vvue.memory.service.MemoryPlaceService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

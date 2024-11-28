@@ -1,18 +1,17 @@
 package com.exciting.vvue.memory;
 
-import com.exciting.vvue.auth.service.AuthService;
+import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.married.service.MarriedService;
+import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
 import com.exciting.vvue.memory.model.dto.req.MemoryCreateResDto;
 import com.exciting.vvue.memory.model.dto.res.MemoryAlbumResDto;
 import com.exciting.vvue.memory.model.dto.res.MemoryResDto;
-import com.exciting.vvue.memory.service.MemoryService;
 
-import com.exciting.vvue.notification.service.NotificationService;
-import com.exciting.vvue.schedule.service.ScheduleService;
+import com.exciting.vvue.notification.NotificationService;
+import com.exciting.vvue.schedule.ScheduleService;
 import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.service.UserService;
+import com.exciting.vvue.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

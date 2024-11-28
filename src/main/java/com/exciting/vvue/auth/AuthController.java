@@ -14,9 +14,8 @@ import com.exciting.vvue.auth.jwt.exception.InvalidTokenException;
 import com.exciting.vvue.auth.jwt.model.JwtDto;
 import com.exciting.vvue.auth.model.Auth;
 import com.exciting.vvue.auth.model.dto.LoginReq;
-import com.exciting.vvue.auth.service.AuthService;
 import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.service.UserService;
+import com.exciting.vvue.user.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,6 @@
 package com.exciting.vvue.place.service;
 
+import com.exciting.vvue.place.PlaceService;
 import com.exciting.vvue.place.exception.PlaceNotFoundException;
 import com.exciting.vvue.place.exception.PlaceRequiredException;
 import com.exciting.vvue.place.model.Place;
@@ -8,8 +9,7 @@ import com.exciting.vvue.place.model.dto.PlaceReqDto;
 import com.exciting.vvue.place.model.dto.PlaceResDto;
 import com.exciting.vvue.place.model.dto.RecommendPlaceListResDto;
 import com.exciting.vvue.place.model.dto.RecommendPlaceResDto;
-import com.exciting.vvue.place.repository.PlaceRepository;
-import com.exciting.vvue.place.repository.PlaceStatsRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PlaceServiceImpl implements PlaceService{
+public class PlaceServiceImpl implements PlaceService {
 
     private final PlaceRepository placeRepository;
     private final PlaceStatsRepository placeStatsRepository;

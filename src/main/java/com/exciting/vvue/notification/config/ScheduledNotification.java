@@ -3,11 +3,11 @@ package com.exciting.vvue.notification.config;
 import com.exciting.vvue.notification.model.NotificationContent;
 import com.exciting.vvue.notification.model.NotificationType;
 import com.exciting.vvue.notification.model.dto.NotificationReqDto;
-import com.exciting.vvue.notification.service.NotificationService;
+import com.exciting.vvue.notification.NotificationService;
 import com.exciting.vvue.schedule.model.DateType;
 import com.exciting.vvue.schedule.model.Schedule;
 import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
-import com.exciting.vvue.schedule.service.ScheduleService;
+import com.exciting.vvue.schedule.ScheduleService;
 import com.exciting.vvue.user.model.User;
 
 import java.util.ArrayList;

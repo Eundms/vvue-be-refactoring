@@ -1,18 +1,16 @@
 package com.exciting.vvue.memory.service;
 
+import com.exciting.vvue.memory.MemoryPlaceService;
 import com.exciting.vvue.memory.model.PlaceMemory;
 import com.exciting.vvue.memory.model.ScheduleMemory;
 import com.exciting.vvue.memory.model.dto.MemoryPlaceFindDto;
-import com.exciting.vvue.memory.repository.PlaceMemoryRepository;
-import com.exciting.vvue.memory.repository.ScheduleMemoryRepository;
-import com.exciting.vvue.place.model.Place;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service

@@ -2,13 +2,13 @@
 //
 // import com.exciting.vvue.auth.jwt.model.JwtDto;
 // import com.exciting.vvue.auth.model.Auth;
-// import com.exciting.vvue.auth.service.AuthService;
+// import com.exciting.vvue.auth.AuthService;
 // import com.exciting.vvue.married.model.Married;
 // import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
-// import com.exciting.vvue.married.service.MarriedService;
+// import com.exciting.vvue.married.MarriedService;
 // import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
 // import com.exciting.vvue.memory.model.dto.req.PlaceMemoryReqDto;
-// import com.exciting.vvue.memory.service.MemoryService;
+// import com.exciting.vvue.memory.MemoryService;
 // import com.exciting.vvue.notification.model.NotificationContent;
 // import com.exciting.vvue.notification.model.NotificationType;
 // import com.exciting.vvue.notification.model.VvueNotification;
@@ -17,17 +17,17 @@
 // import com.exciting.vvue.picture.repository.PictureRepository;
 // import com.exciting.vvue.place.model.dto.PlaceDumpReqDto;
 // import com.exciting.vvue.place.model.dto.PlaceReqDto;
-// import com.exciting.vvue.place.service.PlaceService;
+// import com.exciting.vvue.place.PlaceService;
 // import com.exciting.vvue.schedule.model.RepeatCycle;
 // import com.exciting.vvue.schedule.model.Schedule;
 // import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
 // import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
-// import com.exciting.vvue.schedule.service.ScheduleService;
+// import com.exciting.vvue.schedule.ScheduleService;
 // import com.exciting.vvue.user.exception.UserNotFoundException;
 // import com.exciting.vvue.user.model.Gender;
 // import com.exciting.vvue.user.model.User;
 // import com.exciting.vvue.user.repository.UserRepository;
-// import com.exciting.vvue.user.service.UserService;
+// import com.exciting.vvue.user.UserService;
 // import com.fasterxml.jackson.core.JsonProcessingException;
 // import com.fasterxml.jackson.databind.ObjectMapper;
 // import java.io.IOException;

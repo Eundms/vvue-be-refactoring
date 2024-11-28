@@ -1,22 +1,21 @@
 package com.exciting.vvue.schedule;
 
 import com.exciting.vvue.auth.exception.UserUnAuthorizedException;
-import com.exciting.vvue.auth.service.AuthService;
+import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.married.exception.MarriedInfoNotFoundException;
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.married.service.MarriedService;
+import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.notification.model.NotificationContent;
 import com.exciting.vvue.notification.model.NotificationType;
 import com.exciting.vvue.notification.model.dto.NotificationReqDto;
-import com.exciting.vvue.notification.service.NotificationService;
+import com.exciting.vvue.notification.NotificationService;
 import com.exciting.vvue.schedule.model.Schedule;
 import com.exciting.vvue.schedule.model.dto.ScheduleDailyResDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleListResDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
-import com.exciting.vvue.schedule.service.ScheduleService;
 import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.service.UserService;
+import com.exciting.vvue.user.UserService;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;

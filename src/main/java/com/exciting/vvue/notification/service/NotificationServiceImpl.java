@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.exciting.vvue.notification.NotificationService;
 import com.exciting.vvue.notification.exception.NotificationFailException;
 import com.exciting.vvue.notification.exception.UserNotAddedToNotifyException;
 import com.exciting.vvue.notification.model.Subscriber;
@@ -15,8 +16,6 @@ import com.exciting.vvue.notification.model.dto.NotReadNotificationDto;
 import com.exciting.vvue.notification.model.dto.NotificationReqDto;
 import com.exciting.vvue.notification.model.dto.VvueNotificationListDto;
 import com.exciting.vvue.notification.model.dto.VvueNotificationResDto;
-import com.exciting.vvue.notification.repository.SubscriberRepository;
-import com.exciting.vvue.notification.repository.VvueNotificationRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

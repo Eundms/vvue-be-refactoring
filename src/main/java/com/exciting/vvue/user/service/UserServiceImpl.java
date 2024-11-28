@@ -2,15 +2,15 @@ package com.exciting.vvue.user.service;
 
 import org.springframework.stereotype.Service;
 
-import com.exciting.vvue.auth.oauth.model.OAuthUserInfo;
 import com.exciting.vvue.picture.exception.PictureNotFoundException;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
+import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.exception.UserNotFoundException;
 import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.model.dto.UserDto;
 import com.exciting.vvue.user.model.dto.UserModifyDto;
-import com.exciting.vvue.user.repository.UserRepository;
+import com.exciting.vvue.user.repository.UserRepositoryImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryImpl userRepository;
     private final PictureRepository pictureRepository;
     @Override
     public UserDto getUserDto(Long userId) throws UserNotFoundException {

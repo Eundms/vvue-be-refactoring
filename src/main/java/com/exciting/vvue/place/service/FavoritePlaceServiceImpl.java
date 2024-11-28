@@ -1,12 +1,11 @@
 package com.exciting.vvue.place.service;
 
+import com.exciting.vvue.place.FavoritePlaceService;
 import com.exciting.vvue.place.exception.PlaceNotFoundException;
 import com.exciting.vvue.place.model.FavoritePlace;
 import com.exciting.vvue.place.model.Place;
-import com.exciting.vvue.place.repository.FavoritePlaceRepository;
-import com.exciting.vvue.place.repository.PlaceRepository;
 import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.repository.UserRepository;
+import com.exciting.vvue.user.repository.UserRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,10 +13,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class FavoritePlaceServiceImpl implements FavoritePlaceService{
+public class FavoritePlaceServiceImpl implements FavoritePlaceService {
     private final FavoritePlaceRepository favoritePlaceRepository;
     private final PlaceRepository placeRepository;
-    private final UserRepository userRepository;
+    private final UserRepositoryImpl userRepository;
 
     @Override
     public boolean checkScrap(long userId, long placeId) {

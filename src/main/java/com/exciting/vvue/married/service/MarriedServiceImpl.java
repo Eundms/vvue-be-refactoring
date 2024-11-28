@@ -1,16 +1,14 @@
 package com.exciting.vvue.married.service;
 
-import javax.transaction.Transactional;
-
-import com.exciting.vvue.married.repository.MarriedRepository;
 import org.springframework.stereotype.Service;
 
+import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.model.dto.MarriedModifyDto;
 import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
 import com.exciting.vvue.picture.repository.PictureRepository;
+import com.exciting.vvue.user.service.UserRepository;
 import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class MarriedServiceImpl implements MarriedService{
+public class MarriedServiceImpl implements MarriedService {
 	private final MarriedRepository marriedRepository;
 	private final UserRepository userRepository;
 	private final PictureRepository pictureRepository;
