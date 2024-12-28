@@ -1,6 +1,5 @@
 package com.exciting.vvue.auth;
 
-
 import com.exciting.vvue.auth.jwt.model.JwtDto;
 import com.exciting.vvue.auth.model.Auth;
 import com.exciting.vvue.user.model.User;

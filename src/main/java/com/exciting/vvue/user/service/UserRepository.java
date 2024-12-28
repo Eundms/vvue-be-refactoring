@@ -7,8 +7,7 @@ import com.exciting.vvue.user.model.User;
 public interface UserRepository {
 	User findByNickname(String nickname);
 
-	Optional<User> findByEmailAndPassword(String email, String password);
-
+	User findByProviderAndProviderId(String provider, String providerId);
 	Optional<User> findById(Long id);
 
 	User getReferenceById(long userId);

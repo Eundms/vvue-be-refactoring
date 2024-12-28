@@ -1,5 +1,17 @@
 package com.exciting.vvue.user;
 
+
+import com.exciting.vvue.auth.AuthService;
+import com.exciting.vvue.married.MarriedService;
+import com.exciting.vvue.married.model.Married;
+import com.exciting.vvue.user.model.User;
+import com.exciting.vvue.user.model.dto.UserAuthenticated;
+import com.exciting.vvue.user.model.dto.UserDto;
+import com.exciting.vvue.user.model.dto.UserInfoUpdated;
+import com.exciting.vvue.user.model.dto.UserModifyDto;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,19 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.exciting.vvue.auth.AuthService;
-import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.married.MarriedService;
-import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.model.dto.UserAuthenticated;
-import com.exciting.vvue.user.model.dto.UserDto;
-import com.exciting.vvue.user.model.dto.UserInfoUpdated;
-import com.exciting.vvue.user.model.dto.UserModifyDto;
-
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -64,7 +63,6 @@ public class UserController {
         UserDto userResDto = userService.getUserDto(id);
         return new ResponseEntity<>(userResDto, HttpStatus.OK);
     }
-
     @Operation(summary ="유저 정보(성별,생일,닉네임,프로필사진ID) 수정")
     @PutMapping
     public ResponseEntity<?> modify(@RequestHeader("Authorization") String token,
@@ -74,7 +72,6 @@ public class UserController {
         userService.modifyUser(userId, userModifyDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
     @Operation(summary ="[TODO] 유저 삭제")
     @DeleteMapping
     public ResponseEntity<?> delete(@RequestHeader("Authorization") String token) {

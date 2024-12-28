@@ -22,8 +22,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByEmailAndPassword(String email, String password) {
-        return userJpaRepository.findByEmailAndPassword(email, password);
+    public User findByProviderAndProviderId(String provider, String providerId) {
+        return userJpaRepository.findByProviderAndProviderId(provider, providerId);
     }
 
     @Override

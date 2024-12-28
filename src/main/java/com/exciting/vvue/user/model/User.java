@@ -27,11 +27,12 @@ public class User {
     private Long id;
     private String nickname;
     private String email;
-    private String password;
+    private String provider;
+    @Column(unique = true)
+    private String providerId;
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     private Gender gender;
-
     private boolean isAuthenticated;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "picture_id")
@@ -45,14 +46,15 @@ public class User {
     private LocalDateTime modifiedAt;
     @Builder
     public User(Long id, String nickname,
-                String email, String password,
-                Gender gender,
-                boolean isAuthenticated,
-                Picture picture, LocalDate birthday, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        String email, String provider, String providerId,
+        Gender gender,
+        boolean isAuthenticated,
+        Picture picture, LocalDate birthday, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.nickname = nickname;
         this.email = email;
-        this.password = password;
+        this.provider = provider;
+        this.providerId = providerId;
         this.gender = gender;
         this.isAuthenticated = isAuthenticated;
         this.picture = picture;

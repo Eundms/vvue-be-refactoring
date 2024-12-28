@@ -35,17 +35,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(jwt2Interceptor).addPathPatterns(PATTERNS);
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedOrigins("http://localhost:3000", "https://vvue.site")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-
-    }
-
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
