@@ -67,5 +67,4 @@ jobs:
           if sudo docker images | grep ${{ secrets.DOCKERHUB_USERNAME }}/vvue-be-img; then sudo docker rmi -f ${{ secrets.DOCKERHUB_USERNAME }}/vvue-be-img; fi
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vvue-be-img
 
-          sudo docker-compose -f ${{secrets.DOCKER_COMPOSE_FILE_PATH}} down
-          sudo docker-compose -f ${{secrets.DOCKER_COMPOSE_FILE_PATH}} up -d
+          sudo docker run -d --name vvue-be-container --env-file ${{secrets.ENV_PATH}} -p ${{ secrets.SERVER_PORT }}:${{ secrets.SERVER_PORT }} ${{ secrets.DOCKERHUB_USERNAME }}/vvue-be-img
