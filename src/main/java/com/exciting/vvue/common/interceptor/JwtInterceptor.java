@@ -6,13 +6,12 @@ import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -27,6 +26,10 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler)
         throws Exception {
+
+        if (HttpMethod.OPTIONS.name().equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
 
         log.debug("request : " + request.getHeader(HEADER_AUTH));
 

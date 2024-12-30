@@ -1,13 +1,12 @@
 package com.exciting.vvue.common.interceptor;
 
-import com.exciting.vvue.auth.jwt.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 
 @Slf4j
 @Component
@@ -18,7 +17,9 @@ public class Jwt2Interceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler)
             throws Exception {
-
+        if (HttpMethod.OPTIONS.name().equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
         log.debug("request : " + request.getHeader(HEADER_AUTH));
 
         final String token = request.getHeader(HEADER_AUTH);

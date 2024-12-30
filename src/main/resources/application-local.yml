@@ -34,8 +34,3 @@ logging:
     com.exciting.vvue: DEBUG
     org.hibernate.SQL: INFO
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
-server:
-  servlet:
-    context-path: /v1/api
-  port: 8080
