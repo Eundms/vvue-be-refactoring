@@ -1,3 +1,5 @@
+swagger:
+  url: http://localhost:8080/back/api
 spring:
   config:
     activate:
