@@ -56,7 +56,10 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
 
 	private String resolveToken(HttpServletRequest request) {
 		String refresh = request.getHeader("refresh-token");
-		return refresh;
+		if (refresh != null && refresh.startsWith("Bearer ")) {
+			return refresh.substring(7);
+		}
+		return null;
 	}
 
 }

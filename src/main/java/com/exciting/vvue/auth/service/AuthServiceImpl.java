@@ -35,14 +35,6 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public Long getUserIdFromToken(String bearerToken) {
-		String token = jwtUtil.removeBearer(bearerToken);
-		Map<String, Object> claims = jwtUtil.getClaims(token);
-		Long userId = Long.valueOf(claims.get("id").toString());
-		return userId;
-	}
-
-	@Override
 	public Map<String, Object> getClaimsFromToken(String token) {
 		return jwtUtil.getClaims(token);
 	}

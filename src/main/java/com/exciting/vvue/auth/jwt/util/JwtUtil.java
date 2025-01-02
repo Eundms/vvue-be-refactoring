@@ -28,7 +28,7 @@ public class JwtUtil {
 	private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
 	public String generateToken(String subject, Map<String, Object> claims, long expiration) {
-		return createToken(claims, subject, expiration);
+		return "Bearer " + createToken(claims, subject, expiration);
 	}
 
 	private String createToken(Map<String, Object> claims, String subject, long expiration) {
@@ -91,7 +91,7 @@ public class JwtUtil {
 		return true;
 	}
 
-	public String removeBearer(String bearerToken) {
+	private String removeBearer(String bearerToken) {
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
 			return bearerToken.replace("Bearer ", "");
 		}
@@ -99,6 +99,7 @@ public class JwtUtil {
 	}
 
 	private Jws<Claims> extractAllClaims(String token) {
+		token = removeBearer(token);
 		return Jwts.parserBuilder().setSigningKey(key).build()
 			.parseClaimsJws(token);
 	}

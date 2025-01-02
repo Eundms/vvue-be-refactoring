@@ -10,8 +10,6 @@ public interface AuthService {
 
 	JwtDto createTokens(User user);
 
-	Long getUserIdFromToken(String token);
-
 	Map<String, Object> getClaimsFromToken(String token);
 
 	Auth getSavedTokenByUserId(Long id);
