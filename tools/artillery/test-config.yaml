@@ -1,0 +1,35 @@
+config:
+  target: 'http://localhost:8080'
+  phases:
+    - duration: 30
+      arrivalRate: 3
+      name: Warm up (30초 동안 매초 3개의 요청)
+    - duration: 30
+      arrivalRate: 3
+      rampTo: 30
+      name: Ramp up load (rampTo까지 초당 요청을 늘릴 수 있음)
+    - duration: 60
+      arrivalRate: 30
+      name: Sustained Load (부하 유지)
+    - duration: 30
+      arrivalRate: 30
+      rampTo: 10
+      name: End of Load (rampTo까지 초당 요청을 줄일 수 있음)
+  payload:
+    path: "login.csv"
+    fields:
+      - "email"
+      - "nickname"
+      - "provider"
+      - "providerId"
+scenarios:
+  - name: "login and use some functions"
+    flow:
+      - post:
+          url: "/back/api/auth"
+          json:
+            email: "{{ email }}"
+            nickname: "{{ nickname }}"
+            provider: "{{ provider }}"
+            providerId: "{{ providerId }}"
+

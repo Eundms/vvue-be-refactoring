@@ -10,7 +10,6 @@ public interface MarriedCodeService {
 	// redis에 key-value 넣기
 	public void addMarriedCodeInRedis(Long id, String code);
 
-
 	// redis key값에 대한 value return
 	public Long getIdFromMarriedCode(String code);
 

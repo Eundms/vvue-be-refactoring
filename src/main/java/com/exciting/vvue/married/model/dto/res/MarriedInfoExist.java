@@ -6,9 +6,9 @@ import lombok.ToString;
 @ToString
 @Getter
 public class MarriedInfoExist {
-    private boolean marriedInfoExists;
+	private boolean marriedInfoExists;
 
-    public MarriedInfoExist(boolean marriedInfoExists) {
-        this.marriedInfoExists = marriedInfoExists;
-    }
+	public MarriedInfoExist(boolean marriedInfoExists) {
+		this.marriedInfoExists = marriedInfoExists;
+	}
 }

@@ -10,6 +10,6 @@ import com.exciting.vvue.place.model.FavoritePlace;
 @Repository
 public interface FavoritePlaceJpaRepository extends JpaRepository<FavoritePlace, Long> {
 
-    Optional<FavoritePlace> findByUser_IdAndPlaceId(long userId, long placeId);
+	Optional<FavoritePlace> findByUser_IdAndPlaceId(long userId, long placeId);
 
 }

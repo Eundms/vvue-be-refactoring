@@ -6,5 +6,5 @@ import com.exciting.vvue.memory.model.dto.MemoryPlaceFindDto;
 import java.util.List;
 
 public interface MemoryPlaceService {
-    List<PlaceMemory> getRecentMemoryPlaceByMarriedId(Long marriedId, MemoryPlaceFindDto findCondition);
+	List<PlaceMemory> getRecentMemoryPlaceByMarriedId(Long marriedId, MemoryPlaceFindDto findCondition);
 }

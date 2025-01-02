@@ -10,7 +10,7 @@ public class MarriedCode {
 	private String marriedCode;
 
 	@Builder
-	public MarriedCode(String marriedCode){
+	public MarriedCode(String marriedCode) {
 		this.marriedCode = marriedCode;
 	}
 }

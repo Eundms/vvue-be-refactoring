@@ -7,8 +7,8 @@ import lombok.Data;
 @Builder
 public class OAuthUserInfoDto {
 
-    private String providerId;//socialId
-    private String provider;
-    private String email;
-    private String nickName;
+	private String providerId;//socialId
+	private String provider;
+	private String email;
+	private String nickName;
 }

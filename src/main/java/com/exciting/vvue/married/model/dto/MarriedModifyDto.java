@@ -18,9 +18,9 @@ import lombok.NoArgsConstructor;
 @Schema(title = "부부 정보 수정", description = "부부 정보 수정을 위함")
 public class MarriedModifyDto {
 
-	@SchemaProperty(name="결혼기념일")
+	@SchemaProperty(name = "결혼기념일")
 	private LocalDate marriedDay;
-	@SchemaProperty(name="사진 id, url")
+	@SchemaProperty(name = "사진 id, url")
 	private Long pictureId;
 
 }

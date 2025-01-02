@@ -20,6 +20,7 @@ public class MarriedServiceImpl implements MarriedService {
 	private final MarriedRepository marriedRepository;
 	private final UserRepository userRepository;
 	private final PictureRepository pictureRepository;
+
 	@Override
 	public int getMarriedCount(Long id) {
 		return marriedRepository.countByUserId(id);
@@ -39,10 +40,10 @@ public class MarriedServiceImpl implements MarriedService {
 	@Override
 	public void updateMarried(Long id, MarriedModifyDto marriedModifyDto) {
 		Married married = marriedRepository.getMarriedByUserId(id);
-		if(marriedModifyDto.getMarriedDay() != null)
+		if (marriedModifyDto.getMarriedDay() != null)
 			married.setMarriedDay(marriedModifyDto.getMarriedDay());
 
-		if(marriedModifyDto.getPictureId() > 0){
+		if (marriedModifyDto.getPictureId() > 0) {
 			married.setPicture(pictureRepository.findById(marriedModifyDto.getPictureId()).get());
 		}
 
@@ -53,7 +54,6 @@ public class MarriedServiceImpl implements MarriedService {
 	public boolean existById(Long id) {
 		return marriedRepository.existsById(id);
 	}
-
 
 	@Override
 	public void createMarried(Long id, MarriedCreateDto marriedCreateDto) {

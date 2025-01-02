@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JwtDto {
 
-    private Long userId;
-    private String accessToken;
-    private String refreshToken;
+	private Long userId;
+	private String accessToken;
+	private String refreshToken;
 
-    @Builder
-    public JwtDto(Long userId, String accessToken, String refreshToken) {
-        this.userId = userId;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
+	@Builder
+	public JwtDto(Long userId, String accessToken, String refreshToken) {
+		this.userId = userId;
+		this.accessToken = accessToken;
+		this.refreshToken = refreshToken;
+	}
 }

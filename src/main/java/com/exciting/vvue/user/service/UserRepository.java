@@ -8,6 +8,7 @@ public interface UserRepository {
 	User findByNickname(String nickname);
 
 	User findByProviderAndProviderId(String provider, String providerId);
+
 	Optional<User> findById(Long id);
 
 	User getReferenceById(long userId);
@@ -15,4 +16,6 @@ public interface UserRepository {
 	User save(User prev);
 
 	void delete(User user);
+
+	boolean existsById(Long userId);
 }

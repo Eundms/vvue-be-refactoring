@@ -20,9 +20,9 @@ public class MarriedCodeRepositoryImpl implements MarriedCodeRepository {
 	public String createCode(int length, int failOverCount) {
 		String code = null;
 
-		for(int times = 0; times < failOverCount; times++){
+		for (int times = 0; times < failOverCount; times++) {
 			String newCode = generate(length);
-			if(!redisEventTemplate.hasKey(newCode)){
+			if (!redisEventTemplate.hasKey(newCode)) {
 				code = newCode;
 				break;
 			}
@@ -30,10 +30,10 @@ public class MarriedCodeRepositoryImpl implements MarriedCodeRepository {
 		return code;
 	}
 
-	private String generate(int length){
+	private String generate(int length) {
 		Random random = new Random();
 		StringBuffer code = new StringBuffer();
-		for(int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++)
 			code.append(variation.charAt(random.nextInt(variation.length())));
 
 		return code.toString();
@@ -58,6 +58,5 @@ public class MarriedCodeRepositoryImpl implements MarriedCodeRepository {
 	public void deleteMarriedCodeInRedis(String code) {
 		redisEventTemplate.delete(code);
 	}
-
 
 }

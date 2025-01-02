@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MarriedRepositoryImpl implements MarriedRepository {
 	private final MarriedJpaRepository marriedJpaRepository;
+
 	@Override
 	public int countByUserId(Long id) {
 		return marriedJpaRepository.countByUserId(id);

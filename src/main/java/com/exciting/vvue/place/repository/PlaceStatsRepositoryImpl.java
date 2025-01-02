@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import com.exciting.vvue.place.service.PlaceStatsRepository;
 import com.exciting.vvue.place.model.PlaceStats;
 import com.exciting.vvue.place.model.dto.RecommendPlaceResDto;
 import com.exciting.vvue.place.repository.jpa.PlaceStatsJpaRepository;
+import com.exciting.vvue.place.service.PlaceStatsRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,10 +16,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PlaceStatsRepositoryImpl implements PlaceStatsRepository {
 	private final PlaceStatsJpaRepository placeStatsJpaRepository;
+
 	@Override
 	public List<RecommendPlaceResDto> findRecommendPlacesByLocation(Long userId, double lat, double lng, Long distance,
 		Long idCursor, double rateCursor, Long size) {
-		return placeStatsJpaRepository.findRecommendPlacesByLocation(userId, lat, lng, distance, idCursor, rateCursor,size);
+		return placeStatsJpaRepository.findRecommendPlacesByLocation(userId, lat, lng, distance, idCursor, rateCursor,
+			size);
 	}
 
 	@Override

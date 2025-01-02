@@ -32,7 +32,7 @@ auth:
     scope:
       - email
       - profile
-    token-req-url : https://oauth2.googleapis.com
+    token-req-url: https://oauth2.googleapis.com
   kakao:
     client-id: ${KAKAO_CLIENT_ID}
     client-secret: ${KAKAO_CLIENT_SECRET}
@@ -40,5 +40,5 @@ auth:
       - profile_nickname
       - profile_image
       - account_email
-    token-req-url : https://kauth.kakao.com/oauth/token
+    token-req-url: https://kauth.kakao.com/oauth/token
     user-info-request-url: https://kapi.kakao.com/v2/user/me

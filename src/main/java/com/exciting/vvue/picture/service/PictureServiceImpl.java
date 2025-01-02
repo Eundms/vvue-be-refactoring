@@ -36,8 +36,8 @@ public class PictureServiceImpl implements PictureService {
 	public List<String> uploadMulti(List<MultipartFile> multipartFiles) throws
 		FileUploadFailException {
 		List<String> multiImagesUrls = new ArrayList<>();
-		for(int i = 0 ; i < multipartFiles.size(); i++){
-			if(multipartFiles.get(i) != null && !multipartFiles.get(i).isEmpty()) {
+		for (int i = 0; i < multipartFiles.size(); i++) {
+			if (multipartFiles.get(i) != null && !multipartFiles.get(i).isEmpty()) {
 				multiImagesUrls.add(fileManageUtil.uploadFile(multipartFiles.get(i)));
 			}
 		}
@@ -47,10 +47,10 @@ public class PictureServiceImpl implements PictureService {
 
 	@Override
 	public List<Long> insertMulti(List<String> filePaths)
-		throws FileUploadFailException{
+		throws FileUploadFailException {
 		List<Long> imagesIdList = new ArrayList<>();
 
-		for(int i = 0; i < filePaths.size(); i++){
+		for (int i = 0; i < filePaths.size(); i++) {
 			Picture newImage = Picture.builder()
 				.url(filePaths.get(i))
 				.isDeleted(false)
@@ -83,14 +83,14 @@ public class PictureServiceImpl implements PictureService {
 	}
 
 	@Override
-	public void deleteSingle(Long pictureId) throws FileDeleteFailException{
+	public void deleteSingle(Long pictureId) throws FileDeleteFailException {
 		Picture deletedPicture = pictureRepository.findById(pictureId).get();
 		pictureRepository.delete(deletedPicture);
 	}
 
 	@Override
 	public void deleteMulti(List<Long> imageIdList) throws FileDeleteFailException {
-		for(Long imageId : imageIdList){
+		for (Long imageId : imageIdList) {
 			this.deleteSingle(imageId);
 		}
 	}

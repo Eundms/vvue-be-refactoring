@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-@ToString@Getter
+@ToString
+@Getter
 @AllArgsConstructor
 public class UserAuthenticated {
-    private boolean isAuthenticated;
+	private boolean isAuthenticated;
 }

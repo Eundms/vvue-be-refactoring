@@ -25,8 +25,10 @@ public interface PictureService {
 
 	// 이미지 존재 여부 조회
 	boolean existSingle(Long imageId);
+
 	// 단일 이미지 조회
 	Picture getSingle(Long imageId);
+
 	// 단일 이미지 논리삭제
 	void deleteSingle(Long imageId) throws FileDeleteFailException;
 

@@ -1,8 +1,10 @@
 package com.exciting.vvue.notification.model.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Getter@Setter
+@Getter
+@Setter
 public class SubscribeReqDto {
-    private String firebaseToken;
+	private String firebaseToken;
 }

@@ -1,8 +1,12 @@
 package com.exciting.vvue.auth.model;
 
-import lombok.*;
-
 import javax.persistence.Id;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @ToString
 @Setter
@@ -10,13 +14,13 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class Auth {
 
-    @Id
-    private Long userId;//unique
-    private String refreshToken;
+	@Id
+	private Long userId;//unique
+	private String refreshToken;
 
-    @Builder
-    public Auth(Long userId, String refreshToken) {
-        this.userId = userId;
-        this.refreshToken = refreshToken;
-    }
+	@Builder
+	public Auth(Long userId, String refreshToken) {
+		this.userId = userId;
+		this.refreshToken = refreshToken;
+	}
 }

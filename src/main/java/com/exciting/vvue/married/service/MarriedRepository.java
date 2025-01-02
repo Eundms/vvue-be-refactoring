@@ -3,6 +3,7 @@ package com.exciting.vvue.married.service;
 import java.util.Optional;
 
 import com.exciting.vvue.married.model.Married;
+
 public interface MarriedRepository {
 
 	int countByUserId(Long id);

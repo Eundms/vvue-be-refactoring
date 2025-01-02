@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SocialUser {
-    private String email;
-    private String nickname;
-    private OAuthProvider provider;
-    private String providerId;
+	private String email;
+	private String nickname;
+	private OAuthProvider provider;
+	private String providerId;
 }

@@ -11,14 +11,15 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class UserMemoryRepositoryImpl implements UserMemoryRepository {
-    private final UserMemoryJpaRepository userMemoryJpaRepository;
-    @Override
-    public UserMemory findByUserIdAndScheduleMemoryId(Long userId, Long scheduleMemoryId) {
-        return userMemoryJpaRepository.findByUserIdAndScheduleMemoryId(userId, scheduleMemoryId);
-    }
+	private final UserMemoryJpaRepository userMemoryJpaRepository;
 
-    @Override
-    public void save(UserMemory userMemory) {
-        userMemoryJpaRepository.save(userMemory);
-    }
+	@Override
+	public UserMemory findByUserIdAndScheduleMemoryId(Long userId, Long scheduleMemoryId) {
+		return userMemoryJpaRepository.findByUserIdAndScheduleMemoryId(userId, scheduleMemoryId);
+	}
+
+	@Override
+	public void save(UserMemory userMemory) {
+		userMemoryJpaRepository.save(userMemory);
+	}
 }

@@ -38,5 +38,4 @@ public class MarriedCodeServiceImpl implements MarriedCodeService {
 		marriedCodeRepository.deleteMarriedCodeInRedis(code);
 	}
 
-
 }

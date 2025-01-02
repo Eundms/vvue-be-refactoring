@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public abstract class NotFoundException extends VvueApiException {
 
-    public NotFoundException(String reason) {
-        super(HttpStatus.NOT_FOUND, reason);
-    }
+	public NotFoundException(String reason) {
+		super(HttpStatus.NOT_FOUND, reason);
+	}
 }

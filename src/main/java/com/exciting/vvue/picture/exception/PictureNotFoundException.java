@@ -4,7 +4,7 @@ import com.exciting.vvue.common.exception.BadRequestException;
 
 public class PictureNotFoundException extends BadRequestException {
 
-    public PictureNotFoundException(String reason) {
-        super(reason);
-    }
+	public PictureNotFoundException(String reason) {
+		super(reason);
+	}
 }
