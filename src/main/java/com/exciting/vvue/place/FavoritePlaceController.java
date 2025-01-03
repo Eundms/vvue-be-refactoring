@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.place.model.dto.PlaceReqDto;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +24,6 @@ public class FavoritePlaceController {
 
 	private final FavoritePlaceService favoritePlaceService;
 	private final PlaceService placeService;
-	private final AuthService authService;
 
 	@PostMapping
 	@Operation(summary = "즐겨찾기 상태 변경", description = "즐겨찾기의 상태를 변경한다.")

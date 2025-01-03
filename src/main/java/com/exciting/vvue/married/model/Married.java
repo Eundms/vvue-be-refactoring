@@ -1,29 +1,24 @@
 package com.exciting.vvue.married.model;
 
-import com.exciting.vvue.married.model.dto.MarriedDto;
-import com.exciting.vvue.memory.model.ScheduleMemory;
-import com.exciting.vvue.picture.model.Picture;
-import com.exciting.vvue.user.model.User;
-
 import java.time.LocalDate;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import org.hibernate.annotations.DynamicUpdate;
+
+import com.exciting.vvue.picture.model.Picture;
+import com.exciting.vvue.user.model.User;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter

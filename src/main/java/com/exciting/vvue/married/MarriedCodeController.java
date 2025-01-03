@@ -1,18 +1,10 @@
 package com.exciting.vvue.married;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +18,12 @@ import com.exciting.vvue.married.model.dto.MarriedCode;
 import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
 import com.exciting.vvue.user.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,7 +55,6 @@ public class MarriedCodeController {
 		 *
 		 */
 		Long userId = AuthContext.getUserId();
-		log.debug("[GET] /married-code/generate : id " + userId);
 
 		String code = marriedCodeService.generateCode(CODE_LENGTH, REGENERATE_COUNT);
 		log.debug("[GET] /married-code/generate : marriedCode " + code);
@@ -87,9 +84,7 @@ public class MarriedCodeController {
 		 * 인증방식 논의 필요
 		 */
 		Long userId = AuthContext.getUserId();
-		log.debug("[GET] /married-code/regenerate : id " + userId);
 		String code = marriedCodeService.generateCode(CODE_LENGTH, REGENERATE_COUNT);
-		log.debug("[GET] /married-code/regenerate : regenerated marreidCode " + code);
 		if (code == null)
 			throw new MarriedCodeNotGeneratedException("인증 코드 생성에 실패했어요.");
 
@@ -111,7 +106,6 @@ public class MarriedCodeController {
 	})
 	public ResponseEntity<?> connectMarriedCode(@RequestBody MarriedCode marriedCode) {
 		Long userId = AuthContext.getUserId();
-		log.debug("[POST] /married-code/connect : id " + userId);
 		log.debug("[POST] /married-code/connect : marriedCode " + marriedCode);
 		if (!marriedCodeService.isCodeInRedis(marriedCode.getMarriedCode()))
 			throw new MarriedCodeNotGeneratedException("인증 코드가 존재하지 않아요.");

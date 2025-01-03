@@ -1,55 +1,68 @@
 package com.exciting.vvue.develop;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import com.exciting.vvue.auth.AuthContext;
+import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.auth.jwt.model.JwtDto;
 import com.exciting.vvue.auth.model.Auth;
-import com.exciting.vvue.auth.AuthService;
+import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
-import com.exciting.vvue.married.MarriedService;
+import com.exciting.vvue.memory.MemoryService;
 import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
 import com.exciting.vvue.memory.model.dto.req.PlaceMemoryReqDto;
-import com.exciting.vvue.memory.MemoryService;
 import com.exciting.vvue.notification.model.NotificationContent;
 import com.exciting.vvue.notification.model.NotificationType;
 import com.exciting.vvue.notification.model.VvueNotification;
 import com.exciting.vvue.notification.service.VvueNotificationRepository;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
+import com.exciting.vvue.place.PlaceService;
 import com.exciting.vvue.place.model.dto.PlaceDumpReqDto;
 import com.exciting.vvue.place.model.dto.PlaceReqDto;
-import com.exciting.vvue.place.PlaceService;
+import com.exciting.vvue.schedule.ScheduleService;
 import com.exciting.vvue.schedule.model.RepeatCycle;
 import com.exciting.vvue.schedule.model.Schedule;
 import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
-import com.exciting.vvue.schedule.ScheduleService;
+import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.exception.UserNotFoundException;
 import com.exciting.vvue.user.model.Gender;
 import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.service.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @RestController
@@ -298,7 +311,6 @@ public class DevelopController {
 	@Operation(summary = "테스트 JWT 토큰 발급 (유저정보 확인하기): providerId = {providerId}")
 	@GetMapping("/test-token-gen/{providerId}")
 	public ResponseEntity<JwtDto> testTokenGen(@PathVariable Long providerId) {
-		log.debug("[POST] /test-token-gen");
 		Long TEST_USER_ID = providerId;
 		Optional<User> testUser = userRepository.findById(TEST_USER_ID);
 		if (testUser.isEmpty()) {
@@ -331,7 +343,6 @@ public class DevelopController {
 	@Operation(summary = "덤프 장소 데이터 추가")
 	@PostMapping("/dump-place-data")
 	public ResponseEntity<?> dumpPlaceData(@RequestHeader("authUserId") Long userId) {
-		log.debug("[POST] /dump-place-data");
 		User user = userRepository.findById(userId).orElseThrow(
 			() -> new UserNotFoundException("" + userId)
 		);
@@ -413,7 +424,6 @@ public class DevelopController {
 	@PostMapping("/dump-place-data-param")
 	public ResponseEntity<?> selectDumpPlaceData(@RequestHeader("authUserId") Long userId, @RequestParam("x") Double x,
 		@RequestParam("y") Double y, @RequestParam("code") String categoryCode) {
-		log.debug("[POST] /dump-place-data-param");
 		User user = userRepository.findById(userId).orElseThrow(
 			() -> new UserNotFoundException("" + userId)
 		);

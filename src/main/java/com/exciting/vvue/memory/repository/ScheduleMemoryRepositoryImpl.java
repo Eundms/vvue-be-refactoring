@@ -5,9 +5,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import com.exciting.vvue.memory.service.ScheduleMemoryRepository;
 import com.exciting.vvue.memory.model.ScheduleMemory;
 import com.exciting.vvue.memory.repository.jpa.ScheduleMemoryJpaRepository;
+import com.exciting.vvue.memory.service.ScheduleMemoryRepository;
 
 import lombok.RequiredArgsConstructor;
 

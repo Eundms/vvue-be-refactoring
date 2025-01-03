@@ -1,10 +1,10 @@
 package com.exciting.vvue.memory.repository;
 
-import com.exciting.vvue.memory.service.PlaceMemoryImageRepository;
+import org.springframework.stereotype.Repository;
+
 import com.exciting.vvue.memory.model.PlaceMemoryImage;
 import com.exciting.vvue.memory.repository.jpa.PlaceMemoryImageJpaRepository;
-
-import org.springframework.stereotype.Repository;
+import com.exciting.vvue.memory.service.PlaceMemoryImageRepository;
 
 import lombok.RequiredArgsConstructor;
 

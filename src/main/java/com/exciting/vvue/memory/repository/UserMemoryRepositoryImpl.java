@@ -2,9 +2,9 @@ package com.exciting.vvue.memory.repository;
 
 import org.springframework.stereotype.Repository;
 
-import com.exciting.vvue.memory.service.UserMemoryRepository;
 import com.exciting.vvue.memory.model.UserMemory;
 import com.exciting.vvue.memory.repository.jpa.UserMemoryJpaRepository;
+import com.exciting.vvue.memory.service.UserMemoryRepository;
 
 import lombok.RequiredArgsConstructor;
 

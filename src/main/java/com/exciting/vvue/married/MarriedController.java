@@ -1,30 +1,27 @@
 package com.exciting.vvue.married;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.exciting.vvue.auth.AuthContext;
+import com.exciting.vvue.auth.AuthService;
+import com.exciting.vvue.married.exception.MarriedInfoNotFoundException;
+import com.exciting.vvue.married.model.Married;
+import com.exciting.vvue.married.model.dto.MarriedDto;
+import com.exciting.vvue.married.model.dto.MarriedModifyDto;
 import com.exciting.vvue.married.model.dto.res.MarriedInfoExist;
+import com.exciting.vvue.schedule.ScheduleService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.exciting.vvue.auth.AuthService;
-import com.exciting.vvue.married.exception.MarriedInfoNotFoundException;
-import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.married.model.dto.MarriedDto;
-import com.exciting.vvue.married.model.dto.MarriedModifyDto;
-import com.exciting.vvue.schedule.ScheduleService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +47,6 @@ public class MarriedController {
 		 * 부부 정보 가져오기
 		 */
 		Long userId = AuthContext.getUserId();
-		log.debug("[GET] /married/info : id " + userId);
 		Married marriedInfo = marriedService.getMarriedByUserId(userId);
 		if (marriedInfo == null)
 			throw new MarriedInfoNotFoundException("부부 정보를 가져올 수 없어요.");
@@ -65,7 +61,6 @@ public class MarriedController {
 	// @ApiImplicitParam(name = "marriedModifyDto", value = "marriedModifyDto")
 	public ResponseEntity<?> updateMarriedInfo(@RequestBody MarriedModifyDto marriedModifyDto) {
 		Long userId = AuthContext.getUserId();
-		log.debug("[PUT] /married/info : id " + userId);
 
 		if (marriedService.getMarriedCount(userId) <= 0)
 			throw new MarriedInfoNotFoundException("부부 정보를 찾을 수 없어요");
@@ -99,7 +94,6 @@ public class MarriedController {
 	@Operation(summary = "부부 정보가 있는지 확인")
 	public ResponseEntity<?> isUserMarried() {
 		Long userId = AuthContext.getUserId();
-		log.debug("[POST] /married/is-married : id " + userId);
 		Married married = marriedService.getMarriedByUserId(userId);
 
 		boolean marriedInfoExists = true;

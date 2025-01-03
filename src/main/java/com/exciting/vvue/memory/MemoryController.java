@@ -1,29 +1,35 @@
 package com.exciting.vvue.memory;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.exciting.vvue.auth.AuthContext;
 import com.exciting.vvue.auth.AuthService;
-import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.MarriedService;
+import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
 import com.exciting.vvue.memory.model.dto.req.MemoryCreateResDto;
 import com.exciting.vvue.memory.model.dto.res.MemoryAlbumResDto;
 import com.exciting.vvue.memory.model.dto.res.MemoryResDto;
-
 import com.exciting.vvue.notification.NotificationService;
 import com.exciting.vvue.schedule.ScheduleService;
-import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.UserService;
+import com.exciting.vvue.user.model.User;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -47,7 +53,6 @@ public class MemoryController {
 	public ResponseEntity<?> addMemory(@RequestBody @Validated MemoryAddReqDto memoryAddReqDto) {
 		Long userId = AuthContext.getUserId();
 
-		log.debug("[POST] /memory : " + memoryAddReqDto);
 		User user = userService.getUserById(userId);
 		Married userMarried = marriedService.getMarriedByUserId(userId);
 		log.debug("[userId={}]가 포함된 " + userMarried, userId);
@@ -82,7 +87,6 @@ public class MemoryController {
 	})
 	@GetMapping("/{scheduleMemoryId}")//scheduleMemory.id
 	public ResponseEntity<?> getMemory(@PathVariable Long scheduleMemoryId) {
-		log.debug("[GET] /memory/{scheduleMemoryId} : " + scheduleMemoryId);
 		Long userId = AuthContext.getUserId();
 		User user = userService.getUserById(userId);
 

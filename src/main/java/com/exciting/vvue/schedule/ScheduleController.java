@@ -40,9 +40,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/schedules")
 @RequiredArgsConstructor
@@ -66,7 +64,6 @@ public class ScheduleController {
 	})
 	public ResponseEntity<ScheduleResDto> get(
 		@PathVariable("scheduleId") Long scheduleId) {
-		log.debug("[GET] /schedules/{}", scheduleId);
 		Long userId = AuthContext.getUserId();
 		Long marriedId = getMarriedIdWith(userId);
 		ScheduleResDto scheduleResDto = scheduleService.getSchedule(scheduleId);
@@ -89,7 +86,6 @@ public class ScheduleController {
 	})
 	public ResponseEntity<?> add(
 		@RequestBody ScheduleReqDto scheduleReqDto) {
-		log.debug("[POST] /schedules {}", scheduleReqDto);
 		Long userId = AuthContext.getUserId();
 
 		Long marriedId = getMarriedIdWith(userId);
@@ -126,7 +122,6 @@ public class ScheduleController {
 		, @ApiResponse(responseCode = "401", description = "로그인되지 않은 사용자")
 	})
 	public ResponseEntity<String> addMarry() {
-		log.debug("[POST] /schedules/married");
 		Long userId = AuthContext.getUserId();
 		Long marriedId = getMarriedIdWith(userId);
 		scheduleService.addAnniversaryAndBirthday(marriedId);
@@ -145,7 +140,6 @@ public class ScheduleController {
 	})
 	public ResponseEntity<?> modify(
 		@PathVariable("scheduleId") Long scheduleId, @RequestBody ScheduleReqDto scheduleReqDto) {
-		log.debug("[PUT] /schedules/{} {}", scheduleId, scheduleReqDto);
 		Long userId = AuthContext.getUserId();
 
 		Long marriedId = getMarriedIdWith(userId);
@@ -187,7 +181,6 @@ public class ScheduleController {
 	})
 	public ResponseEntity<String> delete(
 		@PathVariable("scheduleId") Long scheduleId) {
-		log.debug("[DELETE] /schedules/{}", scheduleId);
 		Long userId = AuthContext.getUserId();
 
 		Long marriedId = getMarriedIdWith(userId);
@@ -226,7 +219,6 @@ public class ScheduleController {
 	})
 	public ResponseEntity<List<String>> getCalendar(
 		@RequestParam("year") int year, @RequestParam("month") int month) {
-		log.debug("[GET] /schedules/calendar {} {}", year, month);
 		Long userId = AuthContext.getUserId();
 
 		Long marriedId = getMarriedIdWith(userId);
@@ -246,7 +238,6 @@ public class ScheduleController {
 	public ResponseEntity<List<ScheduleDailyResDto>> getDaily(
 
 		@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-		log.debug("[GET] /schedules/calendar-daily {}", date.toString());
 		Long userId = AuthContext.getUserId();
 
 		Long marriedId = getMarriedIdWith(userId);
@@ -266,7 +257,6 @@ public class ScheduleController {
 	})
 	public ResponseEntity<?> getDday(
 		@RequestParam("idCursor") long idCursor, @RequestParam("size") int size) {
-		log.debug("[GET] /dday ");
 		Long userId = AuthContext.getUserId();
 
 		Long marriedId = getMarriedIdWith(userId);

@@ -69,7 +69,6 @@ public class UserController {
 	@PutMapping
 	public ResponseEntity<?> modify(
 		@RequestBody UserModifyDto userModifyDto) {
-		log.debug("[PUT] /users : modifyInfo " + userModifyDto);
 		Long userId = AuthContext.getUserId();
 		userService.modifyUser(userId, userModifyDto);
 		return new ResponseEntity<>(HttpStatus.OK);

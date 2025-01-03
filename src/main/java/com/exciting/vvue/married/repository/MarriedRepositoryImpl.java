@@ -4,9 +4,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import com.exciting.vvue.married.service.MarriedRepository;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.repository.jpa.MarriedJpaRepository;
+import com.exciting.vvue.married.service.MarriedRepository;
 
 import lombok.RequiredArgsConstructor;
 

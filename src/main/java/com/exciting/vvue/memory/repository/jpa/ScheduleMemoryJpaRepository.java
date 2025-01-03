@@ -1,11 +1,11 @@
 package com.exciting.vvue.memory.repository.jpa;
 
-import com.exciting.vvue.memory.model.ScheduleMemory;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import com.exciting.vvue.memory.model.ScheduleMemory;
 
 public interface ScheduleMemoryJpaRepository extends JpaRepository<ScheduleMemory, Long> {
 	@Query("select sm from ScheduleMemory sm where sm.scheduleId=:scheduleId and sm.married.id=:userMarriedId")
