@@ -1,10 +1,10 @@
 package com.exciting.vvue.married.model.dto;
 
+import javax.validation.constraints.NotNull;
+
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.picture.model.dto.PictureDto;
 import com.exciting.vvue.user.model.dto.UserDto;
-
-import javax.validation.constraints.NotNull;
 
 import lombok.Builder;
 import lombok.Getter;

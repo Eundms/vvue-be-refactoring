@@ -2,13 +2,9 @@ package com.exciting.vvue.married.model.dto;
 
 import java.time.LocalDate;
 
-import com.exciting.vvue.picture.model.Picture;
-import com.exciting.vvue.picture.model.dto.PictureDto;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

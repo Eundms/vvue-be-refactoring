@@ -40,8 +40,6 @@ public class AuthController {
 	@PostMapping
 	@NoAuth
 	public ResponseEntity<JwtDto> loginOrRegister(@RequestBody SocialUser socialUser) {
-		log.debug("[POST] /auth/" + socialUser.getProvider());
-
 		OAuthUserInfo oauthUser = null;
 		OAuthUserInfoDto userInitialInfo = OAuthUserInfoDto.builder()
 			.email(socialUser.getEmail() == null ? null : socialUser.getEmail())
@@ -77,7 +75,6 @@ public class AuthController {
 	@NoAuth
 	public ResponseEntity<JwtDto> refreshToken(@RequestHeader("refresh-token") String refreshToken)
 		throws InvalidTokenException {
-		log.debug("[POST] /refresh-access-token " + refreshToken);
 		Map<String, Object> claims = authService.getClaimsFromToken(refreshToken);
 		Auth saved = authService.getSavedTokenByUserId(Long.valueOf(claims.get("id").toString()));
 		if (refreshToken.equals(saved.getRefreshToken())) {

@@ -7,8 +7,8 @@ import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.model.dto.MarriedModifyDto;
 import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
 import com.exciting.vvue.picture.repository.PictureRepository;
-import com.exciting.vvue.user.service.UserRepository;
 import com.exciting.vvue.user.model.User;
+import com.exciting.vvue.user.service.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

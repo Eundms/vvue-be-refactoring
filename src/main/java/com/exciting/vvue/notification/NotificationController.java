@@ -34,7 +34,6 @@ public class NotificationController {
 	@GetMapping
 	public ResponseEntity<?> getAllNotification(Long nextCursor, int size) {
 		Long userId = AuthContext.getUserId();
-		log.debug("[GET] /notify : userId(" + userId + ")");
 		VvueNotificationListDto vvueNotifications = notificationService.getAllNotificationBy(userId, nextCursor, size);
 		return ResponseEntity.status(HttpStatus.OK).body(vvueNotifications);
 	}

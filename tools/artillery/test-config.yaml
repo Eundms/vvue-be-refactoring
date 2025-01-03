@@ -32,4 +32,10 @@ scenarios:
             nickname: "{{ nickname }}"
             provider: "{{ provider }}"
             providerId: "{{ providerId }}"
+          capture:
+            json: "$.accessToken"
+            as: authToken
+      - post:
+          url: "/back/api/"
+
 
