@@ -19,13 +19,13 @@ public class MarriedCodeServiceImpl implements MarriedCodeService {
 	}
 
 	@Override
-	public boolean isCodeInRedis(String code) {
-		return marriedCodeRepository.isCodeInRedis(code);
+	public boolean isCodeExists(String code) {
+		return marriedCodeRepository.isCodeExists(code);
 	}
 
 	@Override
-	public void addMarriedCodeInRedis(Long id, String code) {
-		marriedCodeRepository.addMarriedCodeInRedis(id, code);
+	public void addMarriedCode(Long id, String code) {
+		marriedCodeRepository.addMarriedCode(id, code);
 	}
 
 	@Override
@@ -34,8 +34,8 @@ public class MarriedCodeServiceImpl implements MarriedCodeService {
 	}
 
 	@Override
-	public void deleteMarriedCodeInRedis(String code) {
-		marriedCodeRepository.deleteMarriedCodeInRedis(code);
+	public void deleteMarriedCode(String code) {
+		marriedCodeRepository.deleteMarriedCode(code);
 	}
 
 }

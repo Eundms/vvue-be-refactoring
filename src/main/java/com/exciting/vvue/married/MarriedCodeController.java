@@ -48,20 +48,14 @@ public class MarriedCodeController {
 		@ApiResponse(responseCode = "404", description = "인증코드 생성실패"),
 	})
 	public ResponseEntity<?> getMarriedAuthCode() {
-		/**
-		 * todo
-		 * 인증 코드 생성
-		 * token으로 id 가져오기
-		 *
-		 */
 		Long userId = AuthContext.getUserId();
 
 		String code = marriedCodeService.generateCode(CODE_LENGTH, REGENERATE_COUNT);
-		log.debug("[GET] /married-code/generate : marriedCode " + code);
+
 		if (code == null)
 			throw new MarriedCodeNotGeneratedException("인증 코드 생성에 실패했어요.");
 
-		marriedCodeService.addMarriedCodeInRedis(userId, code);
+		marriedCodeService.addMarriedCode(userId, code);
 
 		MarriedCode marriedCodeDto = new MarriedCode(code);
 
@@ -88,16 +82,15 @@ public class MarriedCodeController {
 		if (code == null)
 			throw new MarriedCodeNotGeneratedException("인증 코드 생성에 실패했어요.");
 
-		if (marriedCodeService.isCodeInRedis(marriedCode))
-			marriedCodeService.deleteMarriedCodeInRedis(marriedCode);
+		if (marriedCodeService.isCodeExists(marriedCode))
+			marriedCodeService.deleteMarriedCode(marriedCode);
 
-		marriedCodeService.addMarriedCodeInRedis(userId, code);
+		marriedCodeService.addMarriedCode(userId, code);
 		return new ResponseEntity<>(new MarriedCode(code), HttpStatus.OK);
 	}
 
 	@PostMapping("/connect")
 	@Operation(summary = "인증 코드 일치 확인", description = "인증 코드 발급한 유저와 부부 정보 생성")
-	// @ApiImplicitParam(name = "marriedCode", value = "입력한 인증코드", required = true)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "성공", content = {
 			@Content(schema = @Schema(implementation = Long.class))}),
@@ -106,12 +99,10 @@ public class MarriedCodeController {
 	})
 	public ResponseEntity<?> connectMarriedCode(@RequestBody MarriedCode marriedCode) {
 		Long userId = AuthContext.getUserId();
-		log.debug("[POST] /married-code/connect : marriedCode " + marriedCode);
-		if (!marriedCodeService.isCodeInRedis(marriedCode.getMarriedCode()))
+		if (!marriedCodeService.isCodeExists(marriedCode.getMarriedCode()))
 			throw new MarriedCodeNotGeneratedException("인증 코드가 존재하지 않아요.");
 
 		Long targetId = marriedCodeService.getIdFromMarriedCode(marriedCode.getMarriedCode());
-		log.debug("[POST] /married-code/connect : target id " + targetId);
 
 		if (targetId == userId)
 			throw new MarriedWithSameIdException("혼자선 부부가 될 수 없어요!");
@@ -120,8 +111,8 @@ public class MarriedCodeController {
 			throw new AlreadyMarriedException("상대방은 이미 가입중이에요.");
 
 		// 코드 있다면 redis에서 지우기
-		if (marriedCodeService.isCodeInRedis(marriedCode.getMarriedCode()))
-			marriedCodeService.deleteMarriedCodeInRedis(marriedCode.getMarriedCode());
+		if (marriedCodeService.isCodeExists(marriedCode.getMarriedCode()))
+			marriedCodeService.deleteMarriedCode(marriedCode.getMarriedCode());
 
 		// 부부 정보 연결
 		marriedService.createMarried(userId, MarriedCreateDto.builder()

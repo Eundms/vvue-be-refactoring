@@ -74,22 +74,6 @@ public class MarriedController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	//	@Transactional
-	//	@PostMapping()
-	//	@Operation(description ="부부 정보 생성", summary = "부부 정보 생성")
-	//	@Deprecated
-	//	// @ApiImplicitParam(name = "marriedCreateDto", dataTypeClass = MarriedCreateDto.class, value = "배우자 id, 결혼기념일 ")
-	//	public ResponseEntity<?> createMarried( @RequestBody MarriedCreateDto marriedCreateDto){
-	//		Long id = authService.getUserIdFromToken(token);
-	//
-	//		log.debug("[POST] /married : id " + id);
-	//		log.debug("[POST] /married :  MarriedCreateDto " + marriedCreateDto.toString());
-	//		if(marriedService.getMarriedCount(marriedCreateDto.getPartnerId()) > 0)
-	//			throw new AlreadyMarriedException("상대방은 이미 가입중이에요.");
-	//		marriedService.createMarried(id, marriedCreateDto);
-	//		return new ResponseEntity<>(HttpStatus.OK);
-	//	}
-
 	@GetMapping("/is-married")
 	@Operation(summary = "부부 정보가 있는지 확인")
 	public ResponseEntity<?> isUserMarried() {
