@@ -1,4 +1,4 @@
-package com.exciting.vvue.married.service;
+package com.exciting.vvue.marriage.service;
 
 public interface MarriedCodeRepository {
 	String createCode(int length, int failOverCount);

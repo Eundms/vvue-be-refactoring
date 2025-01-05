@@ -13,9 +13,7 @@ import com.exciting.vvue.auth.AuthContext;
 import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.model.dto.UserAuthenticated;
 import com.exciting.vvue.user.model.dto.UserDto;
-import com.exciting.vvue.user.model.dto.UserInfoUpdated;
 import com.exciting.vvue.user.model.dto.UserModifyDto;
-import com.exciting.vvue.user.model.dto.UserRelatedInfo;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -26,21 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-	private final UserSetupService userSetupService;
 	private final UserService userService;
 
-	@Operation(summary = "모든 정보(부부연결유무/유저정보-성별,생일,닉네임) 입력 여부 확인")
-	@GetMapping("/all-info-updated")
-	public ResponseEntity<?> isAllAuthenticated() {
-		Long userId = AuthContext.getUserId();
-
-		UserRelatedInfo userRelatedInfo = userSetupService.getAllRelatedInfo(userId);
-
-		UserInfoUpdated userAuthenticated = new UserInfoUpdated(
-			userRelatedInfo.isAuthenticated(), userRelatedInfo.isSpouseConnected(),
-			userRelatedInfo.isSpouseInfoAdded());
-		return ResponseEntity.status(HttpStatus.OK).body(userAuthenticated);
-	}
 
 	@Operation(summary = "추가 정보(성별,생일,닉네임) 입력 여부 확인")
 	@GetMapping("/user-info-updated")

@@ -50,13 +50,9 @@ public class MarriedServiceImpl implements MarriedService {
 		marriedRepository.save(married);
 	}
 
-	@Override
-	public boolean existById(Long id) {
-		return marriedRepository.existsById(id);
-	}
 
 	@Override
-	public void createMarried(Long id, MarriedCreateDto marriedCreateDto) {
+	public Long createMarried(Long id, MarriedCreateDto marriedCreateDto) {
 		User me = userRepository.findById(id).get();
 		User partner = userRepository.findById(marriedCreateDto.getPartnerId()).get();
 		Married married = Married.builder()
@@ -65,12 +61,8 @@ public class MarriedServiceImpl implements MarriedService {
 			.first(me)
 			.second(partner)
 			.build();
-		marriedRepository.save(married);
-	}
-
-	@Override
-	public boolean existByUserId(Long id) {
-		return marriedRepository.existsByFirst_IdOrSecond_Id(id, id);
+		Married created = marriedRepository.save(married);
+		return created.getId();
 	}
 
 	@Override

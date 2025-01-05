@@ -14,7 +14,7 @@ public interface MarriedRepository {
 
 	boolean existsByFirst_IdOrSecond_Id(Long firstId, Long secondId);
 
-	void save(Married married);
+	Married save(Married married);
 
 	void delete(Married married);
 

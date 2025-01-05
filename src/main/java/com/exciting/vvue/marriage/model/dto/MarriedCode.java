@@ -1,4 +1,4 @@
-package com.exciting.vvue.married.model.dto;
+package com.exciting.vvue.marriage.model.dto;
 
 import lombok.Builder;
 import lombok.Getter;

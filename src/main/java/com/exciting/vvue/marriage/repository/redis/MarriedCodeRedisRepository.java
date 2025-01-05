@@ -1,4 +1,4 @@
-package com.exciting.vvue.married.repository.jpa;
+package com.exciting.vvue.marriage.repository.redis;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;

@@ -1,13 +1,9 @@
-package com.exciting.vvue.married.repository;
+package com.exciting.vvue.marriage.repository;
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.exciting.vvue.married.repository.jpa.MarriedCodeRedisRepository;
-import com.exciting.vvue.married.service.MarriedCodeRepository;
+import com.exciting.vvue.marriage.repository.redis.MarriedCodeRedisRepository;
+import com.exciting.vvue.marriage.service.MarriedCodeRepository;
 
 import lombok.RequiredArgsConstructor;
 

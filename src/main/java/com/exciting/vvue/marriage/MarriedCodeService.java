@@ -1,4 +1,4 @@
-package com.exciting.vvue.married;
+package com.exciting.vvue.marriage;
 
 public interface MarriedCodeService {
 	// 코드 발급

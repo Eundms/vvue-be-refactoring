@@ -36,8 +36,8 @@ public class MarriedRepositoryImpl implements MarriedRepository {
 	}
 
 	@Override
-	public void save(Married married) {
-		marriedJpaRepository.save(married);
+	public Married save(Married married) {
+		return marriedJpaRepository.save(married);
 	}
 
 	@Override

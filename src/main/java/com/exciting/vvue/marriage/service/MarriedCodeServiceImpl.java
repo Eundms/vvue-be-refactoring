@@ -1,8 +1,8 @@
-package com.exciting.vvue.married.service;
+package com.exciting.vvue.marriage.service;
 
 import org.springframework.stereotype.Service;
 
-import com.exciting.vvue.married.MarriedCodeService;
+import com.exciting.vvue.marriage.MarriedCodeService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

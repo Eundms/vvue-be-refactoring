@@ -12,18 +12,12 @@ public interface MarriedService {
 	Married getMarriedByUserId(Long id);
 
 	// peerId 찾기
-
 	Long getSpouseIdById(Long userId);
 
 	// married 정보 수정하기
 	void updateMarried(Long id, MarriedModifyDto marriedModifyDto);
 
-	//married id 값으로 객체 있는지 확인
-	boolean existById(Long id);
-
-	void createMarried(Long id, MarriedCreateDto marriedCreateDto);
-
-	boolean existByUserId(Long id);
+	Long createMarried(Long id, MarriedCreateDto marriedCreateDto);
 
 	int countByUserId(Long id);
 

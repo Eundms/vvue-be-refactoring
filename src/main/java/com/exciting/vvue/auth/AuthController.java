@@ -1,5 +1,7 @@
 package com.exciting.vvue.auth;
 
+import static com.exciting.vvue.landing.model.LandingStatus.*;
+
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import com.exciting.vvue.auth.oauth.model.OAuthUserInfo;
 import com.exciting.vvue.auth.oauth.model.SocialUser;
 import com.exciting.vvue.auth.oauth.model.dto.OAuthUserInfoDto;
 import com.exciting.vvue.common.annotation.NoAuth;
+import com.exciting.vvue.landing.LandingStateEmitService;
 import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.model.User;
 
@@ -35,7 +38,7 @@ public class AuthController {
 
 	private final UserService userService;
 	private final AuthService authService;
-
+	private final LandingStateEmitService landingStateEmitService;
 	@Operation(summary = "로그인/회원 가입", description = "토큰 발급 됨")
 	@PostMapping
 	@NoAuth
@@ -67,6 +70,9 @@ public class AuthController {
 			authEntity.setRefreshToken(jwtDto.getRefreshToken());
 			authService.updateTokens(authEntity);
 		}
+
+		Long id = userEntity.getId();
+		landingStateEmitService.notifyLandingState(id, "USER", LOGGED);
 		return new ResponseEntity<>(jwtDto, HttpStatus.OK);
 	}
 

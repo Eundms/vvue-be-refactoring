@@ -1,4 +1,4 @@
-package com.exciting.vvue.married;
+package com.exciting.vvue.marriage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.auth.AuthService;
+import com.exciting.vvue.landing.LandingStateEmitService;
+import com.exciting.vvue.landing.model.LandingStatus;
+import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.exception.AlreadyMarriedException;
 import com.exciting.vvue.married.exception.MarriedCodeNotGeneratedException;
 import com.exciting.vvue.married.exception.MarriedWithSameIdException;
-import com.exciting.vvue.married.model.dto.MarriedCode;
+import com.exciting.vvue.marriage.model.dto.MarriedCode;
 import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
-import com.exciting.vvue.user.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,8 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MarriedCodeController {
 	private final MarriedCodeService marriedCodeService;
 	private final MarriedService marriedService;
-	private final AuthService authService;
-	private final UserService userService;
+	private final LandingStateEmitService landingStateEmitService;
+
 	private final int REGENERATE_COUNT = 10;
 	private final int CODE_LENGTH = 8;
 
@@ -115,9 +116,12 @@ public class MarriedCodeController {
 			marriedCodeService.deleteMarriedCode(marriedCode.getMarriedCode());
 
 		// 부부 정보 연결
-		marriedService.createMarried(userId, MarriedCreateDto.builder()
+		Long marriedId = marriedService.createMarried(userId, MarriedCreateDto.builder()
 			.partnerId(targetId)
 			.build());
+
+		landingStateEmitService.notifyLandingState(userId, "USER", LandingStatus.CODED);
+		landingStateEmitService.notifyLandingState(targetId, "USER", LandingStatus.CODED);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

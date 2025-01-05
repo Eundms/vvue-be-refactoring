@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
 import com.exciting.vvue.auth.AuthService;
+import com.exciting.vvue.landing.LandingStateEmitService;
+import com.exciting.vvue.landing.model.LandingStatus;
 import com.exciting.vvue.married.exception.MarriedInfoNotFoundException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.model.dto.MarriedDto;
@@ -31,9 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MarriedController {
 	public final MarriedService marriedService;
-	private final AuthService authService;
 	private final ScheduleService scheduleService;
-
+	private final LandingStateEmitService landingStateEmitService;
 	@Operation(summary = "user의 부부정보 가져오기")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "성공", content = {
@@ -58,7 +59,6 @@ public class MarriedController {
 
 	@PutMapping("/info")
 	@Operation(summary = "부부 정보 수정", description = "결혼기념일 미수정시 null로, 사진 미수정시 0 이하의 값으로 보낼 것")
-	// @ApiImplicitParam(name = "marriedModifyDto", value = "marriedModifyDto")
 	public ResponseEntity<?> updateMarriedInfo(@RequestBody MarriedModifyDto marriedModifyDto) {
 		Long userId = AuthContext.getUserId();
 
@@ -67,10 +67,12 @@ public class MarriedController {
 
 		marriedService.updateMarried(userId, marriedModifyDto);
 
+		Married married = marriedService.getMarriedByUserId(userId);
 		if (marriedModifyDto.getMarriedDay() != null) {
-			scheduleService.addAnniversaryAndBirthday(marriedService.getMarriedByUserId(userId).getId());
+			scheduleService.addAnniversaryAndBirthday(married.getId());
 		}
 
+		landingStateEmitService.notifyLandingState(married.getId(), "MARRIED", LandingStatus.COMPLETE);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
