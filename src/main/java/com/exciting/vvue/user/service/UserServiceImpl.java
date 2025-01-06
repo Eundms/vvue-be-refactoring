@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUserByProviderId(String provider, String providerId) {
+	public User getByProviderAndProviderId(String provider, String providerId) {
 		return userRepository.findByProviderAndProviderId(provider, providerId);
 	}
 

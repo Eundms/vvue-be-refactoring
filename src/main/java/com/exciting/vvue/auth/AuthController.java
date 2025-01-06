@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.exciting.vvue.auth.jwt.exception.InvalidTokenException;
 import com.exciting.vvue.auth.jwt.model.JwtDto;
 import com.exciting.vvue.auth.model.Auth;
+import com.exciting.vvue.auth.model.dto.AuthRes;
 import com.exciting.vvue.auth.oauth.model.GoogleUserInfo;
 import com.exciting.vvue.auth.oauth.model.KakaoUserInfo;
 import com.exciting.vvue.auth.oauth.model.OAuthProvider;
@@ -22,7 +24,9 @@ import com.exciting.vvue.auth.oauth.model.OAuthUserInfo;
 import com.exciting.vvue.auth.oauth.model.SocialUser;
 import com.exciting.vvue.auth.oauth.model.dto.OAuthUserInfoDto;
 import com.exciting.vvue.common.annotation.NoAuth;
+import com.exciting.vvue.landing.LandingService;
 import com.exciting.vvue.landing.LandingStateEmitService;
+import com.exciting.vvue.landing.model.LandingStatus;
 import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.model.User;
 
@@ -38,11 +42,12 @@ public class AuthController {
 
 	private final UserService userService;
 	private final AuthService authService;
-	private final LandingStateEmitService landingStateEmitService;
+	private final LandingService landingService;
 	@Operation(summary = "로그인/회원 가입", description = "토큰 발급 됨")
-	@PostMapping
 	@NoAuth
-	public ResponseEntity<JwtDto> loginOrRegister(@RequestBody SocialUser socialUser) {
+	@Transactional
+	@PostMapping
+	public ResponseEntity<AuthRes> loginOrRegister(@RequestBody SocialUser socialUser) {
 		OAuthUserInfo oauthUser = null;
 		OAuthUserInfoDto userInitialInfo = OAuthUserInfoDto.builder()
 			.email(socialUser.getEmail() == null ? null : socialUser.getEmail())
@@ -50,20 +55,22 @@ public class AuthController {
 			.provider(socialUser.getProvider().getProviderName())
 			.nickName(socialUser.getNickname())
 			.build();
-		if (socialUser.getProvider().equals(OAuthProvider.GOOGLE)) {
+		if (socialUser.getProvider().getProviderName().equals(OAuthProvider.GOOGLE.getProviderName())) {
 			oauthUser = new GoogleUserInfo(userInitialInfo);
-		} else if (socialUser.getProvider().equals(OAuthProvider.KAKAO)) {
+		} else {
 			oauthUser = new KakaoUserInfo(userInitialInfo);
 		}
 
 		// provider 랑 providerId로 User 있는지 확인
-		User userEntity = userService.getUserByProviderId(oauthUser.getProvider(),
+		User userEntity = userService.getByProviderAndProviderId(oauthUser.getProvider(),
 			oauthUser.getProviderId());
 		if (userEntity == null) { // 새로운 유저 -> User 테이블에 저장
-			userEntity = userService.addOAuthUser(oauthUser);
+			userService.addOAuthUser(oauthUser);
 		}
-		JwtDto jwtDto = authService.createTokens(userEntity);
-		Auth authEntity = authService.getSavedTokenByUserId(userEntity.getId());
+		User saved = userService.getByProviderAndProviderId(oauthUser.getProvider(),
+			oauthUser.getProviderId());
+		JwtDto jwtDto = authService.createTokens(saved);
+		Auth authEntity = authService.getSavedTokenByUserId(saved.getId());
 		if (authEntity == null) { // 새로운 유저 -> Auth 테이블에 저장
 			authService.saveTokens(jwtDto);
 		} else { // 기존 유저 -> Auth 테이블의 Token update
@@ -71,9 +78,10 @@ public class AuthController {
 			authService.updateTokens(authEntity);
 		}
 
-		Long id = userEntity.getId();
-		landingStateEmitService.notifyLandingState(id, "USER", LOGGED);
-		return new ResponseEntity<>(jwtDto, HttpStatus.OK);
+		Long id = saved.getId();
+		LandingStatus status = LandingStatus.from(landingService.getAllRelatedInfo(id));
+
+		return new ResponseEntity<>(AuthRes.from(jwtDto, status), HttpStatus.OK);
 	}
 
 	@Operation(summary = "accessToken 재발급")

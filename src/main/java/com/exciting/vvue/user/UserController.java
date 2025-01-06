@@ -26,16 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 	private final UserService userService;
 
-
-	@Operation(summary = "추가 정보(성별,생일,닉네임) 입력 여부 확인")
-	@GetMapping("/user-info-updated")
-	public ResponseEntity<?> isAuthenticated() {
-		Long userId = AuthContext.getUserId();
-		User user = userService.getUserById(userId);
-		UserAuthenticated userAuthenticated = new UserAuthenticated(user.isAuthenticated());
-		return ResponseEntity.status(HttpStatus.OK).body(userAuthenticated);
-	}
-
 	@Operation(summary = "유저 정보 조회")
 	@GetMapping
 	public ResponseEntity<UserDto> getUserInfoByToken(

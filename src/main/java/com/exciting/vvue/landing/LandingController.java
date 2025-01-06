@@ -2,8 +2,6 @@ package com.exciting.vvue.landing;
 
 import java.io.IOException;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,11 +37,11 @@ public class LandingController {
 			emitter = landingStateEmitService.subscribeLandingState("USER", landingInfos.getUserId());
 		}
 
-		emitter = sendImmediatly(emitter, stage);
+		emitter = sendImmediately(emitter, stage);
 
 		return emitter;
 	}
-	private SseEmitter sendImmediatly(SseEmitter emitter, LandingStatus status) {
+	private SseEmitter sendImmediately(SseEmitter emitter, LandingStatus status) {
 
 		try {
 			// Send the initial state immediately to the client

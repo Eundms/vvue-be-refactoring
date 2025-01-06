@@ -11,7 +11,7 @@ public interface UserService {
 
 	UserDto getUserDto(Long userId) throws UserNotFoundException;
 
-	User getUserByProviderId(String provider, String providerId);
+	User getByProviderAndProviderId(String provider, String providerId);
 
 	User addOAuthUser(OAuthUserInfo oauthUser);
 

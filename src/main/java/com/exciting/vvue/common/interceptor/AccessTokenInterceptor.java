@@ -39,7 +39,11 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
 		}
 
 		String token = resolveToken(request);
-		validateToken(token);
+		try {
+			validateToken(token);
+		} catch (Exception e) {
+			return false;
+		}
 		setAuthenticatedUser(request, token);
 
 		return true;
@@ -59,6 +63,8 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
 	private boolean isNoAuthAnnotated(Object handler) {
 		if (handler instanceof HandlerMethod handlerMethod) {
 			Method method = handlerMethod.getMethod();
+			log.info("No Auth Added");
+			log.info(method.getName());
 			return method.isAnnotationPresent(NoAuth.class);
 		}
 		return false;

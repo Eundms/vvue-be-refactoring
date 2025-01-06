@@ -1,9 +1,12 @@
 package com.exciting.vvue.common.config;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -17,11 +20,11 @@ import com.exciting.vvue.common.interceptor.RefreshTokenInterceptor;
 @EnableWebMvc
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
-	// private final List<String> JWT_PATTERNS = Arrays.asList("/users/**", "/places-favorite/**", "/married-code/**"
-	//         , "/married/**", "/memory/**", "/notify", "/notify/not-read", "/notify/read"
-	//         , "/pictures/**", "/places/favorites", "/places/recommend", "/schedules/**"
-	//         , "/notify/subscribe", "/notify/unsubscribe"
-	// );
+	private final List<String> JWT_PATTERNS = Arrays.asList("/users/**", "/places-favorite/**", "/married-code/**"
+	        , "/married/**", "/memory/**", "/notify", "/notify/not-read", "/notify/read"
+	        , "/pictures/**", "/places/favorites", "/places/recommend", "/schedules/**"
+	        , "/notify/subscribe", "/notify/unsubscribe"
+	);
 	private final List<String> JWT_EXCLUDE_PATTERNS = Arrays.asList(
 		"/notify/users", "/notify/users/all", "/places", "/places/{placeId}", "/auth", "/auth/refresh-access-token"
 	);
@@ -46,10 +49,10 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(accessTokenInterceptor)
 			.excludePathPatterns(SWAGGER_URL_PATTERNS)
-			.excludePathPatterns(JWT_EXCLUDE_PATTERNS);
+			.excludePathPatterns(JWT_EXCLUDE_PATTERNS); // 배열로 변환
 
 		registry.addInterceptor(refreshTokenInterceptor)
-			.excludePathPatterns(SWAGGER_URL_PATTERNS)
+			.excludePathPatterns(SWAGGER_URL_PATTERNS.toArray(new String[0])) // 배열로 변환
 			.addPathPatterns("/auth/refresh-access-token");
 	}
 
@@ -70,4 +73,5 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 		registry.addResourceHandler("/webjars/**")
 			.addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
+
 }
