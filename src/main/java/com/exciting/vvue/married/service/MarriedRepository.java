@@ -21,4 +21,5 @@ public interface MarriedRepository {
 	Married getReferenceById(Long marriedId);
 
 	Optional<Married> findById(long marriedId);
+
 }

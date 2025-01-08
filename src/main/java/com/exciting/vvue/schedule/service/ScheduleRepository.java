@@ -26,4 +26,6 @@ public interface ScheduleRepository {
 	Schedule save(Schedule from);
 
 	void delete(Schedule schedule);
+
+	boolean existsById(Long scheduleId);
 }

@@ -163,7 +163,7 @@ public class DevelopController {
 			Married married = marriedService.getMarriedByUserId(pair[i] - 1);
 			LocalDate marriedDate = married.getMarriedDay();
 
-			scheduleService.addSchedule(married.getId(),
+			scheduleService.addSchedule(married,
 				new ScheduleReqDto(marriedDate, "결혼기념일", RepeatCycle.YEARLY));
 
 			Map<String, String> data = new HashMap<>();
@@ -194,7 +194,7 @@ public class DevelopController {
 
 			LocalDate montlyDate = LocalDate.now().plusDays(i);
 
-			scheduleService.addSchedule(married.getId(),
+			scheduleService.addSchedule(married,
 				new ScheduleReqDto(montlyDate, "일반일정(달반복)", RepeatCycle.MONTHLY));
 			vvueNotificationRepository.save(VvueNotification.builder()
 				.receiverId(pair[i]).content(
@@ -216,7 +216,7 @@ public class DevelopController {
 
 			LocalDate date = LocalDate.now().plusDays(i);
 
-			scheduleService.addSchedule(married.getId(),
+			scheduleService.addSchedule(married,
 				new ScheduleReqDto(date, "일반일정(반복없음)", RepeatCycle.NONREPEAT));
 			vvueNotificationRepository.save(VvueNotification.builder()
 				.receiverId(pair[i]).content(
@@ -366,7 +366,7 @@ public class DevelopController {
 				List<PlaceReqDto> placeReqDtoList = placeDumpReqDto.getDocuments();
 
 				for (PlaceReqDto placeReqDto : placeReqDtoList) {
-					Schedule schedule = scheduleService.addSchedule(married.getId(),
+					Schedule schedule = scheduleService.addSchedule(married,
 						new ScheduleReqDto(LocalDate.parse("2023-01-01"), "더미플레이스용", RepeatCycle.NONREPEAT));
 					placeService.addPlace(placeReqDto);
 					List<PlaceMemoryReqDto> placeMemoryReqDtoList = new ArrayList<>();
@@ -444,7 +444,7 @@ public class DevelopController {
 			List<PlaceReqDto> placeReqDtoList = placeDumpReqDto.getDocuments();
 
 			for (PlaceReqDto placeReqDto : placeReqDtoList) {
-				Schedule schedule = scheduleService.addSchedule(married.getId(),
+				Schedule schedule = scheduleService.addSchedule(married,
 					new ScheduleReqDto(LocalDate.parse("2023-01-01"), "더미플레이스용", RepeatCycle.NONREPEAT));
 				placeService.addPlace(placeReqDto);
 				List<PlaceMemoryReqDto> placeMemoryReqDtoList = new ArrayList<>();

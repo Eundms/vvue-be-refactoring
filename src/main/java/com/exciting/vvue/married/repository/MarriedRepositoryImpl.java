@@ -54,4 +54,5 @@ public class MarriedRepositoryImpl implements MarriedRepository {
 	public Optional<Married> findById(long marriedId) {
 		return marriedJpaRepository.findById(marriedId);
 	}
+
 }

@@ -3,6 +3,7 @@ package com.exciting.vvue.schedule;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.schedule.model.Schedule;
 import com.exciting.vvue.schedule.model.dto.ScheduleDailyResDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleListResDto;
@@ -10,7 +11,7 @@ import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
 
 public interface ScheduleService {
-	Schedule addSchedule(Long marriedId, ScheduleReqDto scheduleReqDto);
+	Schedule addSchedule(Married married, ScheduleReqDto scheduleReqDto);
 
 	void addAnniversaryAndBirthday(long marriedId);
 
@@ -29,4 +30,6 @@ public interface ScheduleService {
 	List<ScheduleDailyResDto> getScheduleOnDate(Long marriedId, Long userId, LocalDate date);
 
 	List<Schedule> getAllAfterNDaySchedule(int dayAfter);
+
+	boolean existsById(Long scheduleId);
 }

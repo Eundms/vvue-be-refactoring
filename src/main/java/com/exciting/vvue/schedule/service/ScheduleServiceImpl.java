@@ -46,6 +46,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 		return scheduleList;
 	}
 
+	@Override
+	public boolean existsById(Long scheduleId) {
+		return scheduleRepository.existsById(scheduleId);
+	}
+
 	// 일정 조회
 	@Override
 	public ScheduleResDto getSchedule(Long scheduleId) {
@@ -61,9 +66,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	// 일정 등록
 	@Override
-	public Schedule addSchedule(Long marriedId, ScheduleReqDto scheduleReqDto) {
-		// getById 사용 시 lazy 처리 되기 때문에 더 효율적
-		Married married = marriedRepository.getReferenceById(marriedId);
+	public Schedule addSchedule(Married married, ScheduleReqDto scheduleReqDto) {
 		Schedule schedule = scheduleRepository.save(Schedule.from(scheduleReqDto, married));
 		return schedule;
 	}

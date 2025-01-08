@@ -62,4 +62,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 	public void delete(Schedule schedule) {
 		scheduleJpaRepository.delete(schedule);
 	}
+
+	@Override
+	public boolean existsById(Long scheduleId) {
+		return scheduleJpaRepository.existsById(scheduleId);
+	}
 }

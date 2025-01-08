@@ -25,16 +25,13 @@ import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.exception.MarriedInfoNotFoundException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.notification.NotificationService;
-import com.exciting.vvue.notification.model.NotificationContent;
-import com.exciting.vvue.notification.model.NotificationType;
-import com.exciting.vvue.notification.model.dto.NotificationReqDto;
+import com.exciting.vvue.schedule.exception.ScheduleNotFoundException;
 import com.exciting.vvue.schedule.model.Schedule;
 import com.exciting.vvue.schedule.model.dto.ScheduleDailyResDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleListResDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
 import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
 import com.exciting.vvue.user.UserService;
-import com.exciting.vvue.user.model.User;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -47,10 +44,7 @@ import lombok.RequiredArgsConstructor;
 public class ScheduleController {
 
 	private final ScheduleService scheduleService;
-	private final NotificationService notificationService;
-	private final AuthService authService;
 	private final MarriedService marriedService;
-	private final UserService userService;
 
 	@GetMapping("/{scheduleId}")
 	@Operation(summary = "일정 상세 조회", description = "해당 일정 상세 정보를 조회한다.")
@@ -65,9 +59,9 @@ public class ScheduleController {
 	public ResponseEntity<ScheduleResDto> get(
 		@PathVariable("scheduleId") Long scheduleId) {
 		Long userId = AuthContext.getUserId();
-		Long marriedId = getMarriedIdWith(userId);
+		Married married = getMarriedIdWith(userId);
 		ScheduleResDto scheduleResDto = scheduleService.getSchedule(scheduleId);
-		if (scheduleResDto.getMarriedId() != marriedId) {
+		if (scheduleResDto.getMarriedId() != married.getId()) {
 			throw new UserUnAuthorizedException(
 				"[유저]는 해당 [일정]을 볼 권한이 없습니다." + userId + " " + scheduleId);
 		}
@@ -87,30 +81,11 @@ public class ScheduleController {
 	public ResponseEntity<?> add(
 		@RequestBody ScheduleReqDto scheduleReqDto) {
 		Long userId = AuthContext.getUserId();
-
-		Long marriedId = getMarriedIdWith(userId);
-		Schedule schedule = scheduleService.addSchedule(marriedId, scheduleReqDto);
+		Married married = getMarriedIdWith(userId);
+		Schedule schedule = scheduleService.addSchedule(married, scheduleReqDto);
 
 		// 알림 요청
-		Map<String, String> data = new HashMap<>();
-		data.put("scheduleId", schedule.getId().toString());
-		data.put("scheduleDate", schedule.getScheduleDate().toString());
-		Long spouseId = marriedService.getSpouseIdById(userId);
-		User spouse = userService.getUserById(spouseId);
-		notificationService.sendByToken(
-			NotificationReqDto.builder()
-				.targetUserId(spouseId)
-				.content(
-					NotificationContent.builder()
-						.title("일정 추가")
-						.body("배우자가 " + "\"" + scheduleReqDto.getScheduleName() + " "
-							+ scheduleReqDto.getScheduleDate().toString() + "\"을 등록했어요")
-						.image(spouse.getPicture() != null ? spouse.getPicture().getUrl() : null)
-						.build()
-				)
-				.type(NotificationType.SCHEDULE)
-				//.data(data)
-				.build());
+		// 배우자가 일정을 등록했어요
 		return new ResponseEntity<>(schedule.getId(), HttpStatus.OK);
 	}
 
@@ -123,8 +98,8 @@ public class ScheduleController {
 	})
 	public ResponseEntity<String> addMarry() {
 		Long userId = AuthContext.getUserId();
-		Long marriedId = getMarriedIdWith(userId);
-		scheduleService.addAnniversaryAndBirthday(marriedId);
+		Married married = getMarriedIdWith(userId);
+		scheduleService.addAnniversaryAndBirthday(married.getId());
 		return new ResponseEntity<>("기념일 생일 등록 성공", HttpStatus.OK);
 	}
 
@@ -142,30 +117,9 @@ public class ScheduleController {
 		@PathVariable("scheduleId") Long scheduleId, @RequestBody ScheduleReqDto scheduleReqDto) {
 		Long userId = AuthContext.getUserId();
 
-		Long marriedId = getMarriedIdWith(userId);
-		Schedule schedule = scheduleService.modifySchedule(marriedId, scheduleId, scheduleReqDto);
+		Married married = getMarriedIdWith(userId);
+		Schedule schedule = scheduleService.modifySchedule(married.getId(), scheduleId, scheduleReqDto);
 
-		// 알림 요청
-		//        Long userId = authService.getUserIdFromToken(token);
-		//        Long spouseId = marriedService.getSpouseIdById(userId);
-		//        User spouse = userService.getUserById(spouseId);
-		//        Map<String, String> data = new HashMap<>();
-		//        data.put("scheduleId", schedule.getId().toString());
-		//        data.put("scheduleDate", schedule.getScheduleDate().toString());
-		//
-		//        notificationService.sendByToken(
-		//                NotificationReqDto.builder()
-		//                        .targetUserId(spouseId)
-		//                        .content(
-		//                                NotificationContent.builder()
-		//                                        .title("일정 수정")
-		//                                        .body("배우자가 " + "\"" + scheduleReqDto.getScheduleName() + " "
-		//                                                + scheduleReqDto.getScheduleDate().toString() + "\"을 수정했어요")
-		//                                        .image(spouse.getPicture() != null ? spouse.getPicture().getUrl() : null)
-		//                                        .build()
-		//                        )//.data(data)
-		//                        .type(NotificationType.SCHEDULE)
-		//                        .build());
 		return new ResponseEntity<>(schedule.getId(), HttpStatus.OK);
 	}
 
@@ -183,29 +137,12 @@ public class ScheduleController {
 		@PathVariable("scheduleId") Long scheduleId) {
 		Long userId = AuthContext.getUserId();
 
-		Long marriedId = getMarriedIdWith(userId);
+		Married married = getMarriedIdWith(userId);
 
-		ScheduleResDto scheduleReqDto = scheduleService.getSchedule(scheduleId);
+		boolean isExists = scheduleService.existsById(scheduleId);
+		if(!isExists) throw new ScheduleNotFoundException("스케줄 없음");
 
-		scheduleService.deleteSchedule(marriedId, scheduleId);
-
-		// 알림 요청
-		//        Long userId = authService.getUserIdFromToken(token);
-		//        Long spouseId = marriedService.getSpouseIdById(userId);
-		//        User spouse = userService.getUserById(spouseId);
-		//        notificationService.sendByToken(
-		//                NotificationReqDto.builder()
-		//                        .targetUserId(spouseId)
-		//                        .content(
-		//                                NotificationContent.builder()
-		//                                        .title("일정 삭제")
-		//                                        .body("배우자가 " + "\"" + scheduleReqDto.getScheduleName() + " "
-		//                                                + scheduleReqDto.getScheduleDate().toString() + "\"을 삭제했어요")
-		//                                        .image(spouse.getPicture() != null ? spouse.getPicture().getUrl() : null)
-		//                                        .build()
-		//                        )
-		//                        .type(NotificationType.SCHEDULE)
-		//                        .build());
+		scheduleService.deleteSchedule(married.getId(), scheduleId);
 		return new ResponseEntity<>("일정 삭제 성공", HttpStatus.OK);
 	}
 
@@ -221,9 +158,8 @@ public class ScheduleController {
 		@RequestParam("year") int year, @RequestParam("month") int month) {
 		Long userId = AuthContext.getUserId();
 
-		Long marriedId = getMarriedIdWith(userId);
-
-		List<String> dateList = scheduleService.getScheduledDateOnCalendar(marriedId, year, month);
+		Married married = getMarriedIdWith(userId);
+		List<String> dateList = scheduleService.getScheduledDateOnCalendar(married.getId(), year, month);
 		return new ResponseEntity<>(dateList, HttpStatus.OK);
 	}
 
@@ -240,9 +176,8 @@ public class ScheduleController {
 		@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 		Long userId = AuthContext.getUserId();
 
-		Long marriedId = getMarriedIdWith(userId);
-
-		List<ScheduleDailyResDto> scheduleDailyResDtoList = scheduleService.getScheduleOnDate(marriedId, userId,
+		Married married = getMarriedIdWith(userId);
+		List<ScheduleDailyResDto> scheduleDailyResDtoList = scheduleService.getScheduleOnDate(married.getId(), userId,
 			date);
 		return new ResponseEntity<>(scheduleDailyResDtoList, HttpStatus.OK);
 	}
@@ -259,20 +194,18 @@ public class ScheduleController {
 		@RequestParam("idCursor") long idCursor, @RequestParam("size") int size) {
 		Long userId = AuthContext.getUserId();
 
-		Long marriedId = getMarriedIdWith(userId);
-
-		ScheduleListResDto scheduleListResDto = scheduleService.getAllSchedule(marriedId,
+		Married married = getMarriedIdWith(userId);
+		ScheduleListResDto scheduleListResDto = scheduleService.getAllSchedule(married.getId(),
 			idCursor, size);
 
 		return ResponseEntity.ok().body(scheduleListResDto);
 	}
 
-	private Long getMarriedIdWith(Long userId) {
+	private Married getMarriedIdWith(Long userId) {
 		Married married = marriedService.getMarriedByUserId(userId);
 		if (married == null) {
 			throw new MarriedInfoNotFoundException("결혼한 정보가 없습니다");
 		}
-		Long marriedId = married.getId();
-		return marriedId;
+		return married;
 	}
 }
