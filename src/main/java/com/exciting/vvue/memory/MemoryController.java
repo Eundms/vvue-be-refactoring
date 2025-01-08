@@ -1,5 +1,7 @@
 package com.exciting.vvue.memory;
 
+import java.time.LocalDate;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +24,8 @@ import com.exciting.vvue.memory.model.dto.res.MemoryAlbumResDto;
 import com.exciting.vvue.memory.model.dto.res.MemoryResDto;
 import com.exciting.vvue.notification.NotificationService;
 import com.exciting.vvue.schedule.ScheduleService;
+import com.exciting.vvue.schedule.model.Schedule;
+import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
 import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.model.User;
 
@@ -37,7 +41,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemoryController {
 	private final MemoryService memoryService;
-	private final AuthService authService;
 	private final UserService userService;
 	private final MarriedService marriedService;
 
@@ -56,6 +59,9 @@ public class MemoryController {
 		User user = userService.getUserById(userId);
 		Married userMarried = marriedService.getMarriedByUserId(userId);
 		log.debug("[userId={}]가 포함된 " + userMarried, userId);
+		ScheduleResDto schedule = scheduleService.getSchedule(memoryAddReqDto.getScheduleId());
+		memoryAddReqDto.setScheduleName(schedule.getScheduleName());
+		memoryAddReqDto.setScheduleDate(LocalDate.parse(schedule.getScheduleDate()));
 		Long memoryId = memoryService.add(memoryAddReqDto, user, userMarried);
 
 		// 알림 요청
