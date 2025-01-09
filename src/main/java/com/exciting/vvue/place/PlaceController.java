@@ -30,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PlaceController {
 	private final PlaceService placeService;
-	private final AuthService authService;
 
 	@GetMapping("/{placeId}")
 	@Operation(summary = "장소 조회", description = "해당 장소 상세 정보 조회")

@@ -11,4 +11,6 @@ public interface PlaceStatsRepository {
 		Long idCursor, double rateCursor, Long size);
 
 	Optional<PlaceStats> findById(Long cursor);
+
+	void updateSummary();
 }

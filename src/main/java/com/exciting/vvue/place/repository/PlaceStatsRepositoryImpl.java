@@ -28,4 +28,9 @@ public class PlaceStatsRepositoryImpl implements PlaceStatsRepository {
 	public Optional<PlaceStats> findById(Long cursor) {
 		return placeStatsJpaRepository.findById(cursor);
 	}
+
+	@Override
+	public void updateSummary() {
+		placeStatsJpaRepository.updateSummary();
+	}
 }
