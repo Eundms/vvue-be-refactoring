@@ -1,5 +1,7 @@
 package com.exciting.vvue.memory.repository;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.exciting.vvue.memory.model.PlaceMemory;
@@ -17,5 +19,10 @@ public class PlaceMemoryRepositoryImpl implements PlaceMemoryRepository {
 	public PlaceMemory save(PlaceMemory placeMemory) {
 		placeMemoryJpaRepository.save(placeMemory);
 		return placeMemory;
+	}
+
+	@Override
+	public List<PlaceMemory> saveAll(List<PlaceMemory> placeMemoryList) {
+		return placeMemoryJpaRepository.saveAll(placeMemoryList);
 	}
 }

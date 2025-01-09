@@ -3,15 +3,15 @@ swagger:
 spring:
   config:
     activate:
-      on-profile: local
-  datasource:
-    url: jdbc:mysql://localhost:3306/vvue
-    username: root
-    password: ssafy
+      on-profile: test
+#  datasource: # TestContainer에 의해 동적으로 처리됨
+#    url: jdbc:mysql://localhost:3306/testvvue
+#    username: test
+#    password: test
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true

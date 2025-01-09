@@ -51,6 +51,10 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.mysql:mysql-connector-j'
+    testImplementation "org.testcontainers:testcontainers:1.20.4"
+    testImplementation "org.testcontainers:junit-jupiter:1.20.4"
+    testImplementation "org.testcontainers:mysql:1.20.4"
 
     // Swagger 3.0.0
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'

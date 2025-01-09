@@ -68,7 +68,7 @@ public class ScheduleMemory {
 		return ScheduleMemory.builder()
 			.scheduleId(memoryAddReqDto.getScheduleId())
 			.scheduleName(memoryAddReqDto.getScheduleName())
-			.scheduleDate(memoryAddReqDto.getScheduleDate())
+			.scheduleDate(LocalDate.parse(memoryAddReqDto.getScheduleDate()))
 			.married(married)
 			.build();
 	}

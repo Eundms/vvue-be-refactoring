@@ -45,7 +45,6 @@ public class MemoryController {
 	private final MarriedService marriedService;
 
 	private final ScheduleService scheduleService;
-	private final NotificationService notificationService;
 
 	@Operation(summary = "추억 추가")
 	@ApiResponses({
@@ -61,28 +60,9 @@ public class MemoryController {
 		log.debug("[userId={}]가 포함된 " + userMarried, userId);
 		ScheduleResDto schedule = scheduleService.getSchedule(memoryAddReqDto.getScheduleId());
 		memoryAddReqDto.setScheduleName(schedule.getScheduleName());
-		memoryAddReqDto.setScheduleDate(LocalDate.parse(schedule.getScheduleDate()));
+		memoryAddReqDto.setScheduleDate(schedule.getScheduleDate());
 		Long memoryId = memoryService.add(memoryAddReqDto, user, userMarried);
 
-		// 알림 요청
-		//        ScheduleResDto schedule = scheduleService.getSchedule(memoryAddReqDto.getScheduleId());
-		//        Long spouseId = marriedService.getSpouseIdById(userId);
-		//        User spouse = userService.getUserById(spouseId);
-		//        Map<String, String> data = new HashMap<>();
-		//        data.put("memoryId", Long.toString(memoryId));
-		//        notificationService.sendByToken(
-		//                NotificationReqDto.builder()
-		//                        .targetUserId(spouseId)
-		//                        .content(
-		//                                NotificationContent.builder()
-		//                                        .title("추억 추가")
-		//                                        .body("배우자가 \"" + schedule.getScheduleName() + " " + schedule.getCurDate() + "\"에 대한 추억을 등록했어요")
-		//                                        .image(spouse.getPicture()!=null?spouse.getPicture().getUrl():null)
-		//                                        .build()
-		//                        )
-		//                        .type(NotificationType.MEMORY)
-		//                        //.data(data)
-		//                        .build());
 		return ResponseEntity.status(HttpStatus.OK).body(new MemoryCreateResDto(memoryId));
 	}
 

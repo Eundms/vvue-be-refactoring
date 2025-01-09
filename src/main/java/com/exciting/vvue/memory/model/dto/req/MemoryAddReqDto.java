@@ -26,7 +26,7 @@ public class MemoryAddReqDto {
 	//@NotNull(message = "[필수] scheduleName")
 	private String scheduleName;
 	//@NotNull(message = "[필수] scheduleDate")
-	private LocalDate scheduleDate;
+	private String scheduleDate;
 
 	@NotBlank(message = "[필수] comment")
 	@Size(min = 1, max = 300, message = "[범위] comment의 길이 : 1자이상 300자이하")

@@ -1,7 +1,12 @@
 package com.exciting.vvue.memory.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,23 +91,46 @@ public class MemoryServiceImpl implements MemoryService {
 
 		// PlaceMemory 저장
 		List<PlaceMemoryReqDto> placeMemoryReqDtos = memoryAddReqDto.getPlaceMemories();
+		// 미리 Place 및 Picture 조회
+		Set<Long> placeIds = placeMemoryReqDtos.stream()
+			.map(req -> Long.parseLong(req.getPlace().getId()))
+			.collect(Collectors.toSet());
+		Set<Long> pictureIds = placeMemoryReqDtos.stream()
+			.flatMap(req -> req.getPictureIds().stream())
+			.collect(Collectors.toSet());
+
+		Map<Long, Place> placeMap = placeRepository.findAllById(new ArrayList<>(placeIds)).stream()
+			.collect(Collectors.toMap(Place::getId, Function.identity()));
+		Map<Long, Picture> pictureMap = pictureRepository.findAllById(pictureIds).stream()
+			.collect(Collectors.toMap(Picture::getId, Function.identity()));
+
+		// PlaceMemory 및 PlaceMemoryImage 저장
+		List<PlaceMemory> placeMemories = new ArrayList<>();
+		List<PlaceMemoryImage> placeMemoryImages = new ArrayList<>();
+
 		for (PlaceMemoryReqDto placeMemoryReqDto : placeMemoryReqDtos) {
-			// PlaceMemoryImage 저장
-			Optional<Place> place = placeRepository.findById(
-				Long.parseLong(placeMemoryReqDto.getPlace().getId()));
-			if (place.isEmpty()) {
-				place = Optional.of(placeRepository.save(Place.from(placeMemoryReqDto.getPlace())));
-			}
-			PlaceMemory placeMemory = placeMemoryRepository.save(
-				PlaceMemory.with(placeMemoryReqDto, scheduleMemory, place.get(), user));
+			Long placeId = Long.parseLong(placeMemoryReqDto.getPlace().getId());
+			Place place = placeMap.getOrDefault(placeId,
+				placeRepository.save(Place.from(placeMemoryReqDto.getPlace())));
+
+			PlaceMemory placeMemory = PlaceMemory.with(placeMemoryReqDto, scheduleMemory, place, user);
+			placeMemories.add(placeMemory);
+
 			for (Long pictureId : placeMemoryReqDto.getPictureIds()) {
-				Picture picture = pictureRepository.findById(pictureId).get();
-				placeMemoryImageRepository.save(PlaceMemoryImage.builder()
-					.picture(picture)
-					.placeMemory(placeMemory)
-					.build());
+				Picture picture = pictureMap.get(pictureId);
+				if (picture != null) {
+					placeMemoryImages.add(PlaceMemoryImage.builder()
+						.picture(picture)
+						.placeMemory(placeMemory)
+						.build());
+				}
 			}
 		}
+
+		// Batch Save
+		placeMemoryRepository.saveAll(placeMemories);
+		placeMemoryImageRepository.saveAll(placeMemoryImages);
+
 		return scheduleMemory.getId();
 	}
 

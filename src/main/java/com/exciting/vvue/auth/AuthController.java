@@ -1,12 +1,9 @@
 package com.exciting.vvue.auth;
 
-import static com.exciting.vvue.landing.model.LandingStatus.*;
-
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -21,11 +18,10 @@ import com.exciting.vvue.auth.oauth.model.GoogleUserInfo;
 import com.exciting.vvue.auth.oauth.model.KakaoUserInfo;
 import com.exciting.vvue.auth.oauth.model.OAuthProvider;
 import com.exciting.vvue.auth.oauth.model.OAuthUserInfo;
-import com.exciting.vvue.auth.oauth.model.SocialUser;
+import com.exciting.vvue.auth.oauth.model.dto.SocialUserDto;
 import com.exciting.vvue.auth.oauth.model.dto.OAuthUserInfoDto;
 import com.exciting.vvue.common.annotation.NoAuth;
 import com.exciting.vvue.landing.LandingService;
-import com.exciting.vvue.landing.LandingStateEmitService;
 import com.exciting.vvue.landing.model.LandingStatus;
 import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.model.User;
@@ -45,17 +41,16 @@ public class AuthController {
 	private final LandingService landingService;
 	@Operation(summary = "로그인/회원 가입", description = "토큰 발급 됨")
 	@NoAuth
-	@Transactional
 	@PostMapping
-	public ResponseEntity<AuthRes> loginOrRegister(@RequestBody SocialUser socialUser) {
+	public ResponseEntity<AuthRes> loginOrRegister(@RequestBody SocialUserDto socialUserDto) {
 		OAuthUserInfo oauthUser = null;
 		OAuthUserInfoDto userInitialInfo = OAuthUserInfoDto.builder()
-			.email(socialUser.getEmail() == null ? null : socialUser.getEmail())
-			.providerId(socialUser.getProviderId())
-			.provider(socialUser.getProvider().getProviderName())
-			.nickName(socialUser.getNickname())
+			.email(socialUserDto.getEmail() == null ? null : socialUserDto.getEmail())
+			.providerId(socialUserDto.getProviderId())
+			.provider(socialUserDto.getProvider().getProviderName())
+			.nickName(socialUserDto.getNickname())
 			.build();
-		if (socialUser.getProvider().getProviderName().equals(OAuthProvider.GOOGLE.getProviderName())) {
+		if (socialUserDto.getProvider().getProviderName().equals(OAuthProvider.GOOGLE.getProviderName())) {
 			oauthUser = new GoogleUserInfo(userInitialInfo);
 		} else {
 			oauthUser = new KakaoUserInfo(userInitialInfo);

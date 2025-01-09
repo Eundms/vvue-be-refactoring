@@ -3,6 +3,7 @@ package com.exciting.vvue.married.model;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,11 +38,11 @@ public class Married {
 	@JoinColumn(name = "picture_id")
 	private Picture picture; // pictureId
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, unique = true)
 	private User first;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, unique = true)
 	private User second;
 

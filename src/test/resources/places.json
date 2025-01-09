@@ -1,0 +1,54 @@
+[
+  {
+    "id" : 218274780,
+    "address_name" : "서울 강남구 역삼동 736-55",
+    "category_group_code" : "FD6",
+    "category_group_name" : "음식점",
+    "category_name" : "음식점 > 양식 > 햄버거",
+    "phone" : "02-568-6654",
+    "place_name" : "바스버거 역삼점",
+    "place_url" : "http:\/\/place.map.kakao.com\/218274780",
+    "road_address_name" : "서울 강남구 테헤란로26길 10",
+    "x" : 127.03583792503390000,
+    "y" : 37.49963304887893400
+  },
+  {
+    "id" : 802213706,
+    "address_name" : "서울 용산구 한남동 727-21",
+    "category_group_code" : "FD6",
+    "category_group_name" : "음식점",
+    "category_name" : "음식점 > 간식 > 도넛",
+    "phone" : "02-6015-2022",
+    "place_name" : "올드페리도넛",
+    "place_url" : "http:\/\/place.map.kakao.com\/802213706",
+    "road_address_name" : "서울 용산구 한남대로27길 66",
+    "x" : 127.00300977409600000,
+    "y" : 37.53959973720270000
+  },
+  {
+    "id" : 1133750897,
+    "address_name" : "부산 해운대구 반여동 1242-7",
+    "category_group_code" : "CE7",
+    "category_group_name" : "카페",
+    "category_name" : "음식점 > 카페",
+    "phone" : "",
+    "place_name" : "aaa",
+    "place_url" : "http:\/\/place.map.kakao.com\/1133750897",
+    "road_address_name" : "부산 해운대구 반여로 151",
+    "x" : 129.12523524584500000,
+    "y" : 35.20480581444570000
+  },
+  {
+    "id" : 1986524452,
+    "address_name" : "인천 미추홀구 용현동 622-66",
+    "category_group_code" : "CE7",
+    "category_group_name" : "카페",
+    "category_name" : "음식점 > 카페",
+    "phone" : "010-8001-1321",
+    "place_name" : "D 카페in 용현점",
+    "place_url" : "http:\/\/place.map.kakao.com\/1986524452",
+    "road_address_name" : "인천 미추홀구 토금북로 36",
+    "x" : 126.63804519134982000,
+    "y" : 37.45398687385336000
+  }
+]

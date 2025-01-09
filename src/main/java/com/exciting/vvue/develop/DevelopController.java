@@ -264,7 +264,7 @@ public class DevelopController {
 			for (int j = 0; j < schedule.size(); j++) {
 				MemoryAddReqDto memory2 = MemoryAddReqDto.builder()
 					.scheduleId(schedule.get(j).getId())
-					.scheduleDate(LocalDate.parse(schedule.get(j).getScheduleDate()))
+					.scheduleDate(schedule.get(j).getScheduleDate())
 					.scheduleName(schedule.get(j).getScheduleName())
 					.comment("코멘트" + i)
 					.pictureId(pair[i] - 1)
@@ -457,7 +457,7 @@ public class DevelopController {
 					.pictureId(picture.getId())
 					.scheduleId(schedule.getId())
 					.scheduleName(schedule.getScheduleName())
-					.scheduleDate(schedule.getScheduleDate())
+					.scheduleDate(schedule.getScheduleDate().toString())
 					.comment("더미코멘트")
 					.placeMemories(placeMemoryReqDtoList)
 					.build(), user, married);

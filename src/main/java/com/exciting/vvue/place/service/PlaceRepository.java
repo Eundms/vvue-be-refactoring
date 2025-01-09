@@ -15,4 +15,6 @@ public interface PlaceRepository {
 	Place save(Place place);
 
 	void delete(Place place);
+
+	List<Place> findAllById(List<Long> placeIds) ;
 }
