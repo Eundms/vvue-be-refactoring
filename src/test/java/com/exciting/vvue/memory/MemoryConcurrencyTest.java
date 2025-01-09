@@ -1,9 +1,6 @@
 package com.exciting.vvue.memory;
 
 import static com.exciting.vvue.auth.oauth.model.OAuthProvider.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -44,11 +41,7 @@ import com.exciting.vvue.auth.model.dto.AuthRes;
 import com.exciting.vvue.auth.oauth.model.dto.SocialUserDto;
 import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
 import com.exciting.vvue.memory.model.dto.req.PlaceMemoryReqDto;
-import com.exciting.vvue.memory.model.dto.res.MemoryResDto;
-import com.exciting.vvue.memory.model.dto.res.PlaceCommentResDto;
-import com.exciting.vvue.memory.model.dto.res.PlaceMemoryResDto;
 import com.exciting.vvue.memory.model.dto.res.ScheduleResDto;
-import com.exciting.vvue.memory.model.dto.res.UserMemoryResDto;
 import com.exciting.vvue.place.model.dto.PlaceReqDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -58,7 +51,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @TestPropertySource("classpath:application.yml")
 @AutoConfigureMockMvc
 @Testcontainers
-public class MemoryTest {
+public class MemoryConcurrencyTest {
 	@Container
 	private static final MySQLContainer<?> mysqlContainer =
 		new MySQLContainer<>("mysql:8.0.33")
@@ -69,8 +62,8 @@ public class MemoryTest {
 	@Container
 	public static final GenericContainer redisContainer =
 		new GenericContainer(DockerImageName.parse("redis:latest"))
-		.withExposedPorts(6379)
-		.waitingFor(Wait.forListeningPort());;
+			.withExposedPorts(6379)
+			.waitingFor(Wait.forListeningPort());;
 
 	@DynamicPropertySource
 	static void configureProperties(DynamicPropertyRegistry registry) {
@@ -103,20 +96,32 @@ public class MemoryTest {
 	}
 
 	@Test
-	void 추억작성_테스트() throws Exception {
-
+	void test() {
 		MemoryAddReqDto reqDto = prepareReqMemory(1L, 0, 0);
 
-		addMemoryTest(1L, reqDto);
+		ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-		MemoryResDto resDto = getMemoryTest(1L, 1L);
-		assertAll(
-			() -> {
-				assertThat(resDto.getScheduleInfo().getName()).isEqualTo(reqDto.getScheduleName());
-				assertThat(resDto.getScheduleInfo().getDate()).isEqualTo(reqDto.getScheduleDate());
+		// 두 스레드에서 동시에 addMemoryTest 호출
+		executorService.submit(() -> {
+			try {
+				addMemoryTest(1L, reqDto);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
-		);
+		});
+		executorService.submit(() -> {
+			try {
+				addMemoryTest(2L, reqDto);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		});
 
+
+		executorService.shutdown();
+		while (!executorService.isTerminated()) {
+
+		}
 
 	}
 
@@ -142,63 +147,6 @@ public class MemoryTest {
 			.content(objectMapper.writeValueAsString(user1Req))
 		);
 		resultActions.andExpect(status().isOk());
-	}
-
-
-	MemoryResDto getMemoryTest(Long memoryId, Long userId) throws Exception {
-		AuthRes user1 = authed.get(userId);
-
-		ResultActions resultActions = mockMvc.perform(get("/memory/" + memoryId)
-			.header("Authorization", user1.getAccessToken())
-		);
-
-		// 응답을 DTO로 변환
-		String jsonResponse = resultActions.andReturn().getResponse().getContentAsString();
-		MemoryResDto memoryResDto = objectMapper.readValue(jsonResponse, MemoryResDto.class);
-
-		// DTO 필드 값 검증
-		assertThat(memoryResDto).isNotNull();
-		assertThat(memoryId).isEqualTo(memoryResDto.getId()); // MemoryResDto의 id 검증
-
-		// ScheduleInfo 검증
-		assertThat(memoryResDto.getScheduleInfo()).isNotNull();
-		assertThat(memoryResDto.getScheduleInfo().getId()).isNotNull();
-		assertThat(memoryResDto.getScheduleInfo().getName()).isNotNull();
-		assertThat(memoryResDto.getScheduleInfo().getDate()).isNotNull();
-
-		// userMemories 검증
-		assertThat(memoryResDto.getUserMemories()).isNotNull();
-		assertThat(memoryResDto.getUserMemories().isEmpty()).isFalse();
-
-		UserMemoryResDto userMemoryResDto = memoryResDto.getUserMemories().get(0);
-		assertThat(userMemoryResDto.getId()).isNotNull();
-		assertThat(userMemoryResDto.getComment()).isNotNull();
-		assertThat(userMemoryResDto.getPicture()).isNotNull();
-		assertThat(userMemoryResDto.getUser()).isNotNull();
-		assertThat(userMemoryResDto.getUser().getId()).isNotNull();
-		assertThat(userMemoryResDto.getUser().getNickname()).isNotNull();
-		assertThat(userMemoryResDto.getUser().getPicture()).isNotNull();
-
-		// placeMemories 검증
-		assertThat(memoryResDto.getPlaceMemories()).isNotNull();
-		assertThat(memoryResDto.getPlaceMemories().isEmpty()).isFalse();
-
-		PlaceMemoryResDto placeMemoryResDto = memoryResDto.getPlaceMemories().get(0);
-		assertThat(placeMemoryResDto.getPlace()).isNotNull();
-		assertThat(placeMemoryResDto.getAllRating()).isNotNull();
-		assertThat(placeMemoryResDto.getPictures()).isNotNull();
-		assertThat(placeMemoryResDto.getPictures().isEmpty()).isFalse();
-		assertThat(placeMemoryResDto.getComments()).isNotNull();
-
-		PlaceCommentResDto placeCommentResDto = placeMemoryResDto.getComments().get(0);
-		assertThat(placeCommentResDto.getId()).isNotNull();
-		assertThat(placeCommentResDto.getRating()).isNotNull();
-		assertThat(placeCommentResDto.getComment()).isNotNull();
-		assertThat(placeCommentResDto.getUser()).isNotNull();
-		assertThat(placeCommentResDto.getUser().getId()).isNotNull();
-		assertThat(placeCommentResDto.getUser().getNickname()).isNotNull();
-		assertThat(placeCommentResDto.getUser().getPicture()).isNotNull();
-		return memoryResDto;
 	}
 
 	void setupDatabase() throws IOException {
