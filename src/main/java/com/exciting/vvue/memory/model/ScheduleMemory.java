@@ -42,14 +42,14 @@ public class ScheduleMemory {
 	private String scheduleName;
 	private LocalDate scheduleDate;
 
-	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<UserMemory> userMemories;
 
-	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PlaceMemory> placeMemories;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MARRIED_ID", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "married_id", nullable = false)
 	private Married married;
 
 	@CreatedDate

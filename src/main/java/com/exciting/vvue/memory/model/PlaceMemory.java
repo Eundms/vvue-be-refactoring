@@ -6,14 +6,17 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -30,24 +33,28 @@ import lombok.NoArgsConstructor;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "PLACEMEMORY")
+@BatchSize(size = 5)
 public class PlaceMemory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
+	@JoinColumn(name = "schedule_memory_id", nullable = false)
 	private ScheduleMemory scheduleMemory;
 
 	@OneToOne
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 	@ManyToOne
+	@JoinColumn(name = "place_id", nullable = false)
 	private Place place; //PLACE_ID
 
 	private Float rating;
 	private String comment;
 
-	@OneToMany(mappedBy = "placeMemory", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "placeMemory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<PlaceMemoryImage> placeMemoryImageList;//PlaceBlockImage
 
 	@CreatedDate

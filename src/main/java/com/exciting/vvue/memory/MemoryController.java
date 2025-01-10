@@ -38,7 +38,6 @@ public class MemoryController {
 	private final MemoryService memoryService;
 	private final UserService userService;
 	private final MarriedService marriedService;
-
 	private final ScheduleService scheduleService;
 
 	@Operation(summary = "추억 추가")
@@ -57,7 +56,6 @@ public class MemoryController {
 		memoryAddReqDto.setScheduleName(schedule.getScheduleName());
 		memoryAddReqDto.setScheduleDate(schedule.getScheduleDate());
 		Long memoryId = memoryService.add(memoryAddReqDto, user, userMarried);
-
 		return ResponseEntity.status(HttpStatus.OK).body(new MemoryCreateResDto(memoryId));
 	}
 

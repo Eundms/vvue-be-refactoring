@@ -35,7 +35,7 @@ public class PlaceMemoryResDto {
 	}
 
 	public static List<PlaceMemoryResDto> from(List<PlaceMemory> placeMemories) {
-		// 장소 ID
+		// 1. 장소 ID 별로 그룹화된 코멘트
 		Map<Long, List<PlaceCommentResDto>> comments = placeMemories.stream()
 			.collect(
 				Collectors.groupingBy(
@@ -43,17 +43,19 @@ public class PlaceMemoryResDto {
 					Collectors.mapping(PlaceCommentResDto::from, Collectors.toList())
 				)
 			);
-		// 장소 ID 별 장소 정보
-		Map<Long, PlaceResDto> places = new HashMap<>();
-		for (PlaceMemory placeMemory : placeMemories) {
-			places.put(placeMemory.getPlace().getId(), PlaceResDto.from(placeMemory.getPlace()));
-		}
-		// 장소별 rating
+		// 2. 장소 ID 별로 장소 정보 매핑
+		Map<Long, PlaceResDto> places = placeMemories.stream()
+			.collect(Collectors.toMap(
+				x -> x.getPlace().getId(),
+				x -> PlaceResDto.from(x.getPlace())
+			));
+
+		// 3. 장소 ID 별로 평균 rating 계산
 		Map<Long, Float> ratings = placeMemories.stream()
 			.collect(
 				Collectors.groupingBy(
 					x -> x.getPlace().getId(),
-					Collectors.averagingDouble(x -> x.getRating())
+					Collectors.averagingDouble(PlaceMemory::getRating)
 				)
 			)
 			.entrySet()
@@ -63,13 +65,7 @@ public class PlaceMemoryResDto {
 				entry -> entry.getValue().floatValue()
 			));
 
-		//        Map<Long, List<PictureDto>> pictures = placeMemories.stream()
-		//            .collect(
-		//                Collectors.groupingBy(
-		//                    x-> x.getPlace().getId(),
-		//                    Collectors.mapping(PlaceMemory::getPlaceMemoryImageList,Collectors.toList())
-		//                )
-		//            );
+		// 4. 장소 ID 별로 관련 사진 리스트
 		Map<Long, List<PictureDto>> pictures = placeMemories.stream()
 			.collect(
 				Collectors.groupingBy(
@@ -81,17 +77,14 @@ public class PlaceMemoryResDto {
 					)
 				)
 			);
-		List<PlaceMemoryResDto> placeMemoryResDtos = new ArrayList<>();
-		for (Long placeId : comments.keySet()) {
-			placeMemoryResDtos.add(
-				PlaceMemoryResDto.builder()
-					.place(places.get(placeId))
-					.allRating(ratings.get(placeId))
-					.pictures(pictures.get(placeId))
-					.comments(comments.get(placeId))
-					.build()
-			);
-		}
-		return placeMemoryResDtos;
+		// 5. PlaceMemoryResDto 생성
+		return comments.keySet().stream()
+			.map(placeId -> PlaceMemoryResDto.builder()
+				.place(places.get(placeId))
+				.allRating(ratings.get(placeId))
+				.pictures(pictures.get(placeId))
+				.comments(comments.get(placeId))
+				.build())
+			.collect(Collectors.toList());
 	}
 }
