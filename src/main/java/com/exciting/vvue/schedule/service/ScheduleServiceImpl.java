@@ -128,12 +128,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	// D-day 모든 스케쥴 가져오기
 	@Override
-	public ScheduleListResDto getAllSchedule(Long marriedId, long idCursor, int size) {
+	public ScheduleListResDto getAllSchedule(Married married, long idCursor, int size) {
 		//        int isNormal = typeCursor == DateType.NORMAL? 1:0;
-		Married married = marriedRepository.getReferenceById(marriedId);
-		if (married == null) {
-			throw new MarriedInfoNotFoundException("부부 코드가 없습니다");
-		}
+
 		ScheduleResDto cursor =
 			ScheduleResDto.from(
 				scheduleRepository
@@ -152,7 +149,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 		List<ScheduleResDto> scheduleResDtoList =
 			scheduleRepository
 				.findByMarriedAndFuture(
-					marriedId,
+					married.getId(),
 					cursor.getDateType() == DateType.NORMAL ? 1 : 0,
 					LocalDate.parse(cursor.getCurDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
 					cursor.getId(),

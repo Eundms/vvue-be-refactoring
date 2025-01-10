@@ -259,7 +259,7 @@ public class DevelopController {
 			User user = userService.getUserById(pair[i]);
 			Married married = marriedService.getMarriedByUserId(pair[i]);
 
-			List<ScheduleResDto> schedule = scheduleService.getAllSchedule(married.getId(), -1, 100)
+			List<ScheduleResDto> schedule = scheduleService.getAllSchedule(married, -1, 100)
 				.getScheduleResDtoList();
 			for (int j = 0; j < schedule.size(); j++) {
 				MemoryAddReqDto memory2 = MemoryAddReqDto.builder()

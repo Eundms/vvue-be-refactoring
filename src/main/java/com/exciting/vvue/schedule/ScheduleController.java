@@ -190,12 +190,12 @@ public class ScheduleController {
 		, @ApiResponse(responseCode = "401", description = "로그인되지 않은 사용자")
 		, @ApiResponse(responseCode = "500", description = "DB 서버 에러")
 	})
-	public ResponseEntity<?> getDday(
+	public ResponseEntity<ScheduleListResDto> getDday(
 		@RequestParam("idCursor") long idCursor, @RequestParam("size") int size) {
 		Long userId = AuthContext.getUserId();
 
 		Married married = getMarriedIdWith(userId);
-		ScheduleListResDto scheduleListResDto = scheduleService.getAllSchedule(married.getId(),
+		ScheduleListResDto scheduleListResDto = scheduleService.getAllSchedule(married,
 			idCursor, size);
 
 		return ResponseEntity.ok().body(scheduleListResDto);
