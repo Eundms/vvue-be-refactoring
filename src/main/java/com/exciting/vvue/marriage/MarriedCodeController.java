@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
+import com.exciting.vvue.common.exception.married.AlreadyMarriedException;
 import com.exciting.vvue.landing.LandingStateEmitService;
 import com.exciting.vvue.landing.model.LandingStatus;
 import com.exciting.vvue.married.MarriedService;
-import com.exciting.vvue.married.exception.AlreadyMarriedException;
-import com.exciting.vvue.married.exception.MarriedCodeNotGeneratedException;
-import com.exciting.vvue.married.exception.MarriedWithSameIdException;
-import com.exciting.vvue.marriage.model.dto.MarriedCode;
-import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
+import com.exciting.vvue.common.exception.married.MarriedCodeNotGeneratedException;
+import com.exciting.vvue.common.exception.married.MarriedWithSameIdException;
+import com.exciting.vvue.marriage.dto.MarriedCodeDto;
+import com.exciting.vvue.married.dto.req.MarriedCreateDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,7 +45,7 @@ public class MarriedCodeController {
 	@Operation(summary = "부부 인증 코드 발급 (자신 id로)", description = "부부 인증 코드를 발급한다")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "성공", content = {
-			@Content(schema = @Schema(implementation = MarriedCode.class))}),
+			@Content(schema = @Schema(implementation = MarriedCodeDto.class))}),
 		@ApiResponse(responseCode = "404", description = "인증코드 생성실패"),
 	})
 	public ResponseEntity<?> getMarriedAuthCode() {
@@ -58,7 +58,7 @@ public class MarriedCodeController {
 
 		marriedCodeService.addMarriedCode(userId, code);
 
-		MarriedCode marriedCodeDto = new MarriedCode(code);
+		MarriedCodeDto marriedCodeDto = new MarriedCodeDto(code);
 
 		return new ResponseEntity<>(marriedCodeDto, HttpStatus.OK);
 	}
@@ -68,7 +68,7 @@ public class MarriedCodeController {
 	@Parameter(name = "marriedCode", description = "전에 발급된 부부인증코드", required = true)
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "성공", content = {
-			@Content(schema = @Schema(implementation = MarriedCode.class))}),
+			@Content(schema = @Schema(implementation = MarriedCodeDto.class))}),
 		@ApiResponse(responseCode = "404", description = "인증코드 생성실패"),
 	})
 	public ResponseEntity<?> regenerateAuthCode(@RequestParam String marriedCode) {
@@ -87,7 +87,7 @@ public class MarriedCodeController {
 			marriedCodeService.deleteMarriedCode(marriedCode);
 
 		marriedCodeService.addMarriedCode(userId, code);
-		return new ResponseEntity<>(new MarriedCode(code), HttpStatus.OK);
+		return new ResponseEntity<>(new MarriedCodeDto(code), HttpStatus.OK);
 	}
 
 	@PostMapping("/connect")
@@ -98,12 +98,12 @@ public class MarriedCodeController {
 		@ApiResponse(responseCode = "400", description = "자신 인증코드 입력, 이미 부부 정보가 있는 사람과 연동 시도"),
 		@ApiResponse(responseCode = "404", description = "redis에 인증 코드 없음"),
 	})
-	public ResponseEntity<?> connectMarriedCode(@RequestBody MarriedCode marriedCode) {
+	public ResponseEntity<?> connectMarriedCode(@RequestBody MarriedCodeDto marriedCodeDto) {
 		Long userId = AuthContext.getUserId();
-		if (!marriedCodeService.isCodeExists(marriedCode.getMarriedCode()))
+		if (!marriedCodeService.isCodeExists(marriedCodeDto.getMarriedCode()))
 			throw new MarriedCodeNotGeneratedException("인증 코드가 존재하지 않아요.");
 
-		Long targetId = marriedCodeService.getIdFromMarriedCode(marriedCode.getMarriedCode());
+		Long targetId = marriedCodeService.getIdFromMarriedCode(marriedCodeDto.getMarriedCode());
 
 		if (targetId == userId)
 			throw new MarriedWithSameIdException("혼자선 부부가 될 수 없어요!");
@@ -112,8 +112,8 @@ public class MarriedCodeController {
 			throw new AlreadyMarriedException("상대방은 이미 가입중이에요.");
 
 		// 코드 있다면 redis에서 지우기
-		if (marriedCodeService.isCodeExists(marriedCode.getMarriedCode()))
-			marriedCodeService.deleteMarriedCode(marriedCode.getMarriedCode());
+		if (marriedCodeService.isCodeExists(marriedCodeDto.getMarriedCode()))
+			marriedCodeService.deleteMarriedCode(marriedCodeDto.getMarriedCode());
 
 		// 부부 정보 연결
 		Long marriedId = marriedService.createMarried(userId, MarriedCreateDto.builder()

@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.exciting.vvue.place.model.dto.PlaceReqDto;
+import com.exciting.vvue.place.dto.req.PlaceReqDto;
 
 import lombok.Builder;
 import lombok.Getter;

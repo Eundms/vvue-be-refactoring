@@ -1,6 +1,6 @@
 package com.exciting.vvue.memory;
 
-import static com.exciting.vvue.auth.oauth.model.OAuthProvider.*;
+import static com.exciting.vvue.auth.model.OAuthProvider.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -37,12 +37,12 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import com.exciting.vvue.auth.model.dto.AuthRes;
-import com.exciting.vvue.auth.oauth.model.dto.SocialUserDto;
-import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
-import com.exciting.vvue.memory.model.dto.req.PlaceMemoryReqDto;
-import com.exciting.vvue.memory.model.dto.res.ScheduleResDto;
-import com.exciting.vvue.place.model.dto.PlaceReqDto;
+import com.exciting.vvue.auth.dto.res.AuthResDto;
+import com.exciting.vvue.auth.dto.req.SocialUserReqDto;
+import com.exciting.vvue.memory.dto.req.MemoryAddReqDto;
+import com.exciting.vvue.memory.dto.req.PlaceMemoryReqDto;
+import com.exciting.vvue.memory.dto.res.ScheduleResDto;
+import com.exciting.vvue.place.dto.req.PlaceReqDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
@@ -84,7 +84,7 @@ public class MemoryConcurrencyTest {
 	private ObjectMapper objectMapper = new ObjectMapper();
 
 	private List<PlaceReqDto> places;
-	private Map<Long, AuthRes> authed;
+	private Map<Long, AuthResDto> authed;
 	private List<ScheduleResDto> completed;
 
 	@BeforeEach
@@ -95,7 +95,7 @@ public class MemoryConcurrencyTest {
 		setUpPlaces();
 	}
 
-	@Test
+	@Test // TODO
 	void test() {
 		MemoryAddReqDto reqDto = prepareReqMemory(1L, 0, 0);
 
@@ -139,7 +139,7 @@ public class MemoryConcurrencyTest {
 	}
 
 	void addMemoryTest(Long userId, MemoryAddReqDto user1Req) throws Exception {
-		AuthRes user1 = authed.get(userId);
+		AuthResDto user1 = authed.get(userId);
 
 		ResultActions resultActions = mockMvc.perform(post("/memory")
 			.contentType("application/json")
@@ -168,12 +168,12 @@ public class MemoryConcurrencyTest {
 		authed.put(2L, sendLoginRequest(2L));
 	}
 
-	private AuthRes sendLoginRequest(Long id) throws Exception {
-		Map<Long, SocialUserDto> maps = new HashMap<>();
-		maps.put(1L, new SocialUserDto("a@naver.com", "a", KAKAO, "a"));
-		maps.put(2L, new SocialUserDto("b@naver.com", "b", GOOGLE, "b"));
+	private AuthResDto sendLoginRequest(Long id) throws Exception {
+		Map<Long, SocialUserReqDto> maps = new HashMap<>();
+		maps.put(1L, new SocialUserReqDto("a@naver.com", "a", KAKAO, "a"));
+		maps.put(2L, new SocialUserReqDto("b@naver.com", "b", GOOGLE, "b"));
 
-		SocialUserDto loginReq = maps.get(id);
+		SocialUserReqDto loginReq = maps.get(id);
 
 		ResultActions resultActions = mockMvc.perform(post("/auth")
 			.contentType("application/json")
@@ -188,7 +188,7 @@ public class MemoryConcurrencyTest {
 
 		MvcResult mvcResult = resultActions.andReturn();
 		String responseBody = mvcResult.getResponse().getContentAsString();
-		return objectMapper.readValue(responseBody, AuthRes.class);
+		return objectMapper.readValue(responseBody, AuthResDto.class);
 	}
 	private void setupSchedule() throws IOException {
 

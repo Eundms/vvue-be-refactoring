@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 
-import com.exciting.vvue.place.model.dto.RecommendPlaceResDto;
+import com.exciting.vvue.place.dto.res.RecommendPlaceResDto;
 
 import lombok.Builder;
 import lombok.Getter;

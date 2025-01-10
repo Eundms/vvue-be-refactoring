@@ -9,14 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.landing.LandingStateEmitService;
 import com.exciting.vvue.landing.model.LandingStatus;
-import com.exciting.vvue.married.exception.MarriedInfoNotFoundException;
+import com.exciting.vvue.common.exception.married.MarriedInfoNotFoundException;
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.married.model.dto.MarriedDto;
-import com.exciting.vvue.married.model.dto.MarriedModifyDto;
-import com.exciting.vvue.married.model.dto.res.MarriedInfoExist;
+import com.exciting.vvue.married.dto.MarriedDto;
+import com.exciting.vvue.married.dto.MarriedModifyDto;
+import com.exciting.vvue.married.dto.res.MarriedInfoExist;
 import com.exciting.vvue.schedule.ScheduleService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +41,7 @@ public class MarriedController {
 		@ApiResponse(responseCode = "404", description = "부부가 아님")
 	})
 	@GetMapping("/info")
-	public ResponseEntity<?> getMarriedInfo() {
+	public ResponseEntity<MarriedDto> getMarriedInfo() {
 		/**
 		 * todo
 		 * 부부 정보 가져오기

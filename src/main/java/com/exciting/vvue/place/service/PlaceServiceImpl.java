@@ -10,10 +10,10 @@ import com.exciting.vvue.place.exception.PlaceNotFoundException;
 import com.exciting.vvue.place.exception.PlaceRequiredException;
 import com.exciting.vvue.place.model.Place;
 import com.exciting.vvue.place.model.PlaceStats;
-import com.exciting.vvue.place.model.dto.PlaceReqDto;
-import com.exciting.vvue.place.model.dto.PlaceResDto;
-import com.exciting.vvue.place.model.dto.RecommendPlaceListResDto;
-import com.exciting.vvue.place.model.dto.RecommendPlaceResDto;
+import com.exciting.vvue.place.dto.req.PlaceReqDto;
+import com.exciting.vvue.place.dto.res.PlaceResDto;
+import com.exciting.vvue.place.dto.res.RecommendPlaceListResDto;
+import com.exciting.vvue.place.dto.res.RecommendPlaceResDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

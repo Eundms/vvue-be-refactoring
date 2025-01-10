@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.schedule.model.Schedule;
-import com.exciting.vvue.schedule.model.dto.ScheduleDailyResDto;
-import com.exciting.vvue.schedule.model.dto.ScheduleListResDto;
-import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
-import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleDailyResDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleListResDto;
+import com.exciting.vvue.schedule.dto.req.ScheduleReqDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleResDto;
 
 public interface ScheduleService {
 	Schedule addSchedule(Married married, ScheduleReqDto scheduleReqDto);

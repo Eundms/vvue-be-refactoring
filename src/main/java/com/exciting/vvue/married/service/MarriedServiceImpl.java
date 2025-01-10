@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.married.model.dto.MarriedModifyDto;
-import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
+import com.exciting.vvue.married.dto.MarriedModifyDto;
+import com.exciting.vvue.married.dto.req.MarriedCreateDto;
 import com.exciting.vvue.picture.repository.PictureRepository;
 import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.service.UserRepository;

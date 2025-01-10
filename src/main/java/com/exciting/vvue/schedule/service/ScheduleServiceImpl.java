@@ -8,20 +8,20 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.exciting.vvue.auth.exception.UserUnAuthorizedException;
-import com.exciting.vvue.married.exception.MarriedInfoNotFoundException;
+import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
+import com.exciting.vvue.common.exception.married.MarriedInfoNotFoundException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.service.MarriedRepository;
 import com.exciting.vvue.memory.service.UserMemoryRepository;
 import com.exciting.vvue.schedule.ScheduleService;
-import com.exciting.vvue.schedule.exception.ScheduleNotFoundException;
+import com.exciting.vvue.common.exception.schedule.ScheduleNotFoundException;
 import com.exciting.vvue.schedule.model.DateType;
 import com.exciting.vvue.schedule.model.RepeatCycle;
 import com.exciting.vvue.schedule.model.Schedule;
-import com.exciting.vvue.schedule.model.dto.ScheduleDailyResDto;
-import com.exciting.vvue.schedule.model.dto.ScheduleListResDto;
-import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
-import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleDailyResDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleListResDto;
+import com.exciting.vvue.schedule.dto.req.ScheduleReqDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleResDto;
 import com.exciting.vvue.user.exception.UserNotFoundException;
 import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.repository.UserRepositoryImpl;

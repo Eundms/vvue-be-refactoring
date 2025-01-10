@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
 import com.exciting.vvue.auth.AuthService;
-import com.exciting.vvue.notification.model.dto.NotReadNotificationDto;
-import com.exciting.vvue.notification.model.dto.NotificationReqDto;
-import com.exciting.vvue.notification.model.dto.SubscribeReqDto;
-import com.exciting.vvue.notification.model.dto.VvueNotificationListDto;
+import com.exciting.vvue.notification.dto.NotReadNotificationDto;
+import com.exciting.vvue.notification.dto.NotificationReqDto;
+import com.exciting.vvue.notification.dto.SubscribeReqDto;
+import com.exciting.vvue.notification.dto.VvueNotificationListDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

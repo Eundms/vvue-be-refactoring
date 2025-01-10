@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.exciting.vvue.memory.MemoryPlaceService;
 import com.exciting.vvue.memory.model.PlaceMemory;
 import com.exciting.vvue.memory.model.ScheduleMemory;
-import com.exciting.vvue.memory.model.dto.MemoryPlaceFindDto;
+import com.exciting.vvue.memory.dto.MemoryPlaceFindDto;
 
 import lombok.AllArgsConstructor;
 
@@ -17,7 +17,6 @@ import lombok.AllArgsConstructor;
 @Service
 public class MemoryPlaceServiceImpl implements MemoryPlaceService {
 	private final ScheduleMemoryRepository scheduleMemoryRepository;
-	private final PlaceMemoryRepository placeMemoryRepository;
 
 	@Override
 	public List<PlaceMemory> getRecentMemoryPlaceByMarriedId(Long marriedId, MemoryPlaceFindDto findCondition) {

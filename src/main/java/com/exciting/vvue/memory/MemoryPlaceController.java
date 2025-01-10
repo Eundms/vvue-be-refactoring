@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.exciting.vvue.auth.AuthContext;
 import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.memory.model.PlaceMemory;
-import com.exciting.vvue.memory.model.dto.MemoryPlaceFindDto;
+import com.exciting.vvue.memory.dto.MemoryPlaceFindDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

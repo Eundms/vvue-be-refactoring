@@ -1,8 +1,8 @@
 package com.exciting.vvue.married;
 
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.married.model.dto.MarriedModifyDto;
-import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
+import com.exciting.vvue.married.dto.MarriedModifyDto;
+import com.exciting.vvue.married.dto.req.MarriedCreateDto;
 
 public interface MarriedService {
 

@@ -20,7 +20,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
+import com.exciting.vvue.memory.dto.req.MemoryAddReqDto;
 
 import lombok.Builder;
 import lombok.Getter;

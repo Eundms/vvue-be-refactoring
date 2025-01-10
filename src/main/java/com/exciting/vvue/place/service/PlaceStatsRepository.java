@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.exciting.vvue.place.model.PlaceStats;
-import com.exciting.vvue.place.model.dto.RecommendPlaceResDto;
+import com.exciting.vvue.place.dto.res.RecommendPlaceResDto;
 
 public interface PlaceStatsRepository {
 	List<RecommendPlaceResDto> findRecommendPlacesByLocation(Long userId, double lat, double lng, Long distance,

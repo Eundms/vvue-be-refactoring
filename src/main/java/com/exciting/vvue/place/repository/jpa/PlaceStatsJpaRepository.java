@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.exciting.vvue.place.model.PlaceStats;
-import com.exciting.vvue.place.model.dto.RecommendPlaceResDto;
+import com.exciting.vvue.place.dto.res.RecommendPlaceResDto;
 
 import io.lettuce.core.dynamic.annotation.Param;
 

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import com.exciting.vvue.picture.model.dto.PictureDto;
+import com.exciting.vvue.picture.dto.PictureDto;
 
 import lombok.Builder;
 import lombok.Getter;

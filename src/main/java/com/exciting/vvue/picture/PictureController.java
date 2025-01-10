@@ -19,10 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.picture.exception.FileDeleteFailException;
 import com.exciting.vvue.picture.exception.FileUploadFailException;
-import com.exciting.vvue.picture.model.dto.MetaReqDto;
-import com.exciting.vvue.picture.model.dto.PictureIdList;
-import com.exciting.vvue.picture.model.dto.PictureMultiUploadResDto;
-import com.exciting.vvue.picture.model.dto.PictureSingleUploadResDto;
+import com.exciting.vvue.picture.dto.MetaReqDto;
+import com.exciting.vvue.picture.dto.PictureIdList;
+import com.exciting.vvue.picture.dto.PictureMultiUploadResDto;
+import com.exciting.vvue.picture.dto.PictureSingleUploadResDto;
 import com.exciting.vvue.picture.service.PictureService;
 import com.exciting.vvue.user.UserService;
 

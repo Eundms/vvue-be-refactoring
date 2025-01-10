@@ -1,9 +1,7 @@
 package com.exciting.vvue.schedule;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,19 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.auth.AuthService;
-import com.exciting.vvue.auth.exception.UserUnAuthorizedException;
+import com.exciting.vvue.common.exception.married.MarriedInfoNotFoundException;
+import com.exciting.vvue.common.exception.schedule.ScheduleNotFoundException;
+import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
 import com.exciting.vvue.married.MarriedService;
-import com.exciting.vvue.married.exception.MarriedInfoNotFoundException;
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.notification.NotificationService;
-import com.exciting.vvue.schedule.exception.ScheduleNotFoundException;
+import com.exciting.vvue.schedule.dto.req.ScheduleReqDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleDailyResDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleListResDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleResDto;
 import com.exciting.vvue.schedule.model.Schedule;
-import com.exciting.vvue.schedule.model.dto.ScheduleDailyResDto;
-import com.exciting.vvue.schedule.model.dto.ScheduleListResDto;
-import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
-import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
-import com.exciting.vvue.user.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

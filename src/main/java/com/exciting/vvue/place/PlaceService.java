@@ -2,9 +2,9 @@ package com.exciting.vvue.place;
 
 import java.util.List;
 
-import com.exciting.vvue.place.model.dto.PlaceReqDto;
-import com.exciting.vvue.place.model.dto.PlaceResDto;
-import com.exciting.vvue.place.model.dto.RecommendPlaceListResDto;
+import com.exciting.vvue.place.dto.req.PlaceReqDto;
+import com.exciting.vvue.place.dto.res.PlaceResDto;
+import com.exciting.vvue.place.dto.res.RecommendPlaceListResDto;
 
 public interface PlaceService {
 	PlaceResDto getPlace(Long placeId);

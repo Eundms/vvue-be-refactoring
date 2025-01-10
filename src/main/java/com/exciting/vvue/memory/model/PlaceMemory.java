@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.exciting.vvue.memory.model.dto.req.PlaceMemoryReqDto;
+import com.exciting.vvue.memory.dto.req.PlaceMemoryReqDto;
 import com.exciting.vvue.place.model.Place;
 import com.exciting.vvue.user.model.User;
 
