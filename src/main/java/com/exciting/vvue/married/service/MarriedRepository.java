@@ -18,8 +18,6 @@ public interface MarriedRepository {
 
 	void delete(Married married);
 
-	Married getReferenceById(Long marriedId);
-
 	Optional<Married> findById(long marriedId);
 
 }

@@ -19,7 +19,7 @@ public interface ScheduleService {
 
 	void deleteSchedule(Long marriedId, Long scheduleId);
 
-	ScheduleListResDto getAllSchedule(Long marriedId, long idCursor, int size);
+	ScheduleListResDto getAllSchedule(Married married, long idCursor, int size);
 
 	boolean hasNext(List<ScheduleResDto> scheduleResDtoList, int size);
 
