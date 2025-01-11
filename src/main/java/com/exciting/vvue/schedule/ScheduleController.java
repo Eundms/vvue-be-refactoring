@@ -190,10 +190,10 @@ public class ScheduleController {
 		Long userId = AuthContext.getUserId();
 
 		Married married = getMarriedIdWith(userId);
-		ScheduleListResDto scheduleListResDto = scheduleService.getAllSchedule(married,
+		ScheduleListResDto scheduleResDtoList = scheduleService.getAllSchedule(married,
 			idCursor, size);
 
-		return ResponseEntity.ok().body(scheduleListResDto);
+		return ResponseEntity.ok().body(scheduleResDtoList);
 	}
 
 	private Married getMarriedIdWith(Long userId) {

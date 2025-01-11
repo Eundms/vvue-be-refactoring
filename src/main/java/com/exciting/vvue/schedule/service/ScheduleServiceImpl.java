@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
-import com.exciting.vvue.common.exception.married.MarriedInfoNotFoundException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.service.MarriedRepository;
 import com.exciting.vvue.memory.service.UserMemoryRepository;
@@ -156,7 +155,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 					size + 1)
 				.stream()
 				.map(ScheduleResDto::from)
-				.map(scheduleDto -> scheduleDto.setCommingDate())
+				.map(ScheduleResDto::setCommingDate)
 				// 일정과 날짜가 다르면 필터링 해준다.
 				// setCommingDate에 쓰는 LocalDate add가 그 달의 마지막 날을 넘어가면 마지막 날로 변환해주기 때문.
 				// (DB에서 where문으로 필터링 한번 해주지만 확실하게)
@@ -175,21 +174,18 @@ public class ScheduleServiceImpl implements ScheduleService {
 		if (scheduleResDtoList.size() <= size) {
 			hasNext = false;
 		} else {
-			if (scheduleResDtoList.size() > 0)
+			if (!scheduleResDtoList.isEmpty())
 				scheduleResDtoList.remove(scheduleResDtoList.size() - 1);
 		}
 		Long lastId = -1L;
-		if (scheduleResDtoList.size() > 0)
+		if (!scheduleResDtoList.isEmpty())
 			lastId = scheduleResDtoList.get(scheduleResDtoList.size() - 1).getId();
 
-		ScheduleListResDto scheduleListResDto =
-			ScheduleListResDto.builder()
-				.scheduleResDtoList(scheduleResDtoList)
-				.hasNext(hasNext)
-				.lastId(lastId)
-				.build();
-
-		return scheduleListResDto;
+		return ScheduleListResDto.builder()
+			.scheduleResDtoList(scheduleResDtoList)
+			.hasNext(hasNext)
+			.lastId(lastId)
+			.build();
 	}
 
 	// 무한 스크롤에서 다음 row가 있는지 확인
@@ -225,21 +221,24 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public List<ScheduleDailyResDto> getScheduleOnDate(Long marriedId, Long userId, LocalDate date) {
-		List<ScheduleDailyResDto> scheduleList =
+		return
 			scheduleRepository.findByMarried_IdAndScheduleDate(marriedId, date).stream()
 				.map(ScheduleResDto::from)
 				.map(scheduleResDto -> scheduleResDto.setCurDate(date)) // curdate로
 				.map(
 					scheduleResDto -> {
-						Long memoryId = scheduleRepository.getScheduleIdById(scheduleResDto.getId());
-						boolean wroteMemory =
-							userMemoryRepository.findByUserIdAndScheduleMemoryId(userId, memoryId)
-								!= null;
+							LocalDate day = LocalDate.parse(scheduleResDto.getCurDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+							Long memoryId = scheduleRepository.getScheduleMemoryIdByIdAndScheduleDate(
+								scheduleResDto.getId(),
+								day
+							);
+						boolean wroteMemory = false;
+						if(memoryId != null) {
+							wroteMemory =  userMemoryRepository.findByUserIdAndScheduleMemoryId(userId, memoryId, day) != null;
+						}
 						return ScheduleDailyResDto.from(
 							scheduleResDto.setCurDate(date), memoryId, wroteMemory);
 					})
 				.collect(Collectors.toList());
-
-		return scheduleList;
 	}
 }

@@ -1,5 +1,7 @@
 package com.exciting.vvue.memory.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +67,9 @@ public class MemoryServiceImpl implements MemoryService {
 					"[부부ID]에 해당하는 [스케줄ID]가 존재하지 않습니다" + userMarried.getId() + " " + scheduleId));
 
 		// ScheduleMemory 저장
-		ScheduleMemory scheduleMemory = scheduleMemoryRepository.findByScheduleIdAndMarriedId(
-			scheduleId, userMarried.getId());
+		LocalDate day = LocalDate.parse(memoryAddReqDto.getScheduleDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		ScheduleMemory scheduleMemory = scheduleMemoryRepository.findByScheduleIdAndMarriedIdAndDate(
+			scheduleId, userMarried.getId(), day);
 		if (scheduleMemory == null) { // 부부 중 아무도 작성하지 않음
 			scheduleMemory = scheduleMemoryRepository.save(
 				ScheduleMemory.with(memoryAddReqDto, userMarried));
@@ -74,7 +77,7 @@ public class MemoryServiceImpl implements MemoryService {
 
 		// UserMemory 저장
 		UserMemory userMemory = userMemoryRepository.findByUserIdAndScheduleMemoryId(user.getId(),
-			scheduleMemory.getId());
+			scheduleMemory.getId(), scheduleMemory.getScheduleDate());
 		if (userMemory != null) {
 			throw new UserMemoryAlreadyExists(
 				"[유저ID]가 작성한 [스케줄ID]에 대한 [추억ID]가 이미 존재합니다" + user.getId() + " " + scheduleId + " "
@@ -204,7 +207,7 @@ public class MemoryServiceImpl implements MemoryService {
 				return new MemoryAlbumDataDto(x.getId(), imgUrl);
 			})
 			.toList();
-		if (scheduleMemories.size() == 0) {
+		if (scheduleMemories.isEmpty()) {
 			return MemoryAlbumResDto.builder().hasNext(false).build();
 		}
 		Long lastCursorId = scheduleMemories.get(scheduleMemories.size() - 1).getId();

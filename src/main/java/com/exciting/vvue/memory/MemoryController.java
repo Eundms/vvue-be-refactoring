@@ -52,9 +52,6 @@ public class MemoryController {
 		User user = userService.getUserById(userId);
 		Married userMarried = marriedService.getMarriedByUserId(userId);
 		log.debug("[userId={}]가 포함된 " + userMarried, userId);
-		ScheduleResDto schedule = scheduleService.getSchedule(memoryAddReqDto.getScheduleId());
-		memoryAddReqDto.setScheduleName(schedule.getScheduleName());
-		memoryAddReqDto.setScheduleDate(schedule.getScheduleDate());
 		Long memoryId = memoryService.add(memoryAddReqDto, user, userMarried);
 		return ResponseEntity.status(HttpStatus.OK).body(new MemoryCreateResDto(memoryId));
 	}
