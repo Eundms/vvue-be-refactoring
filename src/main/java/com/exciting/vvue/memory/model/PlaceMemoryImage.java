@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.exciting.vvue.picture.model.Picture;
 
 import lombok.Builder;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "PLACEMEMORY_IMAGE")
+@BatchSize(size = 5)
 public class PlaceMemoryImage {
 
 	@Id
@@ -27,11 +30,11 @@ public class PlaceMemoryImage {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "PLACEMEMORY_ID", nullable = false)
+	@JoinColumn(name = "placememory_id", nullable = false)
 	private PlaceMemory placeMemory;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "PICTURE_ID", nullable = false)
+	@JoinColumn(name = "picture_id", nullable = false)
 	private Picture picture;
 
 	@Builder

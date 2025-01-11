@@ -19,7 +19,7 @@ public interface ScheduleRepository {
 
 	List<Schedule> findByScheduleDate(LocalDate date);
 
-	Long getScheduleIdById(Long id);
+	Long getScheduleMemoryIdByIdAndScheduleDate(Long scheduleId, LocalDate scheduleDate);
 
 	Optional<Schedule> findById(Long scheduleId);
 

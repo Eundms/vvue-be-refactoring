@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
+import com.exciting.vvue.schedule.dto.req.ScheduleReqDto;
 
 import lombok.Builder;
 import lombok.Getter;

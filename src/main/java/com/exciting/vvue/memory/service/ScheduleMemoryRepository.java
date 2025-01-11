@@ -1,5 +1,6 @@
 package com.exciting.vvue.memory.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,7 +8,7 @@ import com.exciting.vvue.memory.model.ScheduleMemory;
 
 public interface ScheduleMemoryRepository {
 
-	ScheduleMemory findByScheduleIdAndMarriedId(Long scheduleId, Long userMarriedId);
+	ScheduleMemory findByScheduleIdAndMarriedIdAndDate(Long scheduleId, Long userMarriedId, LocalDate day);
 
 	List<ScheduleMemory> findByMarriedIdWithCursor(Long marriedId, Long firstScheduleMemoryId, int size);
 

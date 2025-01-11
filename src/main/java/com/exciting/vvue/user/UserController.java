@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.model.dto.UserAuthenticated;
-import com.exciting.vvue.user.model.dto.UserDto;
-import com.exciting.vvue.user.model.dto.UserModifyDto;
+import com.exciting.vvue.user.dto.UserDto;
+import com.exciting.vvue.user.dto.UserModifyDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

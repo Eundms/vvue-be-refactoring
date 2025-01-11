@@ -1,5 +1,6 @@
 package com.exciting.vvue.memory.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +19,8 @@ public class ScheduleMemoryRepositoryImpl implements ScheduleMemoryRepository {
 	private final ScheduleMemoryJpaRepository scheduleMemoryJpaRepository;
 
 	@Override
-	public ScheduleMemory findByScheduleIdAndMarriedId(Long scheduleId, Long userMarriedId) {
-		return scheduleMemoryJpaRepository.findByScheduleIdAndMarriedId(scheduleId, userMarriedId);
+	public ScheduleMemory findByScheduleIdAndMarriedIdAndDate(Long scheduleId, Long userMarriedId, LocalDate day) {
+		return scheduleMemoryJpaRepository.findByScheduleIdAndMarriedIdAndDate(scheduleId, userMarriedId, day);
 	}
 
 	@Override

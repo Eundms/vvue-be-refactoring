@@ -2,9 +2,9 @@ package com.exciting.vvue.notification;
 
 import com.exciting.vvue.notification.exception.NotificationFailException;
 import com.exciting.vvue.notification.exception.UserNotAddedToNotifyException;
-import com.exciting.vvue.notification.model.dto.NotReadNotificationDto;
-import com.exciting.vvue.notification.model.dto.NotificationReqDto;
-import com.exciting.vvue.notification.model.dto.VvueNotificationListDto;
+import com.exciting.vvue.notification.dto.NotReadNotificationDto;
+import com.exciting.vvue.notification.dto.NotificationReqDto;
+import com.exciting.vvue.notification.dto.VvueNotificationListDto;
 
 public interface NotificationService {
 	void subscribe(Long userId, String firebaseToken);

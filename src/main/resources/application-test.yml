@@ -1,0 +1,38 @@
+swagger:
+  url: http://localhost:8080/back/api
+spring:
+  config:
+    activate:
+      on-profile: test
+#  datasource: # TestContainer에 의해 동적으로 처리됨
+#    url: jdbc:mysql://localhost:3306/testvvue
+#    username: test
+#    password: test
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  servlet:
+    multipart: # 파일 올리는 설정
+      max-file-size: 50MB # 요청한 파일 한 개의 크기
+      max-request-size: 50MB # 요청한 파일 전체의 크기
+
+  redis:
+    host: localhost
+    port: 6379
+    password: redispassword # 비밀번호 설정이 필요하다면 사용, 아니면 제거
+
+# jwt 설정
+custom:
+  jwt:
+    secret: jwtSecretKey # 실제 사용 시 강력한 비밀 키로 변경
+
+logging:
+  level:
+    com.exciting.vvue: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

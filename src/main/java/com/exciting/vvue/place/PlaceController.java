@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.auth.AuthService;
-import com.exciting.vvue.place.model.dto.PlaceReqDto;
-import com.exciting.vvue.place.model.dto.PlaceResDto;
-import com.exciting.vvue.place.model.dto.RecommendPlaceListResDto;
+import com.exciting.vvue.place.dto.req.PlaceReqDto;
+import com.exciting.vvue.place.dto.res.PlaceResDto;
+import com.exciting.vvue.place.dto.res.RecommendPlaceListResDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -79,7 +78,7 @@ public class PlaceController {
 		, @ApiResponse(responseCode = "401", description = "로그인되지 않은  사용자")
 		, @ApiResponse(responseCode = "500", description = "DB 서버 에러")
 	})
-	public ResponseEntity<?> getFavoritePlaces() {
+	public ResponseEntity<List<PlaceResDto>> getFavoritePlaces() {
 		Long userId = AuthContext.getUserId();
 		List<PlaceResDto> placeResDtoList = placeService.getScrappedPlaces(userId);
 
@@ -93,7 +92,7 @@ public class PlaceController {
 		, @ApiResponse(responseCode = "400", description = "잘못된 필드, 값 요청")
 		, @ApiResponse(responseCode = "500", description = "DB 서버 에러")
 	})
-	public ResponseEntity<?> getRecommendPlace(@RequestParam double lat, @RequestParam double lng,
+	public ResponseEntity<RecommendPlaceListResDto> getRecommendPlace(@RequestParam double lat, @RequestParam double lng,
 		@RequestParam Long distance, @RequestParam Long cursor, @RequestParam Long size) {
 		Long userId = AuthContext.getUserId();
 		RecommendPlaceListResDto recommendPlaceListResDto = placeService.getRecommendPlaces(userId, lat, lng, distance,

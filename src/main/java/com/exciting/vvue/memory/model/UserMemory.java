@@ -1,9 +1,11 @@
 package com.exciting.vvue.memory.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -25,12 +27,15 @@ public class UserMemory {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@ManyToOne
+	@JoinColumn(name= "schedule_memory_id", nullable = false)
 	private ScheduleMemory scheduleMemory;
 	@OneToOne
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 	private String comment;
 
-	@OneToOne(orphanRemoval = true)
+	@OneToOne(orphanRemoval = true, fetch = FetchType.EAGER)
+	@JoinColumn(name = "picture_id", nullable = false)
 	private Picture picture;
 
 	@Builder

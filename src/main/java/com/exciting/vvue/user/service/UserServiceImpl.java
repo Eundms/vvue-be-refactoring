@@ -2,15 +2,15 @@ package com.exciting.vvue.user.service;
 
 import org.springframework.stereotype.Service;
 
-import com.exciting.vvue.auth.oauth.model.OAuthUserInfo;
+import com.exciting.vvue.auth.model.OAuthUserInfo;
 import com.exciting.vvue.picture.exception.PictureNotFoundException;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
 import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.exception.UserNotFoundException;
 import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.model.dto.UserDto;
-import com.exciting.vvue.user.model.dto.UserModifyDto;
+import com.exciting.vvue.user.dto.UserDto;
+import com.exciting.vvue.user.dto.UserModifyDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -12,10 +12,10 @@ import com.exciting.vvue.notification.exception.NotificationFailException;
 import com.exciting.vvue.notification.exception.UserNotAddedToNotifyException;
 import com.exciting.vvue.notification.model.Subscriber;
 import com.exciting.vvue.notification.model.VvueNotification;
-import com.exciting.vvue.notification.model.dto.NotReadNotificationDto;
-import com.exciting.vvue.notification.model.dto.NotificationReqDto;
-import com.exciting.vvue.notification.model.dto.VvueNotificationListDto;
-import com.exciting.vvue.notification.model.dto.VvueNotificationResDto;
+import com.exciting.vvue.notification.dto.NotReadNotificationDto;
+import com.exciting.vvue.notification.dto.NotificationReqDto;
+import com.exciting.vvue.notification.dto.VvueNotificationListDto;
+import com.exciting.vvue.notification.dto.VvueNotificationResDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

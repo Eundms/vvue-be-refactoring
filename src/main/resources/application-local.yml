@@ -33,6 +33,6 @@ custom:
 
 logging:
   level:
-    com.exciting.vvue: DEBUG
+    com.exciting.vvue: INFO
     org.hibernate.SQL: INFO
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE

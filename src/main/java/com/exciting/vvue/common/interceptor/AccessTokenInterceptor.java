@@ -63,7 +63,7 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
 	private boolean isNoAuthAnnotated(Object handler) {
 		if (handler instanceof HandlerMethod handlerMethod) {
 			Method method = handlerMethod.getMethod();
-			log.info("No Auth Added");
+			log.info("No Auth Added?");
 			log.info(method.getName());
 			return method.isAnnotationPresent(NoAuth.class);
 		}

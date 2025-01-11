@@ -20,7 +20,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
+import com.exciting.vvue.memory.dto.req.MemoryAddReqDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -42,14 +42,14 @@ public class ScheduleMemory {
 	private String scheduleName;
 	private LocalDate scheduleDate;
 
-	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<UserMemory> userMemories;
 
-	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PlaceMemory> placeMemories;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "MARRIED_ID", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "married_id", nullable = false)
 	private Married married;
 
 	@CreatedDate
@@ -68,7 +68,7 @@ public class ScheduleMemory {
 		return ScheduleMemory.builder()
 			.scheduleId(memoryAddReqDto.getScheduleId())
 			.scheduleName(memoryAddReqDto.getScheduleName())
-			.scheduleDate(memoryAddReqDto.getScheduleDate())
+			.scheduleDate(LocalDate.parse(memoryAddReqDto.getScheduleDate()))
 			.married(married)
 			.build();
 	}

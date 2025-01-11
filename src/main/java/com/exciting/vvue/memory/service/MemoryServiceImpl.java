@@ -1,31 +1,38 @@
 package com.exciting.vvue.memory.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.exciting.vvue.auth.exception.UserUnAuthorizedException;
+import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.memory.MemoryService;
-import com.exciting.vvue.memory.exception.MemoryNotFoundException;
-import com.exciting.vvue.memory.exception.UserMemoryAlreadyExists;
+import com.exciting.vvue.common.exception.memory.MemoryNotFoundException;
+import com.exciting.vvue.common.exception.memory.UserMemoryAlreadyExists;
 import com.exciting.vvue.memory.model.PlaceMemory;
 import com.exciting.vvue.memory.model.PlaceMemoryImage;
 import com.exciting.vvue.memory.model.ScheduleMemory;
 import com.exciting.vvue.memory.model.UserMemory;
-import com.exciting.vvue.memory.model.dto.MemoryAlbumDataDto;
-import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
-import com.exciting.vvue.memory.model.dto.req.PlaceMemoryReqDto;
-import com.exciting.vvue.memory.model.dto.res.MemoryAlbumResDto;
-import com.exciting.vvue.memory.model.dto.res.MemoryResDto;
+import com.exciting.vvue.memory.dto.MemoryAlbumDataDto;
+import com.exciting.vvue.memory.dto.req.MemoryAddReqDto;
+import com.exciting.vvue.memory.dto.req.PlaceMemoryReqDto;
+import com.exciting.vvue.memory.dto.res.MemoryAlbumResDto;
+import com.exciting.vvue.memory.dto.res.MemoryResDto;
 import com.exciting.vvue.picture.exception.PictureNotFoundException;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
 import com.exciting.vvue.place.model.Place;
 import com.exciting.vvue.place.repository.PlaceRepositoryImpl;
-import com.exciting.vvue.schedule.exception.ScheduleNotFoundException;
+import com.exciting.vvue.common.exception.schedule.ScheduleNotFoundException;
 import com.exciting.vvue.schedule.repository.ScheduleRepositoryImpl;
 import com.exciting.vvue.user.model.User;
 
@@ -60,8 +67,9 @@ public class MemoryServiceImpl implements MemoryService {
 					"[부부ID]에 해당하는 [스케줄ID]가 존재하지 않습니다" + userMarried.getId() + " " + scheduleId));
 
 		// ScheduleMemory 저장
-		ScheduleMemory scheduleMemory = scheduleMemoryRepository.findByScheduleIdAndMarriedId(
-			scheduleId, userMarried.getId());
+		LocalDate day = LocalDate.parse(memoryAddReqDto.getScheduleDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		ScheduleMemory scheduleMemory = scheduleMemoryRepository.findByScheduleIdAndMarriedIdAndDate(
+			scheduleId, userMarried.getId(), day);
 		if (scheduleMemory == null) { // 부부 중 아무도 작성하지 않음
 			scheduleMemory = scheduleMemoryRepository.save(
 				ScheduleMemory.with(memoryAddReqDto, userMarried));
@@ -69,7 +77,7 @@ public class MemoryServiceImpl implements MemoryService {
 
 		// UserMemory 저장
 		UserMemory userMemory = userMemoryRepository.findByUserIdAndScheduleMemoryId(user.getId(),
-			scheduleMemory.getId());
+			scheduleMemory.getId(), scheduleMemory.getScheduleDate());
 		if (userMemory != null) {
 			throw new UserMemoryAlreadyExists(
 				"[유저ID]가 작성한 [스케줄ID]에 대한 [추억ID]가 이미 존재합니다" + user.getId() + " " + scheduleId + " "
@@ -86,23 +94,46 @@ public class MemoryServiceImpl implements MemoryService {
 
 		// PlaceMemory 저장
 		List<PlaceMemoryReqDto> placeMemoryReqDtos = memoryAddReqDto.getPlaceMemories();
+		// 미리 Place 및 Picture 조회
+		Set<Long> placeIds = placeMemoryReqDtos.stream()
+			.map(req -> Long.parseLong(req.getPlace().getId()))
+			.collect(Collectors.toSet());
+		Set<Long> pictureIds = placeMemoryReqDtos.stream()
+			.flatMap(req -> req.getPictureIds().stream())
+			.collect(Collectors.toSet());
+
+		Map<Long, Place> placeMap = placeRepository.findAllById(new ArrayList<>(placeIds)).stream()
+			.collect(Collectors.toMap(Place::getId, Function.identity()));
+		Map<Long, Picture> pictureMap = pictureRepository.findAllById(pictureIds).stream()
+			.collect(Collectors.toMap(Picture::getId, Function.identity()));
+
+		// PlaceMemory 및 PlaceMemoryImage 저장
+		List<PlaceMemory> placeMemories = new ArrayList<>();
+		List<PlaceMemoryImage> placeMemoryImages = new ArrayList<>();
+
 		for (PlaceMemoryReqDto placeMemoryReqDto : placeMemoryReqDtos) {
-			// PlaceMemoryImage 저장
-			Optional<Place> place = placeRepository.findById(
-				Long.parseLong(placeMemoryReqDto.getPlace().getId()));
-			if (place.isEmpty()) {
-				place = Optional.of(placeRepository.save(Place.from(placeMemoryReqDto.getPlace())));
-			}
-			PlaceMemory placeMemory = placeMemoryRepository.save(
-				PlaceMemory.with(placeMemoryReqDto, scheduleMemory, place.get(), user));
+			Long placeId = Long.parseLong(placeMemoryReqDto.getPlace().getId());
+			Place place = placeMap.getOrDefault(placeId,
+				placeRepository.save(Place.from(placeMemoryReqDto.getPlace())));
+
+			PlaceMemory placeMemory = PlaceMemory.with(placeMemoryReqDto, scheduleMemory, place, user);
+			placeMemories.add(placeMemory);
+
 			for (Long pictureId : placeMemoryReqDto.getPictureIds()) {
-				Picture picture = pictureRepository.findById(pictureId).get();
-				placeMemoryImageRepository.save(PlaceMemoryImage.builder()
-					.picture(picture)
-					.placeMemory(placeMemory)
-					.build());
+				Picture picture = pictureMap.get(pictureId);
+				if (picture != null) {
+					placeMemoryImages.add(PlaceMemoryImage.builder()
+						.picture(picture)
+						.placeMemory(placeMemory)
+						.build());
+				}
 			}
 		}
+
+		// Batch Save
+		placeMemoryRepository.saveAll(placeMemories);
+		placeMemoryImageRepository.saveAll(placeMemoryImages);
+
 		return scheduleMemory.getId();
 	}
 
@@ -176,7 +207,7 @@ public class MemoryServiceImpl implements MemoryService {
 				return new MemoryAlbumDataDto(x.getId(), imgUrl);
 			})
 			.toList();
-		if (scheduleMemories.size() == 0) {
+		if (scheduleMemories.isEmpty()) {
 			return MemoryAlbumResDto.builder().hasNext(false).build();
 		}
 		Long lastCursorId = scheduleMemories.get(scheduleMemories.size() - 1).getId();

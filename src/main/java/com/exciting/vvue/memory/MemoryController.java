@@ -1,7 +1,5 @@
 package com.exciting.vvue.memory;
 
-import java.time.LocalDate;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,17 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
-import com.exciting.vvue.memory.model.dto.req.MemoryCreateResDto;
-import com.exciting.vvue.memory.model.dto.res.MemoryAlbumResDto;
-import com.exciting.vvue.memory.model.dto.res.MemoryResDto;
-import com.exciting.vvue.notification.NotificationService;
+import com.exciting.vvue.memory.dto.req.MemoryAddReqDto;
+import com.exciting.vvue.memory.dto.req.MemoryCreateResDto;
+import com.exciting.vvue.memory.dto.res.MemoryAlbumResDto;
+import com.exciting.vvue.memory.dto.res.MemoryResDto;
 import com.exciting.vvue.schedule.ScheduleService;
-import com.exciting.vvue.schedule.model.Schedule;
-import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleResDto;
 import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.model.User;
 
@@ -43,9 +38,7 @@ public class MemoryController {
 	private final MemoryService memoryService;
 	private final UserService userService;
 	private final MarriedService marriedService;
-
 	private final ScheduleService scheduleService;
-	private final NotificationService notificationService;
 
 	@Operation(summary = "추억 추가")
 	@ApiResponses({
@@ -53,36 +46,13 @@ public class MemoryController {
 		@ApiResponse(responseCode = "400", description = "본인이 작성한 일정별 추억이 이미 존재함"),
 	})
 	@PostMapping
-	public ResponseEntity<?> addMemory(@RequestBody @Validated MemoryAddReqDto memoryAddReqDto) {
+	public ResponseEntity<MemoryCreateResDto> addMemory(@RequestBody @Validated MemoryAddReqDto memoryAddReqDto) {
 		Long userId = AuthContext.getUserId();
 
 		User user = userService.getUserById(userId);
 		Married userMarried = marriedService.getMarriedByUserId(userId);
 		log.debug("[userId={}]가 포함된 " + userMarried, userId);
-		ScheduleResDto schedule = scheduleService.getSchedule(memoryAddReqDto.getScheduleId());
-		memoryAddReqDto.setScheduleName(schedule.getScheduleName());
-		memoryAddReqDto.setScheduleDate(LocalDate.parse(schedule.getScheduleDate()));
 		Long memoryId = memoryService.add(memoryAddReqDto, user, userMarried);
-
-		// 알림 요청
-		//        ScheduleResDto schedule = scheduleService.getSchedule(memoryAddReqDto.getScheduleId());
-		//        Long spouseId = marriedService.getSpouseIdById(userId);
-		//        User spouse = userService.getUserById(spouseId);
-		//        Map<String, String> data = new HashMap<>();
-		//        data.put("memoryId", Long.toString(memoryId));
-		//        notificationService.sendByToken(
-		//                NotificationReqDto.builder()
-		//                        .targetUserId(spouseId)
-		//                        .content(
-		//                                NotificationContent.builder()
-		//                                        .title("추억 추가")
-		//                                        .body("배우자가 \"" + schedule.getScheduleName() + " " + schedule.getCurDate() + "\"에 대한 추억을 등록했어요")
-		//                                        .image(spouse.getPicture()!=null?spouse.getPicture().getUrl():null)
-		//                                        .build()
-		//                        )
-		//                        .type(NotificationType.MEMORY)
-		//                        //.data(data)
-		//                        .build());
 		return ResponseEntity.status(HttpStatus.OK).body(new MemoryCreateResDto(memoryId));
 	}
 
@@ -92,7 +62,7 @@ public class MemoryController {
 		@ApiResponse(responseCode = "400", description = "추억ID에 해당하는 추억이 없음"),
 	})
 	@GetMapping("/{scheduleMemoryId}")//scheduleMemory.id
-	public ResponseEntity<?> getMemory(@PathVariable Long scheduleMemoryId) {
+	public ResponseEntity<MemoryResDto> getMemory(@PathVariable Long scheduleMemoryId) {
 		Long userId = AuthContext.getUserId();
 		User user = userService.getUserById(userId);
 
@@ -123,7 +93,7 @@ public class MemoryController {
 
 	@Operation(summary = "모든 추억 조회", description = "앨범 썸네일")
 	@GetMapping
-	public ResponseEntity<?> getAllMemory(Long nextCursor, int size) { //인스타
+	public ResponseEntity<MemoryAlbumResDto> getAllMemory(Long nextCursor, int size) { //인스타
 		Long userId = AuthContext.getUserId();
 
 		Married married = marriedService.getMarriedByUserId(userId);

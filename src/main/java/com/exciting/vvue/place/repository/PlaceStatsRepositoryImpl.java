@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.exciting.vvue.place.model.PlaceStats;
-import com.exciting.vvue.place.model.dto.RecommendPlaceResDto;
+import com.exciting.vvue.place.dto.res.RecommendPlaceResDto;
 import com.exciting.vvue.place.repository.jpa.PlaceStatsJpaRepository;
 import com.exciting.vvue.place.service.PlaceStatsRepository;
 

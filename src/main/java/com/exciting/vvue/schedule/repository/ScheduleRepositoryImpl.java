@@ -24,8 +24,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
 	@Override
 	public List<Schedule> findByMarriedAndFuture(Long marriedId, int typeCursor, LocalDate dateCursor, long idCursor,
-		int size) {
-		return scheduleJpaRepository.findByMarriedAndFuture(marriedId, typeCursor, dateCursor, idCursor, size);
+		int resultSize) {
+		return scheduleJpaRepository.findByMarriedAndFuture(marriedId, typeCursor, dateCursor, idCursor, resultSize);
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 	}
 
 	@Override
-	public Long getScheduleIdById(Long id) {
-		return scheduleJpaRepository.getScheduleIdById(id);
+	public Long getScheduleMemoryIdByIdAndScheduleDate(Long scheduleId, LocalDate scheduleDate) {
+		return scheduleJpaRepository.getScheduleMemoryIdByIdAndScheduleDate(scheduleId, scheduleDate);
 	}
 
 	@Override

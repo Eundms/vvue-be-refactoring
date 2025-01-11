@@ -10,7 +10,7 @@ public interface MarriedJpaRepository extends JpaRepository<Married, Long> {
 	@Query(value = "select count(married.id) from Married married where married.first.id=:id or married.second.id=:id")
 	int countByUserId(Long id);
 
-	@Query(value = "select married from Married married where married.first.id=:id or  married.second.id=:id")
+	@Query(value = "select married from Married married where married.first.id=:id or married.second.id=:id")
 	Married getMarriedByUserId(Long id);
 
 	// married id 값으로 객체 찾기

@@ -1,10 +1,10 @@
 package com.exciting.vvue.memory;
 
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.memory.exception.MemoryNotFoundException;
-import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
-import com.exciting.vvue.memory.model.dto.res.MemoryAlbumResDto;
-import com.exciting.vvue.memory.model.dto.res.MemoryResDto;
+import com.exciting.vvue.common.exception.memory.MemoryNotFoundException;
+import com.exciting.vvue.memory.dto.req.MemoryAddReqDto;
+import com.exciting.vvue.memory.dto.res.MemoryAlbumResDto;
+import com.exciting.vvue.memory.dto.res.MemoryResDto;
 import com.exciting.vvue.user.model.User;
 
 public interface MemoryService {

@@ -47,7 +47,7 @@ public class User {
 	@Column(nullable = true)
 	private Gender gender;
 	private boolean isAuthenticated;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "picture_id")
 	private Picture picture; // pictureId
 

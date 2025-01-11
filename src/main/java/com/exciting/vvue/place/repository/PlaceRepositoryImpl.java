@@ -40,4 +40,9 @@ public class PlaceRepositoryImpl implements PlaceRepository {
 	public void delete(Place place) {
 		placeJpaRepository.delete(place);
 	}
+
+	@Override
+	public List<Place> findAllById(List<Long> placeIds) {
+		return placeJpaRepository.findAllById(placeIds);
+	}
 }

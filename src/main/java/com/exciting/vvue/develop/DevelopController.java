@@ -34,10 +34,10 @@ import com.exciting.vvue.auth.jwt.model.JwtDto;
 import com.exciting.vvue.auth.model.Auth;
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.married.model.dto.req.MarriedCreateDto;
+import com.exciting.vvue.married.dto.req.MarriedCreateDto;
 import com.exciting.vvue.memory.MemoryService;
-import com.exciting.vvue.memory.model.dto.req.MemoryAddReqDto;
-import com.exciting.vvue.memory.model.dto.req.PlaceMemoryReqDto;
+import com.exciting.vvue.memory.dto.req.MemoryAddReqDto;
+import com.exciting.vvue.memory.dto.req.PlaceMemoryReqDto;
 import com.exciting.vvue.notification.model.NotificationContent;
 import com.exciting.vvue.notification.model.NotificationType;
 import com.exciting.vvue.notification.model.VvueNotification;
@@ -45,13 +45,13 @@ import com.exciting.vvue.notification.service.VvueNotificationRepository;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
 import com.exciting.vvue.place.PlaceService;
-import com.exciting.vvue.place.model.dto.PlaceDumpReqDto;
-import com.exciting.vvue.place.model.dto.PlaceReqDto;
+import com.exciting.vvue.place.dto.req.PlaceDumpReqDto;
+import com.exciting.vvue.place.dto.req.PlaceReqDto;
 import com.exciting.vvue.schedule.ScheduleService;
 import com.exciting.vvue.schedule.model.RepeatCycle;
 import com.exciting.vvue.schedule.model.Schedule;
-import com.exciting.vvue.schedule.model.dto.ScheduleReqDto;
-import com.exciting.vvue.schedule.model.dto.ScheduleResDto;
+import com.exciting.vvue.schedule.dto.req.ScheduleReqDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleResDto;
 import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.exception.UserNotFoundException;
 import com.exciting.vvue.user.model.Gender;
@@ -264,7 +264,7 @@ public class DevelopController {
 			for (int j = 0; j < schedule.size(); j++) {
 				MemoryAddReqDto memory2 = MemoryAddReqDto.builder()
 					.scheduleId(schedule.get(j).getId())
-					.scheduleDate(LocalDate.parse(schedule.get(j).getScheduleDate()))
+					.scheduleDate(schedule.get(j).getScheduleDate())
 					.scheduleName(schedule.get(j).getScheduleName())
 					.comment("코멘트" + i)
 					.pictureId(pair[i] - 1)
@@ -457,7 +457,7 @@ public class DevelopController {
 					.pictureId(picture.getId())
 					.scheduleId(schedule.getId())
 					.scheduleName(schedule.getScheduleName())
-					.scheduleDate(schedule.getScheduleDate())
+					.scheduleDate(schedule.getScheduleDate().toString())
 					.comment("더미코멘트")
 					.placeMemories(placeMemoryReqDtoList)
 					.build(), user, married);

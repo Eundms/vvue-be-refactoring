@@ -1,10 +1,10 @@
 package com.exciting.vvue.user;
 
-import com.exciting.vvue.auth.oauth.model.OAuthUserInfo;
+import com.exciting.vvue.auth.model.OAuthUserInfo;
 import com.exciting.vvue.user.exception.UserNotFoundException;
 import com.exciting.vvue.user.model.User;
-import com.exciting.vvue.user.model.dto.UserDto;
-import com.exciting.vvue.user.model.dto.UserModifyDto;
+import com.exciting.vvue.user.dto.UserDto;
+import com.exciting.vvue.user.dto.UserModifyDto;
 
 public interface UserService {
 	boolean existsById(Long userId);
