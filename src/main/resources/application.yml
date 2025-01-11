@@ -42,3 +42,8 @@ auth:
       - account_email
     token-req-url: https://kauth.kakao.com/oauth/token
     user-info-request-url: https://kapi.kakao.com/v2/user/me
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus"
