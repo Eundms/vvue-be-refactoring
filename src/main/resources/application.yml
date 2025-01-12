@@ -17,7 +17,7 @@ cloud:
       secretKey: ${AWS_IAM_SECRETKEY}   # AWS IAM SecretKey 적기
     s3:
       bucket: vvue-s3    # ex) marryting-gyunny
-      prefix: https://vvue-s3.s3.us-east-1.amazonaws.com/
+      prefix: https://cdn.vvue.site/
     region:
       static: us-east-1
     stack:

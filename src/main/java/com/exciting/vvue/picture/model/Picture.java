@@ -25,7 +25,7 @@ public class Picture {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String url;
+	private String url; //TODO : url /images/** 만 저장하도록 변경
 	private boolean isDeleted;
 
 	@Builder
@@ -35,10 +35,4 @@ public class Picture {
 		this.isDeleted = isDeleted;
 	}
 
-	public static Picture from(PictureDto pictureDto) {
-		return Picture.builder()
-			.id(pictureDto.getId())
-			.url(pictureDto.getUrl())
-			.build();
-	}
 }

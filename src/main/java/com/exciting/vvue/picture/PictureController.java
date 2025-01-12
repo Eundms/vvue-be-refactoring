@@ -40,8 +40,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PictureController {
 	private final PictureService pictureService;
-	private final AuthService authService;
-	private final UserService userService;
 
 	@Transactional
 	@PostMapping("/upload/multi")

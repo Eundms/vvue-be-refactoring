@@ -123,7 +123,7 @@ public class FileManageUtil {
 			// TODO : 외부에 공개하는 파일인 경우 Public Read 권한을 추가, ACL 확인
 			amazonS3Client.putObject(
 				new PutObjectRequest(bucketName, keyName, inputStream, objectMetadata)
-					.withCannedAcl(CannedAccessControlList.PublicRead));
+					.withCannedAcl(CannedAccessControlList.Private));
 
 		} catch (IOException e) {
 			e.printStackTrace();
