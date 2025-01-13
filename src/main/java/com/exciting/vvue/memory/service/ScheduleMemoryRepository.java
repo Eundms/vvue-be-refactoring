@@ -19,4 +19,6 @@ public interface ScheduleMemoryRepository {
 	Optional<ScheduleMemory> findById(Long scheduleMemoryId);
 
 	void deleteById(Long memoryId);
+
+	Long countByMarriedIdAndIdGreaterThan(Long id, Long lastCursorId);
 }

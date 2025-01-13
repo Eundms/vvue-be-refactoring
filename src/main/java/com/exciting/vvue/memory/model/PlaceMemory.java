@@ -12,6 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -33,7 +36,19 @@ import lombok.NoArgsConstructor;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "PLACEMEMORY")
-@BatchSize(size = 5)
+@NamedEntityGraph(
+	name = "PlaceMemory.withDetails",
+	attributeNodes = {
+		@NamedAttributeNode(value="place"),
+		@NamedAttributeNode(value = "placeMemoryImageList", subgraph = "imageDetails")
+	},
+	subgraphs = {
+		@NamedSubgraph(
+			name = "imageDetails",
+			attributeNodes = @NamedAttributeNode("picture")
+		)
+	}
+)
 public class PlaceMemory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +69,7 @@ public class PlaceMemory {
 	private Float rating;
 	private String comment;
 
+	@BatchSize(size = 10) // 한 번에 가져올 크기
 	@OneToMany(mappedBy = "placeMemory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<PlaceMemoryImage> placeMemoryImageList;//PlaceBlockImage
 

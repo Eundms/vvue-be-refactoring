@@ -25,4 +25,9 @@ public class PlaceMemoryRepositoryImpl implements PlaceMemoryRepository {
 	public List<PlaceMemory> saveAll(List<PlaceMemory> placeMemoryList) {
 		return placeMemoryJpaRepository.saveAll(placeMemoryList);
 	}
+
+	@Override
+	public List<PlaceMemory> findByScheduleMemory_Id(Long scheduleMemoryId) {
+		return placeMemoryJpaRepository.findByScheduleMemory_Id(scheduleMemoryId);
+	}
 }

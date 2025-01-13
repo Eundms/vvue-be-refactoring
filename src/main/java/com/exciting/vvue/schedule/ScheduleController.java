@@ -197,7 +197,7 @@ public class ScheduleController {
 	}
 
 	private Married getMarriedIdWith(Long userId) {
-		Married married = marriedService.getMarriedByUserId(userId);
+		Married married = marriedService.getMarriedByUserIdWithDetails(userId);
 		if (married == null) {
 			throw new MarriedInfoNotFoundException("결혼한 정보가 없습니다");
 		}

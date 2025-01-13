@@ -47,7 +47,7 @@ public class MarriedController {
 		 * 부부 정보 가져오기
 		 */
 		Long userId = AuthContext.getUserId();
-		Married marriedInfo = marriedService.getMarriedByUserId(userId);
+		Married marriedInfo = marriedService.getMarriedByUserIdWithDetails(userId);
 		if (marriedInfo == null)
 			throw new MarriedInfoNotFoundException("부부 정보를 가져올 수 없어요.");
 		log.debug("[GET] /married/info : id " + marriedInfo);
@@ -66,7 +66,7 @@ public class MarriedController {
 
 		marriedService.updateMarried(userId, marriedModifyDto);
 
-		Married married = marriedService.getMarriedByUserId(userId);
+		Married married = marriedService.getMarriedByUserid(userId);
 		if (marriedModifyDto.getMarriedDay() != null) {
 			scheduleService.addAnniversaryAndBirthday(married.getId());
 		}
@@ -79,11 +79,10 @@ public class MarriedController {
 	@Operation(summary = "부부 정보가 있는지 확인")
 	public ResponseEntity<?> isUserMarried() {
 		Long userId = AuthContext.getUserId();
-		Married married = marriedService.getMarriedByUserId(userId);
+		Married married = marriedService.getMarriedByUserid(userId);
 
 		boolean marriedInfoExists = true;
-		if (married == null || married.getFirst() == null || married.getSecond() == null
-			|| married.getMarriedDay() == null) {
+		if (married == null || !married.isAllInfoUpdated()) {
 			marriedInfoExists = false;
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(new MarriedInfoExist(marriedInfoExists));

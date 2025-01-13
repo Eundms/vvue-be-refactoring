@@ -11,7 +11,10 @@ public interface LandingInfoJpaRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT new com.exciting.vvue.landing.model.dto.LandingInfos(" +
 		"u.id, " +
-		"u.isAuthenticated, " +
+		"CASE " +
+		"   WHEN u.gender IS NOT NULL AND u.birthday IS NOT NULL AND u.nickname IS NOT NULL THEN true " +
+		"   ELSE false " +
+		"END, "+
 		"COALESCE(m.id, null), " +
 		"COALESCE(m.marriedDay, null)) " +
 		"FROM User u " +

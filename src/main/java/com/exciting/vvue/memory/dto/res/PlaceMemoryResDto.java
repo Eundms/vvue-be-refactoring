@@ -47,7 +47,8 @@ public class PlaceMemoryResDto {
 		Map<Long, PlaceResDto> places = placeMemories.stream()
 			.collect(Collectors.toMap(
 				x -> x.getPlace().getId(),
-				x -> PlaceResDto.from(x.getPlace())
+				x -> PlaceResDto.from(x.getPlace()),
+				(existing, replacement) -> existing
 			));
 
 		// 3. 장소 ID 별로 평균 rating 계산

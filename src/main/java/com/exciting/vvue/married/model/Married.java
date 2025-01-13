@@ -34,7 +34,7 @@ public class Married {
 	private Long id;
 	private LocalDate marriedDay;
 
-	@OneToOne(orphanRemoval = true)
+	@OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "picture_id")
 	private Picture picture; // pictureId
 
@@ -60,10 +60,10 @@ public class Married {
 			|| second != null && second.getId() == userId;
 	}
 
-	public Long getSpouseId(Long userId) {
-		if (first.getId() == userId) {
-			return second.getId();
-		}
-		return first.getId();
+	public boolean isAllInfoUpdated() {
+		return !(this.getFirst() == null || this.getSecond() == null
+			|| this.getMarriedDay() == null);
 	}
+
+
 }

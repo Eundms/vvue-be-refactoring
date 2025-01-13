@@ -1,6 +1,7 @@
 package com.exciting.vvue.memory.repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
@@ -23,5 +24,10 @@ public class UserMemoryRepositoryImpl implements UserMemoryRepository {
 	@Override
 	public void save(UserMemory userMemory) {
 		userMemoryJpaRepository.save(userMemory);
+	}
+
+	@Override
+	public List<UserMemory> findByScheduleMemory_Id(Long scheduleMemoryId) {
+		return userMemoryJpaRepository.findByScheduleMemory_Id(scheduleMemoryId);
 	}
 }

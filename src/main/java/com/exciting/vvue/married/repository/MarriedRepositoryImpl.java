@@ -21,8 +21,13 @@ public class MarriedRepositoryImpl implements MarriedRepository {
 	}
 
 	@Override
-	public Married getMarriedByUserId(Long id) {
-		return marriedJpaRepository.getMarriedByUserId(id);
+	public Married findByUserIdWithDetails(Long userId) {
+		return marriedJpaRepository.findByUserIdWithDetails(userId);
+	}
+
+	@Override
+	public Married findByUserId(Long userId) {
+		return marriedJpaRepository.findByUserId(userId);
 	}
 
 	@Override
@@ -30,10 +35,6 @@ public class MarriedRepositoryImpl implements MarriedRepository {
 		return marriedJpaRepository.existsById(id);
 	}
 
-	@Override
-	public boolean existsByFirst_IdOrSecond_Id(Long firstId, Long secondId) {
-		return marriedJpaRepository.existsByFirst_IdOrSecond_Id(firstId, secondId);
-	}
 
 	@Override
 	public Married save(Married married) {

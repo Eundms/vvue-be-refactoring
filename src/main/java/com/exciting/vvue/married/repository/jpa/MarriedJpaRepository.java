@@ -10,11 +10,19 @@ public interface MarriedJpaRepository extends JpaRepository<Married, Long> {
 	@Query(value = "select count(married.id) from Married married where married.first.id=:id or married.second.id=:id")
 	int countByUserId(Long id);
 
-	@Query(value = "select married from Married married where married.first.id=:id or married.second.id=:id")
-	Married getMarriedByUserId(Long id);
+	@Query(value = "select married from Married married "
+		+ "left join fetch married.picture "
+		+ "left join fetch married.first first "
+		+ "left join fetch first.picture "
+		+ "left join fetch married.second second "
+		+ "left join fetch second.picture "
+		+ "where married.first.id=:id or married.second.id=:id")
+	Married findByUserIdWithDetails(Long id);
 
-	// married id 값으로 객체 찾기
+	@Query(value = "select married from Married married "
+		+ "where married.first.id=:id or married.second.id=:id")
+	Married findByUserId(Long id);
+
 	boolean existsById(Long id);
 
-	boolean existsByFirst_IdOrSecond_Id(Long firstId, Long secondId);
 }

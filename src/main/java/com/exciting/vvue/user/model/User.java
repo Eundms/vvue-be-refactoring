@@ -9,12 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.Fetch;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -44,10 +46,8 @@ public class User {
 	@Column(unique = true)
 	private String providerId;
 	@Enumerated(value = EnumType.STRING)
-	@Column(nullable = true)
 	private Gender gender;
-	private boolean isAuthenticated;
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@JoinColumn(name = "picture_id")
 	private Picture picture; // pictureId
 
@@ -62,7 +62,6 @@ public class User {
 	public User(Long id, String nickname,
 		String email, String provider, String providerId,
 		Gender gender,
-		boolean isAuthenticated,
 		Picture picture, LocalDate birthday, LocalDateTime createdAt, LocalDateTime modifiedAt) {
 		this.id = id;
 		this.nickname = nickname;
@@ -70,10 +69,13 @@ public class User {
 		this.provider = provider;
 		this.providerId = providerId;
 		this.gender = gender;
-		this.isAuthenticated = isAuthenticated;
 		this.picture = picture;
 		this.birthday = birthday;
 		this.createdAt = createdAt;
 		this.modifiedAt = modifiedAt;
 	}
+	boolean isAuthenticated() {
+		return this.getGender() != null && this.getBirthday() != null && this.getNickname() != null;
+	}
+
 }

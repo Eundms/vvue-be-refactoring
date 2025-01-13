@@ -8,11 +8,10 @@ public interface MarriedRepository {
 
 	int countByUserId(Long id);
 
-	Married getMarriedByUserId(Long id);
+	Married findByUserIdWithDetails(Long id);
+	Married findByUserId(Long id);
 
 	boolean existsById(Long id);
-
-	boolean existsByFirst_IdOrSecond_Id(Long firstId, Long secondId);
 
 	Married save(Married married);
 
