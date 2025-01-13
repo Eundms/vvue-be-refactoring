@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.exciting.vvue.memory.model.ScheduleMemory;
@@ -25,7 +27,8 @@ public class ScheduleMemoryRepositoryImpl implements ScheduleMemoryRepository {
 
 	@Override
 	public List<ScheduleMemory> findByMarriedIdWithCursor(Long marriedId, Long firstScheduleMemoryId, int size) {
-		return scheduleMemoryJpaRepository.findByMarriedIdWithCursor(marriedId, firstScheduleMemoryId, size);
+		Pageable pageable = PageRequest.of(0, size);
+		return scheduleMemoryJpaRepository.findByMarriedIdWithCursor(marriedId, firstScheduleMemoryId, pageable);
 	}
 
 	@Override
@@ -48,5 +51,9 @@ public class ScheduleMemoryRepositoryImpl implements ScheduleMemoryRepository {
 		scheduleMemoryJpaRepository.deleteById(memoryId);
 	}
 
+	@Override
+	public Long countByMarriedIdAndIdGreaterThan(Long marriedId, Long lastCursorId) {
+		return scheduleMemoryJpaRepository.countByMarriedIdAndIdGreaterThan(marriedId, lastCursorId);
+	}
 
 }

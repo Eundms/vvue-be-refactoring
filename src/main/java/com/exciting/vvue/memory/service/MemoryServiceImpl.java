@@ -200,6 +200,7 @@ public class MemoryServiceImpl implements MemoryService {
 		int size) {
 		List<ScheduleMemory> scheduleMemories = scheduleMemoryRepository.findByMarriedIdWithCursor(
 			married.getId(), nextCursor, size);
+
 		List<MemoryAlbumDataDto> res = scheduleMemories.stream()
 			.map(x -> {
 				String imgUrl = "";
@@ -209,17 +210,19 @@ public class MemoryServiceImpl implements MemoryService {
 				return new MemoryAlbumDataDto(x.getId(), imgUrl);
 			})
 			.toList();
-		if (scheduleMemories.isEmpty()) {
+
+		if (res.isEmpty()) {
 			return MemoryAlbumResDto.builder().hasNext(false).build();
 		}
+
 		Long lastCursorId = scheduleMemories.get(scheduleMemories.size() - 1).getId();
-		List<ScheduleMemory> nextScheduleMemories = scheduleMemoryRepository.findByMarriedIdWithCursor(
-			married.getId(), lastCursorId, size);
+
+		boolean hasNext = scheduleMemoryRepository.countByMarriedIdAndIdGreaterThan(married.getId(), lastCursorId) > 0;
 
 		return MemoryAlbumResDto.builder()
 			.allMemories(res)
 			.lastCursorId(lastCursorId)
-			.hasNext(nextScheduleMemories.size() == 0 ? false : true)
+			.hasNext(hasNext)
 			.build();
 	}
 }
