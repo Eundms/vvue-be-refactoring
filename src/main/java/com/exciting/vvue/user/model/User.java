@@ -13,8 +13,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,16 +37,26 @@ import lombok.ToString;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
+@Table(name = "USER", indexes = {
+	@Index(name = "idx_provider_providerId", columnList = "provider, provider_id"),
+	@Index(name = "idx_nickname", columnList = "nickname")
+})
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "nickname")
 	private String nickname;
 	private String email;
+
+	@Column(name = "provider")
 	private String provider;
-	@Column(unique = true)
+
+	@Column(name="provider_id", unique = true)
 	private String providerId;
+
 	@Enumerated(value = EnumType.STRING)
 	private Gender gender;
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

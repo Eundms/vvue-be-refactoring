@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
@@ -35,7 +36,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "PLACEMEMORY")
+@Table(name = "PLACEMEMORY", indexes = {
+	@Index(name = "idx_place_id", columnList = "place_id")
+})
 @NamedEntityGraph(
 	name = "PlaceMemory.withDetails",
 	attributeNodes = {
