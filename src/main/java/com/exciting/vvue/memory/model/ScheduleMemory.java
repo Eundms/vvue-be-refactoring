@@ -3,15 +3,16 @@ package com.exciting.vvue.memory.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -33,14 +34,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "SCHEDULEMEMORY")
+@Table(name = "SCHEDULEMEMORY", indexes = {
+	@Index(name = "idx_married_id", columnList = "married_id"),
+	@Index(name = "idx_schedule_id", columnList = "schedule_id"),
+	@Index(name = "idx_schedule_date", columnList = "schedule_date")
+})
 public class ScheduleMemory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "schedule_id")
 	private Long scheduleId;
 	private String scheduleName;
+
+	@Column(name = "schedule_date")
 	private LocalDate scheduleDate;
 
 	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

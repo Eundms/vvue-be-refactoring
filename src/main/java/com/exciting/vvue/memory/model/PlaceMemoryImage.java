@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,7 +22,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "PLACEMEMORY_IMAGE")
+@Table(name = "PLACEMEMORY_IMAGE", indexes = {
+	@Index(name = "idx_place_memory", columnList = "placememory_id")
+})
 @BatchSize(size = 5)
 public class PlaceMemoryImage {
 

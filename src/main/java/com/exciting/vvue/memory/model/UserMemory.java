@@ -5,6 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
@@ -23,7 +24,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name = "USERMEMORY")
+@Table(name = "USERMEMORY", indexes = {
+	@Index(name = "idx_user_schedule_memory", columnList = "user_id, schedule_memory_id"),
+	@Index(name = "idx_schedule_memory", columnList = "schedule_memory_id")
+})
 @NamedEntityGraph(
 	name ="UserMemory.withDetails",
 	attributeNodes = {
