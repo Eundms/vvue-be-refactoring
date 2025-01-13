@@ -20,7 +20,6 @@ import com.exciting.vvue.memory.dto.req.MemoryCreateResDto;
 import com.exciting.vvue.memory.dto.res.MemoryAlbumResDto;
 import com.exciting.vvue.memory.dto.res.MemoryResDto;
 import com.exciting.vvue.schedule.ScheduleService;
-import com.exciting.vvue.schedule.dto.res.ScheduleResDto;
 import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.model.User;
 
@@ -50,7 +49,7 @@ public class MemoryController {
 		Long userId = AuthContext.getUserId();
 
 		User user = userService.getUserById(userId);
-		Married userMarried = marriedService.getMarriedByUserId(userId);
+		Married userMarried = marriedService.getMarriedByUserIdWithDetails(userId);
 		log.debug("[userId={}]가 포함된 " + userMarried, userId);
 		Long memoryId = memoryService.add(memoryAddReqDto, user, userMarried);
 		return ResponseEntity.status(HttpStatus.OK).body(new MemoryCreateResDto(memoryId));
@@ -96,7 +95,7 @@ public class MemoryController {
 	public ResponseEntity<MemoryAlbumResDto> getAllMemory(Long nextCursor, int size) { //인스타
 		Long userId = AuthContext.getUserId();
 
-		Married married = marriedService.getMarriedByUserId(userId);
+		Married married = marriedService.getMarriedByUserIdWithDetails(userId);
 		MemoryAlbumResDto memoryAlbumResDto = memoryService.getAllThumbnail(married, nextCursor, size);
 
 		return ResponseEntity.ok().body(memoryAlbumResDto);

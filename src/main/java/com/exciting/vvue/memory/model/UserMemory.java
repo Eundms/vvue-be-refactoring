@@ -7,6 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -21,20 +24,34 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "USERMEMORY")
+@NamedEntityGraph(
+	name ="UserMemory.withDetails",
+	attributeNodes = {
+		@NamedAttributeNode(value="user", subgraph = "userWithPicture"),
+		@NamedAttributeNode(value="picture")
+	},
+	subgraphs = {
+		@NamedSubgraph(
+			name = "userWithPicture",
+			attributeNodes = @NamedAttributeNode("picture")
+		)
+	}
+)
 public class UserMemory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name= "schedule_memory_id", nullable = false)
 	private ScheduleMemory scheduleMemory;
-	@OneToOne
+
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 	private String comment;
 
-	@OneToOne(orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "picture_id", nullable = false)
 	private Picture picture;
 

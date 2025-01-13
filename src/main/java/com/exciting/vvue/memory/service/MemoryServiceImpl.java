@@ -175,7 +175,9 @@ public class MemoryServiceImpl implements MemoryService {
 		if (!scheduleMemory.get().getMarried().isMarried(user.getId())) {
 			throw new UserUnAuthorizedException("[유저ID]의 권한이 없는 요청입니다");
 		}
-		return MemoryResDto.from(scheduleMemory.get());
+		List<UserMemory> userMemories = userMemoryRepository.findByScheduleMemory_Id(scheduleMemoryId);
+		List<PlaceMemory> placeMemories = placeMemoryRepository.findByScheduleMemory_Id(scheduleMemoryId);
+		return MemoryResDto.from(scheduleMemory.get(), userMemories, placeMemories);
 
 	}
 

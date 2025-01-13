@@ -47,4 +47,6 @@ public class ScheduleMemoryRepositoryImpl implements ScheduleMemoryRepository {
 	public void deleteById(Long memoryId) {
 		scheduleMemoryJpaRepository.deleteById(memoryId);
 	}
+
+
 }

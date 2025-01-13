@@ -27,19 +27,18 @@ public class MarriedServiceImpl implements MarriedService {
 	}
 
 	@Override
-	public Married getMarriedByUserId(Long id) {
-		return marriedRepository.getMarriedByUserId(id);
+	public Married getMarriedByUserIdWithDetails(Long id) {
+		return marriedRepository.findByUserIdWithDetails(id);
 	}
 
 	@Override
-	public Long getSpouseIdById(Long userId) {
-		Married married = marriedRepository.getMarriedByUserId(userId);
-		return married.getSpouseId(userId);
+	public Married getMarriedByUserid(Long userId) {
+		return marriedRepository.findByUserId(userId);
 	}
 
 	@Override
 	public void updateMarried(Long id, MarriedModifyDto marriedModifyDto) {
-		Married married = marriedRepository.getMarriedByUserId(id);
+		Married married = marriedRepository.findByUserId(id);
 		if (marriedModifyDto.getMarriedDay() != null)
 			married.setMarriedDay(marriedModifyDto.getMarriedDay());
 
@@ -72,7 +71,7 @@ public class MarriedServiceImpl implements MarriedService {
 
 	@Override
 	public Married deleteByUserId(Long userId) {
-		Married married = marriedRepository.getMarriedByUserId(userId);
+		Married married = marriedRepository.findByUserId(userId);
 		if (married != null) {
 			marriedRepository.delete(married);
 		}

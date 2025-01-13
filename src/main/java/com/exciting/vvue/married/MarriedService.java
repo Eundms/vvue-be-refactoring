@@ -9,13 +9,12 @@ public interface MarriedService {
 	int getMarriedCount(Long id);
 
 	// married 찾기
-	Married getMarriedByUserId(Long id);
+	Married getMarriedByUserIdWithDetails(Long id);
 
-	// peerId 찾기
-	Long getSpouseIdById(Long userId);
+	Married getMarriedByUserid(Long userId);
 
 	// married 정보 수정하기
-	void updateMarried(Long id, MarriedModifyDto marriedModifyDto);
+	void updateMarried(Long userId, MarriedModifyDto marriedModifyDto);
 
 	Long createMarried(Long id, MarriedCreateDto marriedCreateDto);
 

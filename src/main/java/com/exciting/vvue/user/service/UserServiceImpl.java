@@ -74,7 +74,6 @@ public class UserServiceImpl implements UserService {
 			prev.setBirthday(user.getBirthday());
 		if (user.getNickname() != null)
 			prev.setNickname(user.getNickname());
-		prev = checkIsAuthenticated(prev);
 		return prev;
 	}
 
@@ -91,17 +90,9 @@ public class UserServiceImpl implements UserService {
 	public User getUserById(Long userId) {
 		User user = userRepository.findById(userId).orElseThrow(
 			() -> new UserNotFoundException("" + userId));
-		user = checkIsAuthenticated(user);
 		userRepository.save(user);
 		return user;
 	}
 
-	private User checkIsAuthenticated(User user) {
-		if (user.getGender() != null && user.getBirthday() != null && user.getNickname() != null) {
-			user.setAuthenticated(true);
-		} else {
-			user.setAuthenticated(false);
-		}
-		return user;
-	}
+
 }

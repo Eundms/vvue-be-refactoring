@@ -3,6 +3,7 @@ package com.exciting.vvue.memory.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -42,10 +43,10 @@ public class ScheduleMemory {
 	private String scheduleName;
 	private LocalDate scheduleDate;
 
-	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<UserMemory> userMemories;
 
-	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "scheduleMemory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<PlaceMemory> placeMemories;
 
 	@ManyToOne(fetch = FetchType.EAGER)

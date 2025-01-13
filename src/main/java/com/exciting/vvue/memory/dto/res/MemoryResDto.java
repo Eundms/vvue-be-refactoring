@@ -31,9 +31,7 @@ public class MemoryResDto {
 		this.placeMemories = placeMemories;
 	}
 
-	public static MemoryResDto from(ScheduleMemory scheduleMemory) {
-		List<PlaceMemory> placeMemories = scheduleMemory.getPlaceMemories();
-		List<UserMemory> userMemories = scheduleMemory.getUserMemories();
+	public static MemoryResDto from(ScheduleMemory scheduleMemory, List<UserMemory> userMemories,  List<PlaceMemory> placeMemories) {
 		return MemoryResDto.builder()
 			.id(scheduleMemory.getId())
 			.scheduleInfo(ScheduleResDto.builder()

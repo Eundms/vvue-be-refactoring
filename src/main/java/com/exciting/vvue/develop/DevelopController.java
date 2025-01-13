@@ -93,8 +93,8 @@ public class DevelopController {
 				"결혼 요청:userId " + userId + spouseId
 					+ " 결혼 실패");
 		}
-		Married userMarriedInfo = marriedService.getMarriedByUserId(user.getId());
-		Married spouseMarriedInfo = marriedService.getMarriedByUserId(spouse.getId());
+		Married userMarriedInfo = marriedService.getMarriedByUserIdWithDetails(user.getId());
+		Married spouseMarriedInfo = marriedService.getMarriedByUserIdWithDetails(spouse.getId());
 		if (userMarriedInfo != null || spouseMarriedInfo != null) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
 				"결혼 요청:userId " + userId + " (결혼ID" + userMarriedInfo.getId() + ") " + spouseId
@@ -147,7 +147,6 @@ public class DevelopController {
 				.birthday(
 					LocalDate.of(1990 + (int)userId * 10, (10 + (int)userId) % 12 + 1, 3))
 				.gender(gender)
-				.isAuthenticated(true)
 				.build();
 			userRepository.save(testUser);
 		}
@@ -160,7 +159,7 @@ public class DevelopController {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		for (int i = 0; i < 3; i++) {
-			Married married = marriedService.getMarriedByUserId(pair[i] - 1);
+			Married married = marriedService.getMarriedByUserIdWithDetails(pair[i] - 1);
 			LocalDate marriedDate = married.getMarriedDay();
 
 			scheduleService.addSchedule(married,
@@ -257,7 +256,7 @@ public class DevelopController {
 
 		for (int i = 0; i < 3; i++) {
 			User user = userService.getUserById(pair[i]);
-			Married married = marriedService.getMarriedByUserId(pair[i]);
+			Married married = marriedService.getMarriedByUserIdWithDetails(pair[i]);
 
 			List<ScheduleResDto> schedule = scheduleService.getAllSchedule(married, -1, 100)
 				.getScheduleResDtoList();
@@ -346,7 +345,7 @@ public class DevelopController {
 		User user = userRepository.findById(userId).orElseThrow(
 			() -> new UserNotFoundException("" + userId)
 		);
-		Married married = marriedService.getMarriedByUserId(userId);
+		Married married = marriedService.getMarriedByUserIdWithDetails(userId);
 		Picture picture = pictureRepository.save(Picture.builder()
 			.url(
 				"https://vvue-bucket.s3.ap-northeast-2.amazonaws.com/image/2023/09/12/0c059ba8-fd0d-4610-a276-2189947f4eb0.jpg")
@@ -427,7 +426,7 @@ public class DevelopController {
 		User user = userRepository.findById(userId).orElseThrow(
 			() -> new UserNotFoundException("" + userId)
 		);
-		Married married = marriedService.getMarriedByUserId(userId);
+		Married married = marriedService.getMarriedByUserIdWithDetails(userId);
 		Picture picture = pictureRepository.save(Picture.builder()
 			.url(
 				"https://vvue-bucket.s3.ap-northeast-2.amazonaws.com/image/2023/09/12/0c059ba8-fd0d-4610-a276-2189947f4eb0.jpg")
