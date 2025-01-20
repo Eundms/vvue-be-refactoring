@@ -35,9 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemoryController {
 	private final MemoryService memoryService;
-	private final UserService userService;
 	private final MarriedService marriedService;
-	private final ScheduleService scheduleService;
 
 	@Operation(summary = "추억 추가")
 	@ApiResponses({
@@ -48,9 +46,9 @@ public class MemoryController {
 	public ResponseEntity<MemoryCreateResDto> addMemory(@RequestBody @Validated MemoryAddReqDto memoryAddReqDto) {
 		Long userId = AuthContext.getUserId();
 
-		User user = userService.getUserById(userId);
 		Married userMarried = marriedService.getMarriedByUserIdWithDetails(userId);
-		log.debug("[userId={}]가 포함된 " + userMarried, userId);
+		User user = userMarried.getFirst().getId() == userId ? userMarried.getFirst() : userMarried.getSecond();
+
 		Long memoryId = memoryService.add(memoryAddReqDto, user, userMarried);
 		return ResponseEntity.status(HttpStatus.OK).body(new MemoryCreateResDto(memoryId));
 	}
@@ -63,16 +61,9 @@ public class MemoryController {
 	@GetMapping("/{scheduleMemoryId}")//scheduleMemory.id
 	public ResponseEntity<MemoryResDto> getMemory(@PathVariable Long scheduleMemoryId) {
 		Long userId = AuthContext.getUserId();
-		User user = userService.getUserById(userId);
 
-		MemoryResDto memoryResDto = memoryService.getById(scheduleMemoryId, user);
+		MemoryResDto memoryResDto = memoryService.getById(scheduleMemoryId, userId);
 		return ResponseEntity.ok().body(memoryResDto);
-	}
-
-	@Operation(summary = "[TODO] 추억 수정", description = "추억ID를 통해 특정 추억 수정")
-	@PutMapping("/{memoryId}") //TODO
-	public ResponseEntity<?> editMemory(@PathVariable Long memoryId) {
-		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "추억 삭제")
@@ -84,9 +75,7 @@ public class MemoryController {
 	public ResponseEntity<?> deleteMemory(@PathVariable Long memoryId) {
 		Long userId = AuthContext.getUserId();
 
-		User user = userService.getUserById(userId);
-
-		memoryService.deleteById(memoryId, user);
+		memoryService.deleteById(memoryId, userId);
 		return ResponseEntity.ok().build();
 	}
 

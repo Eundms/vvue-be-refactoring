@@ -11,9 +11,9 @@ public interface MemoryService {
 
 	Long add(MemoryAddReqDto memoryAddReqDto, User user, Married userMarried);
 
-	MemoryResDto getById(Long memoryId, User user) throws MemoryNotFoundException;
+	MemoryResDto getById(Long memoryId, Long userId) throws MemoryNotFoundException;
 
-	void deleteById(Long memoryId, User user);
+	void deleteById(Long memoryId, Long userId);
 
 	MemoryAlbumResDto getAllThumbnail(Married married, Long nextCursor, int size);
 }

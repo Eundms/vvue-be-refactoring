@@ -54,19 +54,12 @@ public class PictureController {
 
 		@RequestPart(value = "meta", required = false) MetaReqDto meta,
 		@RequestPart(value = "pictures", required = false) List<MultipartFile> multipartFiles) {
-		//log.debug("[POST] /images/upload : images pieces " + fileTypes.size());
-		//log.debug("[POST] /images/upload : fileTypes " + imageTypes.toString());
 
 		if (multipartFiles.size() == 0)
 			throw new FileUploadFailException("업로드 할 이미지가 없어요");
 		// meta != null 유지할 정보가 있는 경우, 추억블록 id
 		if (meta != null) {
 			log.debug("[POST] /pictures/upload/multi : meta " + meta.toString());
-			/**
-			 * todo
-			 * 수정 시 로직
-			 * 장소 블럭 수정시 구현해야 함
-			 */
 		}
 		// meta == null
 		// 유지할 정보가 없는 경우

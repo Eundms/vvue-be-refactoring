@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class NotificationController {
 	private final NotificationService notificationService;
-	private final AuthService authService;
 
 	@Operation(summary = "알림 목록 조회", description = "nextCursor 초기 : -1, size 0이상")
 	@GetMapping

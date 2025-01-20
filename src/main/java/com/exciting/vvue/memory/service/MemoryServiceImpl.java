@@ -138,7 +138,7 @@ public class MemoryServiceImpl implements MemoryService {
 	}
 
 	@Override
-	public MemoryResDto getById(Long scheduleMemoryId, User user) throws MemoryNotFoundException {
+	public MemoryResDto getById(Long scheduleMemoryId, Long userId) throws MemoryNotFoundException {
 
 		/*
 		 * {id:, scheduleId:, scheduleName:, scheduleDate:,
@@ -169,10 +169,9 @@ public class MemoryServiceImpl implements MemoryService {
 		Optional<ScheduleMemory> scheduleMemory = scheduleMemoryRepository.findById(
 			scheduleMemoryId);
 		if (scheduleMemory.isEmpty()) {
-			log.debug("[추억ID] 잘못됨");
 			throw new MemoryNotFoundException("[추억ID]가 존재하지 않습니다" + scheduleMemoryId);
 		}
-		if (!scheduleMemory.get().getMarried().isMarried(user.getId())) {
+		if (!scheduleMemory.get().getMarried().isMarried(userId)) {
 			throw new UserUnAuthorizedException("[유저ID]의 권한이 없는 요청입니다");
 		}
 		List<UserMemory> userMemories = userMemoryRepository.findByScheduleMemory_Id(scheduleMemoryId);
@@ -182,14 +181,13 @@ public class MemoryServiceImpl implements MemoryService {
 	}
 
 	@Override
-	public void deleteById(Long memoryId, User user) {
+	public void deleteById(Long memoryId, Long userId) {
 		Optional<ScheduleMemory> scheduleMemory = scheduleMemoryRepository.findById(
 			memoryId);
 		if (scheduleMemory.isEmpty()) {
-			log.debug("[추억ID] 잘못됨");
 			throw new MemoryNotFoundException("[추억ID]가 존재하지 않습니다" + memoryId);
 		}
-		if (!scheduleMemory.get().getMarried().isMarried(user.getId())) {
+		if (!scheduleMemory.get().getMarried().isMarried(userId)) {
 			throw new UserUnAuthorizedException("[유저ID]의 권한이 없는 요청입니다");
 		}
 		scheduleMemoryRepository.deleteById(memoryId);
