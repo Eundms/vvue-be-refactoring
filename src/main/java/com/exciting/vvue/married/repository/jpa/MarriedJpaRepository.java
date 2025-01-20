@@ -35,7 +35,7 @@ public interface MarriedJpaRepository extends JpaRepository<Married, Long> {
 	void updateMarriedInfo(Long id, LocalDate marriedDay, Picture picture);
 
 	@Modifying
-	@Query("DELETE FROM Married m WHERE m.first.id = :id OR m.second.id = :id")
+	@Query("DELETE FROM Married m WHERE m.first.id = :userId OR m.second.id = :userId")
 	void deleteByUserId(Long userId);
 
 	@Query(value = "select married from Married married "
