@@ -54,9 +54,10 @@ public class ScheduleController {
 	public ResponseEntity<ScheduleResDto> get(
 		@PathVariable("scheduleId") Long scheduleId) {
 		Long userId = AuthContext.getUserId();
-		Married married = getMarriedIdWith(userId);
+		Long marriedId = marriedService.getMarriedIdByUserId(userId);
+
 		ScheduleResDto scheduleResDto = scheduleService.getSchedule(scheduleId);
-		if (scheduleResDto.getMarriedId() != married.getId()) {
+		if (scheduleResDto.getMarriedId() != marriedId) {
 			throw new UserUnAuthorizedException(
 				"[유저]는 해당 [일정]을 볼 권한이 없습니다." + userId + " " + scheduleId);
 		}
@@ -93,8 +94,8 @@ public class ScheduleController {
 	})
 	public ResponseEntity<String> addMarry() {
 		Long userId = AuthContext.getUserId();
-		Married married = getMarriedIdWith(userId);
-		scheduleService.addAnniversaryAndBirthday(married.getId());
+		Long marriedId = marriedService.getMarriedIdByUserId(userId);
+		scheduleService.addAnniversaryAndBirthday(marriedId);
 		return new ResponseEntity<>("기념일 생일 등록 성공", HttpStatus.OK);
 	}
 
@@ -112,8 +113,8 @@ public class ScheduleController {
 		@PathVariable("scheduleId") Long scheduleId, @RequestBody ScheduleReqDto scheduleReqDto) {
 		Long userId = AuthContext.getUserId();
 
-		Married married = getMarriedIdWith(userId);
-		Schedule schedule = scheduleService.modifySchedule(married.getId(), scheduleId, scheduleReqDto);
+		Long marriedId = marriedService.getMarriedIdByUserId(userId);
+		Schedule schedule = scheduleService.modifySchedule(marriedId, scheduleId, scheduleReqDto);
 
 		return new ResponseEntity<>(schedule.getId(), HttpStatus.OK);
 	}
@@ -132,12 +133,12 @@ public class ScheduleController {
 		@PathVariable("scheduleId") Long scheduleId) {
 		Long userId = AuthContext.getUserId();
 
-		Married married = getMarriedIdWith(userId);
+		Long marriedId = marriedService.getMarriedIdByUserId(userId);
 
 		boolean isExists = scheduleService.existsById(scheduleId);
 		if(!isExists) throw new ScheduleNotFoundException("스케줄 없음");
 
-		scheduleService.deleteSchedule(married.getId(), scheduleId);
+		scheduleService.deleteSchedule(marriedId, scheduleId);
 		return new ResponseEntity<>("일정 삭제 성공", HttpStatus.OK);
 	}
 
@@ -152,9 +153,9 @@ public class ScheduleController {
 	public ResponseEntity<List<String>> getCalendar(
 		@RequestParam("year") int year, @RequestParam("month") int month) {
 		Long userId = AuthContext.getUserId();
+		Long marriedId = marriedService.getMarriedIdByUserId(userId);
 
-		Married married = getMarriedIdWith(userId);
-		List<String> dateList = scheduleService.getScheduledDateOnCalendar(married.getId(), year, month);
+		List<String> dateList = scheduleService.getScheduledDateOnCalendar(marriedId, year, month);
 		return new ResponseEntity<>(dateList, HttpStatus.OK);
 	}
 
@@ -171,8 +172,8 @@ public class ScheduleController {
 		@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 		Long userId = AuthContext.getUserId();
 
-		Married married = getMarriedIdWith(userId);
-		List<ScheduleDailyResDto> scheduleDailyResDtoList = scheduleService.getScheduleOnDate(married.getId(), userId,
+		Long marriedId = marriedService.getMarriedIdByUserId(userId);
+		List<ScheduleDailyResDto> scheduleDailyResDtoList = scheduleService.getScheduleOnDate(marriedId, userId,
 			date);
 		return new ResponseEntity<>(scheduleDailyResDtoList, HttpStatus.OK);
 	}

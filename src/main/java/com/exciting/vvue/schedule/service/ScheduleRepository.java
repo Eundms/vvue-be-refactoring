@@ -28,4 +28,6 @@ public interface ScheduleRepository {
 	void delete(Schedule schedule);
 
 	boolean existsById(Long scheduleId);
+
+	void saveAll(List<Schedule> schedules);
 }

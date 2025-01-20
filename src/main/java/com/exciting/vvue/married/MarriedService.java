@@ -6,19 +6,15 @@ import com.exciting.vvue.married.dto.req.MarriedCreateDto;
 
 public interface MarriedService {
 
-	int getMarriedCount(Long id);
-
 	// married 찾기
 	Married getMarriedByUserIdWithDetails(Long id);
-
-	Married getMarriedByUserid(Long userId);
-
+	Long getMarriedIdByUserId(Long userId);
 	// married 정보 수정하기
-	void updateMarried(Long userId, MarriedModifyDto marriedModifyDto);
+	Long updateMarriedAndReturnId(Long userId, MarriedModifyDto marriedModifyDto);
 
 	Long createMarried(Long id, MarriedCreateDto marriedCreateDto);
 
 	int countByUserId(Long id);
 
-	Married deleteByUserId(Long id);
+	void deleteByUserId(Long id);
 }

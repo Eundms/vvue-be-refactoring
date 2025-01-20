@@ -1,11 +1,13 @@
 package com.exciting.vvue.married.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.dto.MarriedModifyDto;
 import com.exciting.vvue.married.dto.req.MarriedCreateDto;
+import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
 import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.service.UserRepository;
@@ -22,33 +24,26 @@ public class MarriedServiceImpl implements MarriedService {
 	private final PictureRepository pictureRepository;
 
 	@Override
-	public int getMarriedCount(Long id) {
-		return marriedRepository.countByUserId(id);
-	}
-
-	@Override
 	public Married getMarriedByUserIdWithDetails(Long id) {
 		return marriedRepository.findByUserIdWithDetails(id);
 	}
 
 	@Override
-	public Married getMarriedByUserid(Long userId) {
-		return marriedRepository.findByUserId(userId);
+	public Long getMarriedIdByUserId(Long userId) {
+		return marriedRepository.findMarriedIdByUserId(userId);
 	}
 
 	@Override
-	public void updateMarried(Long id, MarriedModifyDto marriedModifyDto) {
-		Married married = marriedRepository.findByUserId(id);
-		if (marriedModifyDto.getMarriedDay() != null)
-			married.setMarriedDay(marriedModifyDto.getMarriedDay());
+	@Transactional
+	public Long updateMarriedAndReturnId(Long userId, MarriedModifyDto marriedModifyDto) {
+		Picture picture = null;
 
 		if (marriedModifyDto.getPictureId() > 0) {
-			married.setPicture(pictureRepository.findById(marriedModifyDto.getPictureId()).get());
+			picture = pictureRepository.findById(marriedModifyDto.getPictureId()).orElse(null);
 		}
 
-		marriedRepository.save(married);
+		return marriedRepository.updateAndReturnId(userId, marriedModifyDto.getMarriedDay(), picture);
 	}
-
 
 	@Override
 	public Long createMarried(Long id, MarriedCreateDto marriedCreateDto) {
@@ -70,12 +65,8 @@ public class MarriedServiceImpl implements MarriedService {
 	}
 
 	@Override
-	public Married deleteByUserId(Long userId) {
-		Married married = marriedRepository.findByUserId(userId);
-		if (married != null) {
-			marriedRepository.delete(married);
-		}
-		return married;
+	public void deleteByUserId(Long userId) {
+		marriedRepository.deleteByUserId(userId);
 	}
 
 }

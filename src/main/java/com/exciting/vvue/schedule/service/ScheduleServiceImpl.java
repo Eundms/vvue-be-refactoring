@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
 import com.exciting.vvue.married.model.Married;
@@ -21,8 +23,6 @@ import com.exciting.vvue.schedule.dto.res.ScheduleDailyResDto;
 import com.exciting.vvue.schedule.dto.res.ScheduleListResDto;
 import com.exciting.vvue.schedule.dto.req.ScheduleReqDto;
 import com.exciting.vvue.schedule.dto.res.ScheduleResDto;
-import com.exciting.vvue.user.exception.UserNotFoundException;
-import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.repository.UserRepositoryImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	private final ScheduleRepository scheduleRepository;
 	private final MarriedRepository marriedRepository;
-	private final UserRepositoryImpl userRepository;
 	private final UserMemoryRepository userMemoryRepository;
 
 	@Override
@@ -72,28 +71,20 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	// 결혼기념일과 생일을 등록하는 메서드
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void addAnniversaryAndBirthday(long marriedId) {
 		Married married =
 			marriedRepository
-				.findById(marriedId)
+				.findByMarriedIdWithDetails(marriedId)
 				.orElseThrow(() -> new ScheduleNotFoundException("" + marriedId));
-		User male =
-			userRepository
-				.findById(married.getFirst().getId())
-				.orElseThrow(() -> new UserNotFoundException("" + married.getFirst().getId()));
-		User female =
-			userRepository
-				.findById(married.getSecond().getId())
-				.orElseThrow(() -> new UserNotFoundException("" + married.getSecond().getId()));
 
-		Schedule wedding =
-			Schedule.marryAll(married, married.getMarriedDay(), DateType.WEDDINGANNIVERSARY);
-		scheduleRepository.save(wedding);
-		Schedule maleBirthDay = Schedule.marryAll(married, male.getBirthday(), DateType.MALEBIRTHDAY);
-		scheduleRepository.save(maleBirthDay);
-		Schedule femaleBirthDay =
-			Schedule.marryAll(married, female.getBirthday(), DateType.FEMALEBIRTHDAY);
-		scheduleRepository.save(femaleBirthDay);
+
+		List<Schedule> defaultSchedule = List.of(
+			Schedule.marryAll(married, married.getMarriedDay(), DateType.WEDDINGANNIVERSARY),
+			Schedule.marryAll(married, married.getFirst().getBirthday(), DateType.MALEBIRTHDAY),
+			Schedule.marryAll(married, married.getSecond().getBirthday(), DateType.FEMALEBIRTHDAY)
+		);
+		scheduleRepository.saveAll(defaultSchedule);
 	}
 
 	// 일정 등록

@@ -150,16 +150,25 @@ public class MemoryConcurrencyTest {
 	}
 
 	void setupDatabase() throws IOException {
-		String sqlFilePath = "src/test/resources/sql/regist_data.sql";
+		String[] sqlFilePath = new String[]{
+			"src/test/resources/sql/0_picture.sql",
+			"src/test/resources/sql/1_regist_data.sql",
+			"src/test/resources/sql/2_marry.sql",
+			"src/test/resources/sql/3_update_married.sql",
+			"src/test/resources/sql/4_add_default_schedule.sql"
+		};
 
-		String sql = Files.lines(Paths.get(sqlFilePath))
-			.collect(Collectors.joining("\n"));
+		for(String sqlFile : sqlFilePath) {
+			String sql = Files.lines(Paths.get(sqlFile))
+				.collect(Collectors.joining("\n"));
 
-		for (String query : sql.split(";")) {
-			if (!query.trim().isEmpty()) {
-				jdbcTemplate.execute(query.trim());
+			for (String query : sql.split(";")) {
+				if (!query.trim().isEmpty()) {
+					jdbcTemplate.execute(query.trim());
+				}
 			}
 		}
+
 	}
 
 	void setupLogin() throws Exception {
@@ -192,7 +201,7 @@ public class MemoryConcurrencyTest {
 	}
 	private void setupSchedule() throws IOException {
 
-		String sqlFilePath = "src/test/resources/sql/schedule_data.sql";
+		String sqlFilePath = "src/test/resources/sql/4_add_default_schedule.sql";
 
 		String sql = Files.lines(Paths.get(sqlFilePath))
 			.collect(Collectors.joining("\n"));

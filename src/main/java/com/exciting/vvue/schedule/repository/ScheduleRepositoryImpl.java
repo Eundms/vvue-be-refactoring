@@ -67,4 +67,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 	public boolean existsById(Long scheduleId) {
 		return scheduleJpaRepository.existsById(scheduleId);
 	}
+
+	@Override
+	public void saveAll(List<Schedule> schedules) {
+		scheduleJpaRepository.saveAll(schedules);
+	}
 }

@@ -1,7 +1,11 @@
 package com.exciting.vvue.married;
 
+import javax.persistence.OptimisticLockException;
+import javax.persistence.PessimisticLockException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +19,6 @@ import com.exciting.vvue.common.exception.married.MarriedInfoNotFoundException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.dto.MarriedDto;
 import com.exciting.vvue.married.dto.MarriedModifyDto;
-import com.exciting.vvue.married.dto.res.MarriedInfoExist;
 import com.exciting.vvue.schedule.ScheduleService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,17 +45,11 @@ public class MarriedController {
 	})
 	@GetMapping("/info")
 	public ResponseEntity<MarriedDto> getMarriedInfo() {
-		/**
-		 * todo
-		 * 부부 정보 가져오기
-		 */
 		Long userId = AuthContext.getUserId();
 		Married marriedInfo = marriedService.getMarriedByUserIdWithDetails(userId);
 		if (marriedInfo == null)
 			throw new MarriedInfoNotFoundException("부부 정보를 가져올 수 없어요.");
-		log.debug("[GET] /married/info : id " + marriedInfo);
 		MarriedDto married = MarriedDto.from(marriedInfo);
-		log.debug("[GET] /married/info : id " + married.toString());
 		return new ResponseEntity<>(married, HttpStatus.OK);
 	}
 
@@ -61,31 +58,14 @@ public class MarriedController {
 	public ResponseEntity<?> updateMarriedInfo(@RequestBody MarriedModifyDto marriedModifyDto) {
 		Long userId = AuthContext.getUserId();
 
-		if (marriedService.getMarriedCount(userId) <= 0)
-			throw new MarriedInfoNotFoundException("부부 정보를 찾을 수 없어요");
+		Long marriedId = marriedService.updateMarriedAndReturnId(userId, marriedModifyDto);
 
-		marriedService.updateMarried(userId, marriedModifyDto);
-
-		Married married = marriedService.getMarriedByUserid(userId);
 		if (marriedModifyDto.getMarriedDay() != null) {
-			scheduleService.addAnniversaryAndBirthday(married.getId());
+			scheduleService.addAnniversaryAndBirthday(marriedId);
 		}
 
-		landingStateEmitService.notifyLandingState(married.getId(), "MARRIED", LandingStatus.COMPLETE);
+		landingStateEmitService.notifyLandingState(marriedId, "MARRIED", LandingStatus.COMPLETE);
 		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	@GetMapping("/is-married")
-	@Operation(summary = "부부 정보가 있는지 확인")
-	public ResponseEntity<?> isUserMarried() {
-		Long userId = AuthContext.getUserId();
-		Married married = marriedService.getMarriedByUserid(userId);
-
-		boolean marriedInfoExists = true;
-		if (married == null || !married.isAllInfoUpdated()) {
-			marriedInfoExists = false;
-		}
-		return ResponseEntity.status(HttpStatus.OK).body(new MarriedInfoExist(marriedInfoExists));
 	}
 
 }

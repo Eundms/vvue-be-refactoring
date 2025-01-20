@@ -110,10 +110,10 @@ public class DevelopController {
 	@DeleteMapping("/divorce")
 	public ResponseEntity<?> divorce() {
 		Long userId = AuthContext.getUserId();
-		Married deleted = marriedService.deleteByUserId(userId);
+		marriedService.deleteByUserId(userId);
 
 		return ResponseEntity.ok().body(
-			"이혼 요청:userId " + userId + " " + deleted.getFirst() + " " + deleted.getSecond()
+			"이혼 요청:userId " + userId
 				+ " 이혼 완료");
 	}
 

@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.Version;
 
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.user.model.User;
@@ -27,14 +28,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @DynamicUpdate
-@ToString
 @NoArgsConstructor
 @Table(name = "MARRIED", indexes = {
 	@Index(name = "idx_first_id", columnList = "first_id"),
 	@Index(name = "idx_second_id", columnList = "second_id")
 })
 public class Married {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

@@ -1,12 +1,15 @@
 package com.exciting.vvue.married.repository;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.repository.jpa.MarriedJpaRepository;
 import com.exciting.vvue.married.service.MarriedRepository;
+import com.exciting.vvue.picture.model.Picture;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,8 +29,8 @@ public class MarriedRepositoryImpl implements MarriedRepository {
 	}
 
 	@Override
-	public Married findByUserId(Long userId) {
-		return marriedJpaRepository.findByUserId(userId);
+	public Long findMarriedIdByUserId(Long userId) {
+		return marriedJpaRepository.findMarriedIdByUserId(userId);
 	}
 
 	@Override
@@ -42,8 +45,9 @@ public class MarriedRepositoryImpl implements MarriedRepository {
 	}
 
 	@Override
-	public void delete(Married married) {
-		marriedJpaRepository.delete(married);
+	public Married deleteByUserId(Long userId) {
+		marriedJpaRepository.deleteByUserId(userId);
+		return null;
 	}
 
 	@Override
@@ -51,4 +55,16 @@ public class MarriedRepositoryImpl implements MarriedRepository {
 		return marriedJpaRepository.findById(marriedId);
 	}
 
+	@Override
+	@Transactional
+	public Long updateAndReturnId(Long userId, LocalDate marriedDay, Picture picture) {
+		marriedJpaRepository.updateMarriedInfo(userId, marriedDay, picture);
+		Long marriedId = findMarriedIdByUserId(userId);
+		return marriedId;
+	}
+
+	@Override
+	public Optional<Married> findByMarriedIdWithDetails(long marriedId) {
+		return marriedJpaRepository.findByMarriedIdWithDetails(marriedId);
+	}
 }
