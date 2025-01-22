@@ -9,4 +9,6 @@ public interface PlaceMemoryRepository {
 	List<PlaceMemory> saveAll(List<PlaceMemory> placeMemoryList);
 
 	List<PlaceMemory> findByScheduleMemory_Id(Long scheduleMemoryId);
+
+	List<PlaceMemory> findAllByMarriedId(Long marriedId);
 }

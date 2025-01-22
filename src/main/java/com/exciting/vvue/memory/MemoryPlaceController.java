@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.auth.AuthService;
-import com.exciting.vvue.memory.model.PlaceMemory;
 import com.exciting.vvue.memory.dto.MemoryPlaceFindDto;
+import com.exciting.vvue.memory.dto.res.PlaceMemoryResDto;
+import com.exciting.vvue.memory.dto.res.PlaceMemoryToMapDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +25,11 @@ import lombok.extern.slf4j.Slf4j;
 public class MemoryPlaceController {
 	private final MemoryPlaceService memoryPlaceService;
 
-	private final AuthService authService;
-
-	@Deprecated
-	@Operation(summary = "[TODO] 추억 지도 조회")
+	@Operation(summary = "추억 지도 조회")
 	@GetMapping
 	public ResponseEntity<?> searchMemoryPlace(@RequestParam(required = false) MemoryPlaceFindDto findCondition) {
 		Long userId = AuthContext.getUserId();
-		List<PlaceMemory> placeMemories = memoryPlaceService.getRecentMemoryPlaceByMarriedId(userId, findCondition);
+		List<PlaceMemoryToMapDto> placeMemories = memoryPlaceService.getMemoriablePlaceByMarriedId(userId, findCondition);
 		return ResponseEntity.ok().body(placeMemories);
 	}
 
