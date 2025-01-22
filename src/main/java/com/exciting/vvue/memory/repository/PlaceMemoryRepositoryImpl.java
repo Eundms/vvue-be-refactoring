@@ -30,4 +30,9 @@ public class PlaceMemoryRepositoryImpl implements PlaceMemoryRepository {
 	public List<PlaceMemory> findByScheduleMemory_Id(Long scheduleMemoryId) {
 		return placeMemoryJpaRepository.findByScheduleMemory_Id(scheduleMemoryId);
 	}
+
+	@Override
+	public List<PlaceMemory> findAllByMarriedId(Long marriedId){
+		return placeMemoryJpaRepository.findAllByMarriedId(marriedId);
+	}
 }
