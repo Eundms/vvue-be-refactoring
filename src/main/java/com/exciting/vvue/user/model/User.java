@@ -17,6 +17,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
 import org.springframework.data.annotation.CreatedDate;
@@ -37,10 +38,15 @@ import lombok.ToString;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
-@Table(name = "USER", indexes = {
-	@Index(name = "idx_provider_providerId", columnList = "provider, provider_id"),
-	@Index(name = "idx_nickname", columnList = "nickname")
-})
+@Table(
+	name = "USER",
+	indexes = {
+		@Index(name = "idx_nickname", columnList = "nickname")
+	},
+	uniqueConstraints = {
+		@UniqueConstraint(name = "uk_provider_providerId", columnNames = {"provider", "provider_id"})
+	}
+)
 public class User {
 
 	@Id
@@ -54,7 +60,7 @@ public class User {
 	@Column(name = "provider")
 	private String provider;
 
-	@Column(name="provider_id", unique = true)
+	@Column(name="provider_id")
 	private String providerId;
 
 	@Enumerated(value = EnumType.STRING)

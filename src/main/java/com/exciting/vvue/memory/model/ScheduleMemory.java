@@ -35,10 +35,11 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "SCHEDULEMEMORY", indexes = {
-	@Index(name = "idx_married_id", columnList = "married_id"),
-	@Index(name = "idx_schedule_id", columnList = "schedule_id"),
+	@Index(name = "idx_married_id_id", columnList = "married_id, id"),
+	@Index(name = "idx_schedule_id_married_id_schedule_date", columnList = "schedule_id, married_id, schedule_date"),
 	@Index(name = "idx_schedule_date", columnList = "schedule_date")
 })
+
 public class ScheduleMemory {
 
 	@Id

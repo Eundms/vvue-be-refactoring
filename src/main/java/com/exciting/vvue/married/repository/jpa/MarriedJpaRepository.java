@@ -16,7 +16,6 @@ public interface MarriedJpaRepository extends JpaRepository<Married, Long> {
 	int countByUserId(Long id);
 
 	@Query(value = "select married from Married married "
-		+ "left join fetch married.picture "
 		+ "left join fetch married.first first "
 		+ "left join fetch first.picture "
 		+ "left join fetch married.second second "

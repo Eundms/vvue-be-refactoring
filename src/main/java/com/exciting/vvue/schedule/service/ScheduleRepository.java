@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.exciting.vvue.schedule.model.DateType;
 import com.exciting.vvue.schedule.model.Schedule;
 
 public interface ScheduleRepository {
@@ -30,4 +31,6 @@ public interface ScheduleRepository {
 	boolean existsById(Long scheduleId);
 
 	void saveAll(List<Schedule> schedules);
+
+	List<Schedule> findByMarriedIdAndDateTypeIn(long marriedId, List<DateType> checkDateTypes);
 }

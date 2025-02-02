@@ -11,6 +11,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.Version;
@@ -29,9 +30,8 @@ import lombok.ToString;
 @Setter
 @DynamicUpdate
 @NoArgsConstructor
-@Table(name = "MARRIED", indexes = {
-	@Index(name = "idx_first_id", columnList = "first_id"),
-	@Index(name = "idx_second_id", columnList = "second_id")
+@Table(name = "MARRIED", uniqueConstraints = {
+	@UniqueConstraint(name = "unique_first_second", columnNames = {"first_id", "second_id"})
 })
 public class Married {
 	@Id
@@ -44,11 +44,11 @@ public class Married {
 	private Picture picture; // pictureId
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, unique = true)
+	@JoinColumn(nullable = false)
 	private User first;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, unique = true)
+	@JoinColumn(nullable = false)
 	private User second;
 
 	@Builder

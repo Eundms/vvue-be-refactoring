@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.exciting.vvue.schedule.model.DateType;
 import com.exciting.vvue.schedule.model.Schedule;
 
 @Repository
@@ -96,4 +97,6 @@ public interface ScheduleJpaRepository extends JpaRepository<Schedule, Long> {
 	@Query("select sm.id from Schedule s left join ScheduleMemory sm on s.id = sm.scheduleId "
 		+ "where s.id = :id and sm.scheduleDate = :scheduleDate")
 	Long getScheduleMemoryIdByIdAndScheduleDate(Long id, LocalDate scheduleDate);
+
+	List<Schedule> findByMarriedIdAndDateTypeIn(long marriedId, List<DateType> checkDateTypes);
 }

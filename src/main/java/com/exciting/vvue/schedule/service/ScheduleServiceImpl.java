@@ -3,6 +3,7 @@ package com.exciting.vvue.schedule.service;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,20 +72,39 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	// 결혼기념일과 생일을 등록하는 메서드
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@Transactional
 	public void addAnniversaryAndBirthday(long marriedId) {
 		Married married =
 			marriedRepository
 				.findByMarriedIdWithDetails(marriedId)
 				.orElseThrow(() -> new ScheduleNotFoundException("" + marriedId));
 
-
-		List<Schedule> defaultSchedule = List.of(
-			Schedule.marryAll(married, married.getMarriedDay(), DateType.WEDDINGANNIVERSARY),
-			Schedule.marryAll(married, married.getFirst().getBirthday(), DateType.MALEBIRTHDAY),
-			Schedule.marryAll(married, married.getSecond().getBirthday(), DateType.FEMALEBIRTHDAY)
+		List<DateType> checkDateTypes = List.of(
+			DateType.WEDDINGANNIVERSARY,
+			DateType.MALEBIRTHDAY,
+			DateType.FEMALEBIRTHDAY
 		);
-		scheduleRepository.saveAll(defaultSchedule);
+
+		List<Schedule> existingSchedules = scheduleRepository.findByMarriedIdAndDateTypeIn(marriedId, checkDateTypes);
+
+		List<Schedule> schedulesToSave = new ArrayList<>();
+
+		if (married.getMarriedDay() != null && existingSchedules.stream().noneMatch(schedule -> schedule.getDateType() == DateType.WEDDINGANNIVERSARY)) {
+			schedulesToSave.add(Schedule.marryAll(married, married.getMarriedDay(), DateType.WEDDINGANNIVERSARY));
+		}
+
+		if (existingSchedules.stream().noneMatch(schedule -> schedule.getDateType() == DateType.MALEBIRTHDAY)) {
+			schedulesToSave.add(Schedule.marryAll(married, married.getFirst().getBirthday(), DateType.MALEBIRTHDAY));
+		}
+
+		if (existingSchedules.stream().noneMatch(schedule -> schedule.getDateType() == DateType.FEMALEBIRTHDAY)) {
+			schedulesToSave.add(Schedule.marryAll(married, married.getSecond().getBirthday(), DateType.FEMALEBIRTHDAY));
+		}
+
+		// 중복되지 않은 일정만 저장
+		if (!schedulesToSave.isEmpty()) {
+			scheduleRepository.saveAll(schedulesToSave);
+		}
 	}
 
 	// 일정 등록

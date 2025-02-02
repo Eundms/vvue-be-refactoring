@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
+import com.exciting.vvue.schedule.model.DateType;
 import com.exciting.vvue.schedule.model.Schedule;
 import com.exciting.vvue.schedule.repository.jpa.ScheduleJpaRepository;
 import com.exciting.vvue.schedule.service.ScheduleRepository;
@@ -71,5 +72,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 	@Override
 	public void saveAll(List<Schedule> schedules) {
 		scheduleJpaRepository.saveAll(schedules);
+	}
+
+	@Override
+	public List<Schedule> findByMarriedIdAndDateTypeIn(long marriedId, List<DateType> checkDateTypes) {
+		return scheduleJpaRepository.findByMarriedIdAndDateTypeIn(marriedId, checkDateTypes);
 	}
 }
