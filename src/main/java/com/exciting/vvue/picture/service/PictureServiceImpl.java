@@ -23,12 +23,12 @@ public class PictureServiceImpl implements PictureService {
 	private final PictureRepository pictureRepository;
 	private final FileManageUtil fileManageUtil;
 
-	@Value("${cloud.aws.s3.prefix}")
-	private String s3Prifix;
+	@Value("${cloud.aws.cloudfront.domain}")
+	private String CLOUDFRONT_DOMAIN;
 
 	@Override
 	public String uploadSingle(MultipartFile multipartFile) throws FileUploadFailException {
-		return s3Prifix + fileManageUtil.uploadFile(multipartFile);
+		return CLOUDFRONT_DOMAIN +"/"+ fileManageUtil.uploadFile("image", multipartFile);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class PictureServiceImpl implements PictureService {
 		List<String> multiImagesUrls = new ArrayList<>();
 		for (int i = 0; i < multipartFiles.size(); i++) {
 			if (multipartFiles.get(i) != null && !multipartFiles.get(i).isEmpty()) {
-				multiImagesUrls.add(fileManageUtil.uploadFile(multipartFiles.get(i)));
+				multiImagesUrls.add(fileManageUtil.uploadFile("image", multipartFiles.get(i)));
 			}
 		}
 

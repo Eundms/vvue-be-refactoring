@@ -29,7 +29,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     // amazon
-	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.518'
+    implementation 'software.amazon.awssdk:s3:2.30.16'
+    implementation 'software.amazon.awssdk:cloudfront:2.30.16'
 
     //json simple
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'

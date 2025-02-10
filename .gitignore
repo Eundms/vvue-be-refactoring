@@ -36,5 +36,5 @@ out/
 
 ### VS Code ###
 .vscode/
-
-**/src/main/resources/firebase-service-account.json
+**/private_key.pem
+**/firebase-service-account.json

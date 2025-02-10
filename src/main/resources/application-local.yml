@@ -32,6 +32,14 @@ custom:
   jwt:
     secret: jwtSecretKey # 실제 사용 시 강력한 비밀 키로 변경
 
+cloud:
+  gcp:
+    firebase:
+      service-account-path: firebase-service-account.json
+  aws:
+    cloudfront :
+      private-key-path : private_key.pem
+
 logging:
   level:
     com.exciting.vvue: INFO
