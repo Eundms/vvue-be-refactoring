@@ -88,21 +88,8 @@ public class AuthController {
 		// Signed Cookie 생성 및 응답에 추가
 		List<String> signedCookies = cloudFrontService.generateSignedCookies();
 		for (String cookie : signedCookies) {
-			String[] cookieParts = cookie.split("=", 2);
-			String cookieName = cookieParts[0];
-			String cookieValue = cookieParts[1];
-
-			// ResponseCookie 생성
-			ResponseCookie created = ResponseCookie.from(cookieName, cookieValue)
-				.httpOnly(true)   // JavaScript 접근 방지 (보안 강화)
-				//.secure(true) // HTTPS에서만 전송
-				.path("/")        // 모든 요청에 적용
-				.sameSite("Strict") // CSRF 방지
-				.maxAge(Duration.ofDays(7))
-				.build();
-
-			// Set-Cookie 헤더로 추가
-			response.addHeader(HttpHeaders.SET_COOKIE, created.toString());
+			String cookieWithSecurity = cookie + "; SameSite=None; Secure; Domain=.vvue.site; HttpOnly; Path=/";
+			response.addHeader(HttpHeaders.SET_COOKIE, cookieWithSecurity);
 		}
 
 		return new ResponseEntity<>(AuthResDto.from(jwtDto, status), HttpStatus.OK);

@@ -59,7 +59,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-			.allowedOriginPatterns("*") // Development environment
+			.allowedOriginPatterns("https://www.vvue.site", "http://localhost:3000") // Development environment
 			.allowedMethods("*")
 			.allowedHeaders("*")
 			.exposedHeaders("Authorization", "refresh-token") // 필요한 경우 추가

@@ -37,4 +37,5 @@ out/
 ### VS Code ###
 .vscode/
 **/private_key.pem
+**/private_key.der
 **/firebase-service-account.json

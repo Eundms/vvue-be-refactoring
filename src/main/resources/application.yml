@@ -24,10 +24,10 @@ cloud:
     cloudfront :
         key-pair-id: ${CLOUDFRONT_KEY_PAIR_ID}
         domain: ${CLOUDFRONT_DOMAIN}
-#        private-key-path : ${PRIVATE_KEY_PATH}
-#  gcp:
-#    firebase:
-#      service-account-path: ${GOOGLE_APPLICATION_CREDENTIALS}
+        private-key-path : ${PRIVATE_KEY_PATH}
+  gcp:
+    firebase:
+      service-account-path: ${GOOGLE_APPLICATION_CREDENTIALS}
 auth:
   google:
     client-id: ${GOOGLE_CLIENT_ID}

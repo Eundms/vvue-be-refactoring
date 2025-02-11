@@ -65,6 +65,10 @@ dependencies {
 	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.80'
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.80'
+
 }
 
 tasks.named('test') {
