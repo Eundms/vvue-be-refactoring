@@ -39,6 +39,8 @@ cloud:
   aws:
     cloudfront :
       private-key-path : private_key.pem
+cookie:
+  domain: localhost
 
 logging:
   level:

@@ -40,6 +40,9 @@ public class CloudFrontService {
 	@Value("${cloud.aws.cloudfront.private-key-path}")
 	private String privateKeyPath;
 
+	@Value("${cookie.domain}")
+	private String cookieDomain;
+
 	/**
 	 * 서명된 쿠키를 생성하는 메서드
 	 */
@@ -61,9 +64,10 @@ public class CloudFrontService {
 			CookiesForCustomPolicy cookiesForCustomPolicy = cloudFrontUtilities.getCookiesForCustomPolicy(customSignerRequest);
 
 			List<String> cookies = new ArrayList<>();
-			cookies.add(cookiesForCustomPolicy.policyHeaderValue());
-			cookies.add(cookiesForCustomPolicy.signatureHeaderValue());
-			cookies.add(cookiesForCustomPolicy.keyPairIdHeaderValue());
+			String security = "; SameSite=None; Secure; Domain=" + cookieDomain + "; HttpOnly; Path=/";
+			cookies.add(cookiesForCustomPolicy.policyHeaderValue()+security);
+			cookies.add(cookiesForCustomPolicy.signatureHeaderValue()+security);
+			cookies.add(cookiesForCustomPolicy.keyPairIdHeaderValue()+security);
 
 			logger.info("Generated signed cookies successfully");
 			return cookies;

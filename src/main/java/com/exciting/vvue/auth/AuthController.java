@@ -88,8 +88,7 @@ public class AuthController {
 		// Signed Cookie 생성 및 응답에 추가
 		List<String> signedCookies = cloudFrontService.generateSignedCookies();
 		for (String cookie : signedCookies) {
-			String cookieWithSecurity = cookie + "; SameSite=None; Secure; Domain=.vvue.site; HttpOnly; Path=/";
-			response.addHeader(HttpHeaders.SET_COOKIE, cookieWithSecurity);
+			response.addHeader(HttpHeaders.SET_COOKIE, cookie);
 		}
 
 		return new ResponseEntity<>(AuthResDto.from(jwtDto, status), HttpStatus.OK);
