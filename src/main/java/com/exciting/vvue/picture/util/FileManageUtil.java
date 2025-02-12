@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.exciting.vvue.picture.dto.MetaReqDto;
 import com.exciting.vvue.picture.exception.FileUploadFailException;
+import com.exciting.vvue.picture.model.FileUrlGenerator;
+import com.exciting.vvue.picture.model.PictureUsedFor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,14 +33,17 @@ public class FileManageUtil {
 
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucketName;
+	@Value("${cloud.aws.cloudfront.domain}")
+	private String CLOUDFRONT_DOMAIN;
 
 	/**
 	 * S3로 파일 업로드
 	 */
-	public String uploadFile(String fileType, MultipartFile multipartFile)
+	public String uploadFile(MultipartFile multipartFile, String uploadFilePath)
 		throws FileUploadFailException {
 		// 업로드하는 파일 경로 만들기
-		String uploadFilePath = fileType + "/" + getFolderName();
+
+
 		log.debug("uploadFilePath :" + uploadFilePath);
 
 		// 파일 이름을 가져와서 UUID로 변환
@@ -63,7 +69,7 @@ public class FileManageUtil {
 			throw new FileUploadFailException("File upload failed");
 		}
 
-		return keyName;
+		return CLOUDFRONT_DOMAIN +"/"+ keyName;
 	}
 
 	/**
@@ -90,16 +96,9 @@ public class FileManageUtil {
 	/**
 	 * UUID 파일명 반환
 	 */
-	public String getUuidFileName(String fileName) {
+	private String getUuidFileName(String fileName) {
 		String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
-		return UUID.randomUUID().toString() + "." + ext;
+		return UUID.randomUUID() + "." + ext;
 	}
 
-	/**
-	 * 년/월/일 폴더명 반환
-	 */
-	public String getFolderName() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
-		return sdf.format(new Date());
-	}
 }

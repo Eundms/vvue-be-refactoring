@@ -16,15 +16,19 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.exciting.vvue.auth.AuthService;
-import com.exciting.vvue.picture.exception.FileDeleteFailException;
-import com.exciting.vvue.picture.exception.FileUploadFailException;
+import com.exciting.vvue.auth.AuthContext;
+import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.picture.dto.MetaReqDto;
 import com.exciting.vvue.picture.dto.PictureIdList;
 import com.exciting.vvue.picture.dto.PictureMultiUploadResDto;
 import com.exciting.vvue.picture.dto.PictureSingleUploadResDto;
+import com.exciting.vvue.picture.exception.FileDeleteFailException;
+import com.exciting.vvue.picture.exception.FileUploadFailException;
+import com.exciting.vvue.picture.model.AccessLevel;
+import com.exciting.vvue.picture.model.FileUrlGenerator;
+import com.exciting.vvue.picture.model.PictureUsedFor;
 import com.exciting.vvue.picture.service.PictureService;
-import com.exciting.vvue.user.UserService;
+import com.exciting.vvue.picture.util.FileManageUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,7 +44,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PictureController {
 	private final PictureService pictureService;
+	private final MarriedService marriedService;
+	private final FileManageUtil fileManageUtil;
 
+	// 사진 여러 장 업로드
 	@Transactional
 	@PostMapping("/upload/multi")
 	@Operation(description = "사진 여러장 업로드", summary = "장소 추억 전용")
@@ -51,31 +58,28 @@ public class PictureController {
 		@ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
 	})
 	public ResponseEntity<?> uploadMulti(
-
-		@RequestPart(value = "meta", required = false) MetaReqDto meta,
+		@RequestPart(value = "meta") MetaReqDto meta,
 		@RequestPart(value = "pictures", required = false) List<MultipartFile> multipartFiles) {
-
-		if (multipartFiles.size() == 0)
+		if (multipartFiles.isEmpty())
 			throw new FileUploadFailException("업로드 할 이미지가 없어요");
-		// meta != null 유지할 정보가 있는 경우, 추억블록 id
-		if (meta != null) {
-			log.debug("[POST] /pictures/upload/multi : meta " + meta.toString());
-		}
-		// meta == null
-		// 유지할 정보가 없는 경우
+
+		Long userId = AuthContext.getUserId();
+		Long id  = getKeyOfDirectory(meta.getUsedFor(), userId);
+
 		log.debug("[POST] /pictures/upload/multi : muiltipartfiles number " + multipartFiles.size());
 		List<String> filePaths = new ArrayList<>();
-		for (int i = 0; i < multipartFiles.size(); i++) {
-			// 받은 사진 -> S3 업로드 url filePaths에 추가
-			if (multipartFiles.get(i) != null && !multipartFiles.get(i).isEmpty()) {
-				filePaths.add(pictureService.uploadSingle(multipartFiles.get(i)));
-			} else
+		for (MultipartFile file : multipartFiles) {
+			if (file != null && !file.isEmpty()) {
+				String uploadFilePath = FileUrlGenerator.generate("image", meta.getUsedFor(), id);
+				String filePath = fileManageUtil.uploadFile(file, uploadFilePath); // meta 포함하여 업로드
+				filePaths.add(filePath);
+			} else {
 				throw new FileUploadFailException("이미지 업로드 중 문제가 발생하였습니다.");
+			}
 		}
 
-		//이미지 메타 정보가 있으면 meta
-		List<Long> imagesIdList = pictureService.insertMulti(filePaths);
-		log.debug("[POST] /pictures/upload/single : url " + imagesIdList.toString());
+		List<Long> imagesIdList = pictureService.insertMulti(filePaths, meta.getUsedFor().getAccessLevel());
+		log.debug("[POST] /pictures/upload/multi : image IDs " + imagesIdList.toString());
 
 		PictureMultiUploadResDto pictureMultiUploadResDto = PictureMultiUploadResDto.builder()
 			.meta(meta)
@@ -83,6 +87,7 @@ public class PictureController {
 		return new ResponseEntity<>(pictureMultiUploadResDto, HttpStatus.OK);
 	}
 
+	// 사진 1장 업로드
 	@Transactional
 	@PostMapping("/upload/single")
 	@Operation(description = "사진 1장 업로드", summary = "프로필 변경, 부부공유 사진 변경")
@@ -93,24 +98,21 @@ public class PictureController {
 		@ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
 	})
 	public ResponseEntity<?> uploadSingle(
-
-		@RequestPart(value = "meta", required = false) MetaReqDto meta,
+		@RequestPart(value = "meta") MetaReqDto meta,
 		@RequestPart(value = "picture", required = false) MultipartFile multipartFile) {
-		if (meta != null) {
-			log.debug("[POST] /pictures/upload/single : meta " + meta.toString());
-			/**
-			 * todo
-			 * 수정 시 로직
-			 * 장소 블럭 수정시 구현해야 함
-			 */
-		}
+		Long userId = AuthContext.getUserId();
+
 		if (multipartFile == null || multipartFile.isEmpty())
 			throw new FileUploadFailException("이미지 업로드 중 문제가 발생하였습니다.");
 
-		String url = pictureService.uploadSingle(multipartFile);
-		log.debug("[POST] /pictures/upload/single : url " + url);
-		Long pictureId = pictureService.insertSingle(url);
-		log.debug("[POST] /pictures/upload/single : pictureId " + pictureId);
+		// 사진 업로드
+		Long id  = getKeyOfDirectory(meta.getUsedFor(), userId);
+
+		String uploadFilePath = FileUrlGenerator.generate("image", meta.getUsedFor(), id);
+
+		String filePath = fileManageUtil.uploadFile(multipartFile, uploadFilePath);
+
+		Long pictureId = pictureService.insertSingle(filePath, meta.getUsedFor().getAccessLevel());
 
 		PictureSingleUploadResDto pictureSingleUploadResDto = PictureSingleUploadResDto.builder()
 			.meta(meta)
@@ -119,13 +121,14 @@ public class PictureController {
 		return new ResponseEntity<>(pictureSingleUploadResDto, HttpStatus.OK);
 	}
 
+	// 사진 1장 삭제
 	@Transactional
 	@DeleteMapping("/single/{pictureId}")
 	@Operation(description = "사진 1장 삭제", summary = "사진 삭제")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "삭제 성공"),
 		@ApiResponse(responseCode = "400", description = "삭제 실패"),
-		@ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음"),
+		@ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
 	})
 	public ResponseEntity<?> delete(@PathVariable("pictureId") Long id) {
 		if (pictureService.getSingle(id) == null)
@@ -134,6 +137,7 @@ public class PictureController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	// 여러 장 사진 삭제
 	@Transactional
 	@DeleteMapping("/multi")
 	@Operation(description = "사진 여러장 삭제", summary = "사진 삭제")
@@ -144,9 +148,17 @@ public class PictureController {
 	})
 	public ResponseEntity<?> deleteMulti(@RequestBody PictureIdList pictureIdList) {
 
-		if (pictureIdList.getPictureIds() == null || pictureIdList.getPictureIds().size() == 0)
+		if (pictureIdList.getPictureIds() == null || pictureIdList.getPictureIds().isEmpty())
 			throw new FileDeleteFailException("삭제할 파일이 없어요.");
 		pictureService.deleteMulti(pictureIdList.getPictureIds());
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	private Long getKeyOfDirectory(PictureUsedFor usedFor, Long userId) {
+		Long id  = userId;
+		if(usedFor == PictureUsedFor.MARRIED_RELATED) {
+			id = marriedService.getMarriedIdByUserId(userId);
+		}
+		return id;
 	}
 }

@@ -3,15 +3,13 @@ package com.exciting.vvue.picture.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.exciting.vvue.picture.exception.FileDeleteFailException;
 import com.exciting.vvue.picture.exception.FileUploadFailException;
+import com.exciting.vvue.picture.model.AccessLevel;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
-import com.exciting.vvue.picture.util.FileManageUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,38 +19,16 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class PictureServiceImpl implements PictureService {
 	private final PictureRepository pictureRepository;
-	private final FileManageUtil fileManageUtil;
-
-	@Value("${cloud.aws.cloudfront.domain}")
-	private String CLOUDFRONT_DOMAIN;
 
 	@Override
-	public String uploadSingle(MultipartFile multipartFile) throws FileUploadFailException {
-		return CLOUDFRONT_DOMAIN +"/"+ fileManageUtil.uploadFile("image", multipartFile);
-	}
-
-	@Override
-	@Deprecated
-	public List<String> uploadMulti(List<MultipartFile> multipartFiles) throws
-		FileUploadFailException {
-		List<String> multiImagesUrls = new ArrayList<>();
-		for (int i = 0; i < multipartFiles.size(); i++) {
-			if (multipartFiles.get(i) != null && !multipartFiles.get(i).isEmpty()) {
-				multiImagesUrls.add(fileManageUtil.uploadFile("image", multipartFiles.get(i)));
-			}
-		}
-
-		return multiImagesUrls;
-	}
-
-	@Override
-	public List<Long> insertMulti(List<String> filePaths)
+	public List<Long> insertMulti(List<String> filePaths, AccessLevel accessLevel)
 		throws FileUploadFailException {
 		List<Long> imagesIdList = new ArrayList<>();
 
 		for (int i = 0; i < filePaths.size(); i++) {
 			Picture newImage = Picture.builder()
 				.url(filePaths.get(i))
+				.accessLevel(accessLevel)
 				.isDeleted(false)
 				.build();
 			Long id = pictureRepository.save(newImage).getId();
@@ -63,18 +39,14 @@ public class PictureServiceImpl implements PictureService {
 	}
 
 	@Override
-	public Long insertSingle(String filePath) throws FileUploadFailException {
+	public Long insertSingle(String filePath, AccessLevel accessLevel) throws FileUploadFailException {
 		Picture newImage = Picture.builder()
 			.url(filePath)
+			.accessLevel(accessLevel)
 			.isDeleted(false)
 			.build();
 		Long id = pictureRepository.save(newImage).getId();
 		return id;
-	}
-
-	@Override
-	public boolean existSingle(Long imageId) {
-		return pictureRepository.existsById(imageId);
 	}
 
 	@Override
