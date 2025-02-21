@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -22,6 +23,7 @@ public class Subscriber {
 	@Column(unique = true)
 	private Long userId;
 
+	@Setter
 	private String firebaseToken;
 
 	@Builder
