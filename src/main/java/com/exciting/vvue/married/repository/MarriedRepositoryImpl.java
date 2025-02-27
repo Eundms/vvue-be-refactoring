@@ -67,4 +67,9 @@ public class MarriedRepositoryImpl implements MarriedRepository {
 	public Optional<Married> findByMarriedIdWithDetails(long marriedId) {
 		return marriedJpaRepository.findByMarriedIdWithDetails(marriedId);
 	}
+
+	@Override
+	public Long findSpouseIdByUserId(Long userId) {
+		return marriedJpaRepository.findSpouseIdByUserId(userId);
+	}
 }

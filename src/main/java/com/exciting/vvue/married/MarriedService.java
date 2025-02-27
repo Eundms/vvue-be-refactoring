@@ -17,4 +17,6 @@ public interface MarriedService {
 	int countByUserId(Long id);
 
 	void deleteByUserId(Long id);
+
+	Long getSpouseId(Long userId);
 }

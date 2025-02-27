@@ -69,4 +69,9 @@ public class MarriedServiceImpl implements MarriedService {
 		marriedRepository.deleteByUserId(userId);
 	}
 
+	@Override
+	public Long getSpouseId(Long userId) {
+		return marriedRepository.findSpouseIdByUserId(userId);
+	}
+
 }
