@@ -2,6 +2,10 @@ package com.exciting.vvue.marriage;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
 import com.exciting.vvue.common.exception.married.AlreadyMarriedException;
-import com.exciting.vvue.landing.LandingStateEmitService;
+import com.exciting.vvue.landing.LandingService;
 import com.exciting.vvue.landing.model.LandingStatus;
+import com.exciting.vvue.landing.model.dto.LandingInfos;
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.common.exception.married.MarriedCodeNotGeneratedException;
 import com.exciting.vvue.common.exception.married.MarriedWithSameIdException;
@@ -35,7 +40,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MarriedCodeController {
 	private final MarriedCodeService marriedCodeService;
 	private final MarriedService marriedService;
-	private final LandingStateEmitService landingStateEmitService;
+	private final SimpMessagingTemplate messagingTemplate;
+
 
 	private final int REGENERATE_COUNT = 10;
 	private final int CODE_LENGTH = 8;
@@ -119,10 +125,13 @@ public class MarriedCodeController {
 		Long marriedId = marriedService.createMarried(userId, MarriedCreateDto.builder()
 			.partnerId(targetId)
 			.build());
-
-		landingStateEmitService.notifyLandingState(userId, "USER", LandingStatus.CODED);
-		landingStateEmitService.notifyLandingState(targetId, "USER", LandingStatus.CODED);
+		sendMarriedStatus(userId);
+		sendMarriedStatus(targetId);
 
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	public void sendMarriedStatus(Long targetUserId) {
+		String targetUserTopic = "/topic/user/" + targetUserId + "/married-status";
+		messagingTemplate.convertAndSend(targetUserTopic, LandingStatus.CODED.toString().toLowerCase());
 	}
 }

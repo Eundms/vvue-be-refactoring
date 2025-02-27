@@ -1,11 +1,11 @@
 package com.exciting.vvue.married;
 
-import javax.persistence.OptimisticLockException;
-import javax.persistence.PessimisticLockException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.landing.LandingStateEmitService;
 import com.exciting.vvue.landing.model.LandingStatus;
 import com.exciting.vvue.common.exception.married.MarriedInfoNotFoundException;
 import com.exciting.vvue.married.model.Married;
@@ -36,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MarriedController {
 	public final MarriedService marriedService;
 	private final ScheduleService scheduleService;
-	private final LandingStateEmitService landingStateEmitService;
+	private final SimpMessagingTemplate simpMessagingTemplate;
 	@Operation(summary = "user의 부부정보 가져오기")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "성공", content = {
@@ -57,15 +56,16 @@ public class MarriedController {
 	@Operation(summary = "부부 정보 수정", description = "결혼기념일 미수정시 null로, 사진 미수정시 0 이하의 값으로 보낼 것")
 	public ResponseEntity<?> updateMarriedInfo(@RequestBody MarriedModifyDto marriedModifyDto) {
 		Long userId = AuthContext.getUserId();
-
 		Long marriedId = marriedService.updateMarriedAndReturnId(userId, marriedModifyDto);
-
+		Married spouseMarriedInfo = marriedService.getMarriedByUserIdWithDetails(marriedId);
+		Long spouseId  = spouseMarriedInfo.getFirst().getId() == userId ? spouseMarriedInfo.getSecond().getId(): spouseMarriedInfo.getFirst().getId();
 		if (marriedModifyDto.getMarriedDay() != null) {
 			scheduleService.addAnniversaryAndBirthday(marriedId);
 		}
 
-		landingStateEmitService.notifyLandingState(marriedId, "MARRIED", LandingStatus.COMPLETE);
+		simpMessagingTemplate.convertAndSend("/topic/user/" + userId + "/married-status", LandingStatus.COMPLETE.toString().toLowerCase());
+		simpMessagingTemplate.convertAndSend("/topic/user/" + spouseId + "/married-status", LandingStatus.COMPLETE.toString().toLowerCase());
+
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-
 }
