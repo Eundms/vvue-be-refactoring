@@ -87,7 +87,7 @@ public class PlaceMemory {
 		this.scheduleMemory = scheduleMemory;
 		this.user = user;
 		this.place = place;
-		this.rating = rating;
+		this.rating = Math.min(Math.max(rating, 0.0f), 5.0f);
 		this.comment = comment;
 		this.placeMemoryImageList = placeMemoryImageList;
 	}

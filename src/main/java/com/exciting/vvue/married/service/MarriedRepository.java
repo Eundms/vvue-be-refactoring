@@ -24,4 +24,6 @@ public interface MarriedRepository {
 	Long updateAndReturnId(Long userId, LocalDate marriedDay, Picture picture);
 
 	Optional<Married> findByMarriedIdWithDetails(long marriedId);
+
+	Long findSpouseIdByUserId(Long userId);
 }

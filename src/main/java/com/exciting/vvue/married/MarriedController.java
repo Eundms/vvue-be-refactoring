@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MarriedController {
 	public final MarriedService marriedService;
 	private final ScheduleService scheduleService;
-	private final SimpMessagingTemplate simpMessagingTemplate;
+	private final SimpMessagingTemplate messagingTemplate;
 	@Operation(summary = "user의 부부정보 가져오기")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "성공", content = {
@@ -57,15 +57,18 @@ public class MarriedController {
 	public ResponseEntity<?> updateMarriedInfo(@RequestBody MarriedModifyDto marriedModifyDto) {
 		Long userId = AuthContext.getUserId();
 		Long marriedId = marriedService.updateMarriedAndReturnId(userId, marriedModifyDto);
-		Married spouseMarriedInfo = marriedService.getMarriedByUserIdWithDetails(marriedId);
-		Long spouseId  = spouseMarriedInfo.getFirst().getId() == userId ? spouseMarriedInfo.getSecond().getId(): spouseMarriedInfo.getFirst().getId();
 		if (marriedModifyDto.getMarriedDay() != null) {
 			scheduleService.addAnniversaryAndBirthday(marriedId);
 		}
 
-		simpMessagingTemplate.convertAndSend("/topic/user/" + userId + "/married-status", LandingStatus.COMPLETE.toString().toLowerCase());
-		simpMessagingTemplate.convertAndSend("/topic/user/" + spouseId + "/married-status", LandingStatus.COMPLETE.toString().toLowerCase());
+		sendMarriedStatus(userId);
+		Long spouseId = marriedService.getSpouseId(userId);
+		sendMarriedStatus(spouseId);
 
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	public void sendMarriedStatus(Long targetUserId) {
+		String targetUserTopic = "/topic/user/" + targetUserId + "/married-status";
+		messagingTemplate.convertAndSend(targetUserTopic, LandingStatus.COMPLETE.toString().toLowerCase());
 	}
 }

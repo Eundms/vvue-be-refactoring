@@ -45,4 +45,10 @@ public interface MarriedJpaRepository extends JpaRepository<Married, Long> {
 		+ "left join fetch second.picture "
 		+ "where married.id=:marriedId")
 	Optional<Married> findByMarriedIdWithDetails(long marriedId);
+
+	@Query("select case when married.first.id = :userId then married.second.id "
+		+ "else married.first.id end from Married married "
+		+ "where married.first.id = :userId or married.second.id = :userId")
+	Long findSpouseIdByUserId(Long userId);
+
 }
