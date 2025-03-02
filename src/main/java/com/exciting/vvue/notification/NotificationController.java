@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.notification.dto.NotReadNotificationDto;
-import com.exciting.vvue.notification.dto.NotificationReqDto;
 import com.exciting.vvue.notification.dto.SubscribeReqDto;
 import com.exciting.vvue.notification.dto.VvueNotificationListDto;
 
@@ -67,21 +65,6 @@ public class NotificationController {
 			return ResponseEntity.status(HttpStatus.OK).build();
 		}
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-	}
-
-	@Operation(summary = "알림을 특정 유저에게 보내기")
-	@PostMapping("/users")
-	public ResponseEntity<?> notifyToUser(@RequestBody NotificationReqDto notificationReqDto) {
-		notificationService.sendByToken(notificationReqDto);
-		return ResponseEntity.status(HttpStatus.OK).build();
-	}
-
-	@Operation(summary = "알림을 리스트 유저에게 보내기(bulk)")
-	@PostMapping("/users/all")
-	public ResponseEntity<?> notifyToAllUser(@RequestBody List<NotificationReqDto> notificationReqDtos) {
-		notificationReqDtos.stream()
-			.forEach(notificationService::sendByToken);
-		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@Operation(summary = "안 읽은 알림 한번에 다 읽음 처리")

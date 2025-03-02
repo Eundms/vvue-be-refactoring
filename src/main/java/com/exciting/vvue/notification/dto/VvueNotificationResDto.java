@@ -37,22 +37,10 @@ public class VvueNotificationResDto {
 	}
 
 	public static VvueNotificationResDto from(VvueNotification vvueNotification) {
-		ObjectMapper objectMapper = new ObjectMapper();
-		Map<String, String> item = null;
-		String jsonString = vvueNotification.getData();
-		if (jsonString != null) {
-			try {
-				item = objectMapper.readValue(jsonString, new TypeReference<>() {
-				});
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 		return VvueNotificationResDto.builder()
 			.id(vvueNotification.getId())
 			.notificationType(vvueNotification.getNotificationType())
 			.content(vvueNotification.getContent())
-			//.data(item)
 			.isRead(vvueNotification.getIsRead())
 			.receiverId(vvueNotification.getReceiverId())
 			.createdAt(vvueNotification.getCreatedAt().toString())

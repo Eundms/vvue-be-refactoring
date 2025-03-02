@@ -9,9 +9,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.exciting.vvue.notification.NotificationService;
+import com.exciting.vvue.notification.model.EventType;
 import com.exciting.vvue.notification.model.NotificationContent;
 import com.exciting.vvue.notification.model.NotificationType;
-import com.exciting.vvue.notification.dto.NotificationReqDto;
 import com.exciting.vvue.schedule.ScheduleService;
 import com.exciting.vvue.schedule.model.DateType;
 import com.exciting.vvue.schedule.model.Schedule;
@@ -35,16 +35,17 @@ public class ScheduledNotification {
 		for (int day : List.of(7, 1)) {
 			List<Schedule> schedules = scheduleService.getAllAfterNDaySchedule(day);
 			for (Schedule schedule : schedules) {
-				String body = "";
-				NotificationType notificationType = null;
+				EventType eventType;
 				List<Long> receiverIds = new ArrayList<>();
-				Map<String, String> data = new HashMap<>();
+				String[] titleArgs = null;
+				String[] bodyArgs = null;
+
 				if (schedule.getDateType() == DateType.WEDDINGANNIVERSARY) {
 					// [부부모두] 알림을 등록한다. NotificationType.MARRIED
 					User user = schedule.getMarried().getFirst();
 					User user2 = schedule.getMarried().getSecond();
-					notificationType = NotificationType.MARRIED;
-					body = "결혼 기념일이 " + day + "일 남았어요\n다른 사람들은 이런 곳을 좋아한데요";
+
+					eventType = EventType.WEDDING_REMIND;
 					receiverIds.add(user.getId());
 					receiverIds.add(user2.getId());
 
@@ -56,34 +57,19 @@ public class ScheduledNotification {
 						user = schedule.getMarried().getSecond();
 					}
 
-					notificationType = NotificationType.BIRTH;
-					body = "배우자의 생일이 " + day + "일 남았어요\n다른 사람들은 이런 곳을 좋아한데요";
+					eventType = EventType.BIRTH_REMIND;
 					receiverIds.add(user.getId());
+					bodyArgs = new String[]{""+day};
 
 				} else { // NORMAL
 					// [부부모두] 일정
-					notificationType = NotificationType.SCHEDULE;
-					body = "일정(" + schedule.getScheduleName() + ")이 " + day
-						+ "일 남았어요";
+					eventType = EventType.SCHEDULE_REMIND;
 					receiverIds.add(schedule.getMarried().getFirst().getId());
 					receiverIds.add(schedule.getMarried().getSecond().getId());
-					data.put("scheduleDate", ScheduleResDto.from(schedule).setCommingDate().getCurDate().toString());
-				}
+					bodyArgs = new String[]{""+day};
 
-				for (Long userId : receiverIds) { // send2AllReceivers
-					notificationService.sendByToken(
-						NotificationReqDto.builder()
-							.targetUserId(userId)
-							.type(notificationType)
-							.content(
-								NotificationContent
-									.builder()
-									.title(notificationType.getDescription())
-									.body(body)
-									.build())
-							//.data(data)
-							.build());
 				}
+				notificationService.sendByToken(receiverIds, eventType, titleArgs, bodyArgs);
 			}
 		}
 

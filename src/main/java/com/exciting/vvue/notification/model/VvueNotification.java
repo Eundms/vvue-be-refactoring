@@ -39,7 +39,6 @@ public class VvueNotification {
 
 	@Embedded
 	private NotificationContent content;
-	private String data;
 
 	private Boolean isRead;
 
@@ -49,11 +48,10 @@ public class VvueNotification {
 	private LocalDateTime createdAt;
 
 	@Builder
-	public VvueNotification(Long id, NotificationContent content, String data, Boolean isRead,
+	public VvueNotification(Long id, NotificationContent content, Boolean isRead,
 		NotificationType notificationType, Long receiverId, LocalDateTime createdAt) {
 		this.id = id;
 		this.content = content;
-		this.data = data;
 		this.isRead = isRead;
 		this.notificationType = notificationType;
 		this.receiverId = receiverId;

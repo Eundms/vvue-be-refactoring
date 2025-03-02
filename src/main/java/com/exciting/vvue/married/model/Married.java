@@ -70,5 +70,10 @@ public class Married {
 			|| this.getMarriedDay() == null);
 	}
 
-
+	public Long getPeerId(Long userId) {
+		if(this.getSecond().getId() == userId){
+			return this.getFirst().getId();
+		}
+		return this.getSecond().getId();
+	}
 }

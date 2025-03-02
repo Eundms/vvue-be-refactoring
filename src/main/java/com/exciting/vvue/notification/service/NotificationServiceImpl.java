@@ -3,6 +3,8 @@ package com.exciting.vvue.notification.service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,12 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.exciting.vvue.notification.NotificationService;
 import com.exciting.vvue.notification.exception.NotificationFailException;
 import com.exciting.vvue.notification.exception.UserNotAddedToNotifyException;
+import com.exciting.vvue.notification.model.EventType;
+import com.exciting.vvue.notification.model.NotificationContent;
+import com.exciting.vvue.notification.model.NotificationType;
 import com.exciting.vvue.notification.model.Subscriber;
 import com.exciting.vvue.notification.model.VvueNotification;
 import com.exciting.vvue.notification.dto.NotReadNotificationDto;
-import com.exciting.vvue.notification.dto.NotificationReqDto;
 import com.exciting.vvue.notification.dto.VvueNotificationListDto;
 import com.exciting.vvue.notification.dto.VvueNotificationResDto;
+import com.google.firebase.database.utilities.Pair;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +35,21 @@ public class NotificationServiceImpl implements NotificationService {
 	private final VvueNotificationRepository vvueNotificationRepository;
 	private final SubscriberRepository subscriberRepository;
 
-	//    private final FirebaseMessaging firebaseMessaging;
-	//    private final FirebaseCloudMessageService firebaseCloudMessageService;
+	private final FirebaseCloudMessageService firebaseCloudMessageService;
+
+	@Transactional
 	@Override
 	public void subscribe(Long userId, String firebaseToken) {
-		subscriberRepository.save(Subscriber.from(userId, firebaseToken));
+		Optional<Subscriber> subscriber = subscriberRepository.findByUserId(userId);
+		Subscriber nSubscriber;
+
+		if (subscriber.isEmpty()) {
+			nSubscriber = Subscriber.from(userId, firebaseToken);
+			subscriberRepository.save(nSubscriber);
+		} else {
+			subscriberRepository.update(userId, firebaseToken);
+		}
+
 	}
 
 	@Override
@@ -46,39 +63,48 @@ public class NotificationServiceImpl implements NotificationService {
 		return true;
 	}
 
-	@Override
-	@Transactional
-	public void sendByToken(NotificationReqDto notificationReqDto)
+	public void sendByToken(List<Long> receiverIds, EventType eventType, String[] titleArgs, String[] bodyArgs)
 		throws UserNotAddedToNotifyException, NotificationFailException {
-		log.debug("{sendByToken} " + notificationReqDto);
-		Optional<Subscriber> notificationUser = subscriberRepository.findByUserId(
-			notificationReqDto.getTargetUserId());
-		log.debug("SENDBYTOKEN1{}" + notificationUser.isEmpty());
-		if (!notificationUser.isPresent()) {
-			return;
-		}
-		log.debug("SENDBYTOKEN2{}" + notificationUser.isEmpty());
-		log.debug("[NOTIFY] 전");
 
-		VvueNotification vvueNotification = VvueNotification.builder()
-			.notificationType(notificationReqDto.getType())
-			.content(notificationReqDto.getContent())
-			.isRead(false)
-			.receiverId(notificationReqDto.getTargetUserId())
-			//.data(jsonString)
-			.build();
-		vvueNotificationRepository.save(vvueNotification);
-		log.debug("[NOTIFY]" + vvueNotification);
-		// title, body, image
-		//        firebaseCloudMessageService.sendMessageTo(notificationUser.get().getFirebaseToken(),
-		//            notificationReqDto.getContent().getTitle(),
-		//            notificationReqDto.getContent().getBody());
-		//         Message message = Message.builder()
-		//                 .putData("title", notificationReqDto.getContent().getTitle())
-		//                 .putData("body", notificationReqDto.getContent().getBody())
-		//                 .setToken(notificationUser.get().getFirebaseToken())
-		//                 .build();
-		//         FirebaseMessaging.getInstance().sendAsync(message);
+		List<Subscriber> subscribers = subscriberRepository.findByUserIdIn(receiverIds);
+
+		List<CompletableFuture<Pair<Long, String>>> futures = subscribers.stream()
+			.map(subscriber -> {
+				String title = eventType.getTitle();
+				String body = eventType.getBody(bodyArgs);
+
+				return firebaseCloudMessageService
+					.sendNotification(subscriber.getFirebaseToken(), title, body)
+					.thenApply(response -> new Pair<>(subscriber.getUserId(), response));
+			})
+			.toList();
+
+		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+		for (CompletableFuture<Pair<Long, String>> future : futures) {
+			try {
+				Pair<Long, String> result = future.get();
+				Long receiverId = result.getFirst();
+				String response = result.getSecond();
+				if (response.contains("Error")) {
+					// TODO : 메시지 다시 보낼 수 있도록 에러 처리
+					throw new NotificationFailException("Notification sending failed");
+				}
+				vvueNotificationRepository.save(VvueNotification.builder()
+						.notificationType(eventType.getType())
+						.content(NotificationContent.builder()
+							.title(eventType.getTitle(titleArgs))
+							.body(eventType.getBody(bodyArgs))
+							.image(null)
+							.build())
+						.isRead(false)
+						.receiverId(receiverId)
+					.build());
+			} catch (Exception e) {
+				log.error("Error sending notification: ", e);
+				throw new NotificationFailException("Error sending notification");
+			}
+		}
 	}
 
 	@Override
@@ -107,7 +133,7 @@ public class NotificationServiceImpl implements NotificationService {
 		return VvueNotificationListDto.builder()
 			.vvueNotificationResDtoList(res)
 			.lastCursorId(lastCursorId)
-			.hasNext(nextNotifyCnt == 0 ? false : true)
+			.hasNext(nextNotifyCnt != 0)
 			.build();
 	}
 
