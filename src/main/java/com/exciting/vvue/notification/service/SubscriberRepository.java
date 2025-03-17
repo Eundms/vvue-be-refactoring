@@ -1,10 +1,11 @@
 package com.exciting.vvue.notification.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.exciting.vvue.notification.model.Subscriber;
 
-public interface SubscriberRepository { // Redis로 바꾸기!
+public interface SubscriberRepository {
 	Optional<Subscriber> findByUserId(Long userId);
 
 	Optional<Subscriber> findByUserIdAndFirebaseToken(Long userId, String firebaseToken);
@@ -12,4 +13,8 @@ public interface SubscriberRepository { // Redis로 바꾸기!
 	void save(Subscriber subscriber);
 
 	void delete(Subscriber subscriber);
+
+	List<Subscriber> findByUserIdIn(List<Long> receiverIds);
+
+	void saveOrUpdate(Long userId, String firebaseToken);
 }

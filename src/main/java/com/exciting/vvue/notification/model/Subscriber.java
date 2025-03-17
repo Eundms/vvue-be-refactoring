@@ -6,9 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.springframework.data.annotation.Version;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -22,6 +25,7 @@ public class Subscriber {
 	@Column(unique = true)
 	private Long userId;
 
+	@Setter
 	private String firebaseToken;
 
 	@Builder
@@ -37,4 +41,5 @@ public class Subscriber {
 			.firebaseToken(firebaseToken)
 			.build();
 	}
+
 }

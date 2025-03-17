@@ -1,5 +1,6 @@
 package com.exciting.vvue.notification.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,11 @@ public class SubscriberRepositoryImpl implements SubscriberRepository {
 		return subscriberJpaRepository.findByUserId(userId);
 	}
 
+	// @Override
+	// public Optional<Subscriber> findByUserIdForUpdate(Long userId) {
+	// 	return subscriberJpaRepository.findByUserIdForUpdate(userId);
+	// }
+
 	@Override
 	public Optional<Subscriber> findByUserIdAndFirebaseToken(Long userId, String firebaseToken) {
 		return subscriberJpaRepository.findByUserIdAndFirebaseToken(userId, firebaseToken);
@@ -34,5 +40,15 @@ public class SubscriberRepositoryImpl implements SubscriberRepository {
 	@Override
 	public void delete(Subscriber subscriber) {
 		subscriberJpaRepository.delete(subscriber);
+	}
+
+	@Override
+	public List<Subscriber> findByUserIdIn(List<Long> receiverIds) {
+		return subscriberJpaRepository.findAllByUserId(receiverIds);
+	}
+
+
+	public void saveOrUpdate(Long userId, String firebaseToken) {
+		subscriberJpaRepository.saveOrUpdate(userId, firebaseToken);
 	}
 }

@@ -1,6 +1,9 @@
 package com.exciting.vvue.schedule;
 
+import static com.exciting.vvue.notification.model.EventType.*;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +25,8 @@ import com.exciting.vvue.common.exception.schedule.ScheduleNotFoundException;
 import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.model.Married;
+import com.exciting.vvue.notification.NotificationService;
+import com.exciting.vvue.notification.service.FirebaseCloudMessageService;
 import com.exciting.vvue.schedule.dto.req.ScheduleReqDto;
 import com.exciting.vvue.schedule.dto.res.ScheduleDailyResDto;
 import com.exciting.vvue.schedule.dto.res.ScheduleListResDto;
@@ -40,6 +45,7 @@ public class ScheduleController {
 
 	private final ScheduleService scheduleService;
 	private final MarriedService marriedService;
+	private final NotificationService notificationService;
 
 	@GetMapping("/{scheduleId}")
 	@Operation(summary = "일정 상세 조회", description = "해당 일정 상세 정보를 조회한다.")
@@ -82,6 +88,9 @@ public class ScheduleController {
 
 		// 알림 요청
 		// 배우자가 일정을 등록했어요
+		List<Long> receiverIds = new ArrayList<>();
+		receiverIds.add(married.getPeerId(userId));
+		notificationService.sendByToken(receiverIds, SCHEDULE_CREATE, new String[]{schedule.getScheduleName()}, new String[]{schedule.getScheduleName(), schedule.getScheduleDate().toString()});
 		return new ResponseEntity<>(schedule.getId(), HttpStatus.OK);
 	}
 
@@ -113,9 +122,14 @@ public class ScheduleController {
 		@PathVariable("scheduleId") Long scheduleId, @RequestBody ScheduleReqDto scheduleReqDto) {
 		Long userId = AuthContext.getUserId();
 
-		Long marriedId = marriedService.getMarriedIdByUserId(userId);
-		Schedule schedule = scheduleService.modifySchedule(marriedId, scheduleId, scheduleReqDto);
+		Married married = getMarriedIdWith(userId);
+		Schedule schedule = scheduleService.modifySchedule(married.getId(), scheduleId, scheduleReqDto);
 
+		// 알림 요청
+		// 배우자가 일정을 수정했어요
+		List<Long> receiverIds = new ArrayList<>();
+		receiverIds.add(married.getPeerId(userId));
+		notificationService.sendByToken(receiverIds, SCHEDULE_UPDATED, new String[]{schedule.getScheduleName()}, new String[]{schedule.getScheduleName(), schedule.getScheduleDate().toString()});
 		return new ResponseEntity<>(schedule.getId(), HttpStatus.OK);
 	}
 
@@ -139,6 +153,10 @@ public class ScheduleController {
 		if(!isExists) throw new ScheduleNotFoundException("스케줄 없음");
 
 		scheduleService.deleteSchedule(marriedId, scheduleId);
+
+		List<Long> receiverIds = new ArrayList<>();
+		receiverIds.add(marriedId);
+		notificationService.sendByToken(receiverIds, SCHEDULE_UPDATED, null, null);
 		return new ResponseEntity<>("일정 삭제 성공", HttpStatus.OK);
 	}
 
