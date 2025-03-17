@@ -1,11 +1,13 @@
 package com.exciting.vvue.notification.service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,20 +39,12 @@ public class NotificationServiceImpl implements NotificationService {
 
 	private final FirebaseCloudMessageService firebaseCloudMessageService;
 
-	@Transactional
 	@Override
+	@Transactional
 	public void subscribe(Long userId, String firebaseToken) {
-		Optional<Subscriber> subscriber = subscriberRepository.findByUserId(userId);
-		Subscriber nSubscriber;
-
-		if (subscriber.isEmpty()) {
-			nSubscriber = Subscriber.from(userId, firebaseToken);
-			subscriberRepository.save(nSubscriber);
-		} else {
-			subscriberRepository.update(userId, firebaseToken);
-		}
-
+		subscriberRepository.saveOrUpdate(userId, firebaseToken);
 	}
+
 
 	@Override
 	public boolean unsubscribe(Long userId, String firebaseToken) {

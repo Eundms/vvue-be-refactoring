@@ -16,5 +16,5 @@ public interface SubscriberRepository {
 
 	List<Subscriber> findByUserIdIn(List<Long> receiverIds);
 
-	void update(Long userId, String firebaseToken);
+	void saveOrUpdate(Long userId, String firebaseToken);
 }

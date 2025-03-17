@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.exciting.vvue.notification.model.Subscriber;
 
@@ -26,4 +26,10 @@ public interface SubscriberJpaRepository extends JpaRepository<Subscriber, Long>
 	@Modifying
 	@Query("UPDATE Subscriber s SET s.firebaseToken = :firebaseToken WHERE s.userId = :userId")
 	void update(Long userId, String firebaseToken);
+
+	@Modifying
+	@Query(value = "INSERT INTO subscriber (user_id, firebase_token) VALUES (:userId, :firebaseToken) " +
+		"ON DUPLICATE KEY UPDATE firebase_token = :firebaseToken", nativeQuery = true)
+	void saveOrUpdate(@Param("userId") Long userId, @Param("firebaseToken") String firebaseToken);
+
 }

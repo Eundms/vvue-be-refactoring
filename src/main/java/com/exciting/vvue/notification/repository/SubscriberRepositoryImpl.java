@@ -22,6 +22,11 @@ public class SubscriberRepositoryImpl implements SubscriberRepository {
 		return subscriberJpaRepository.findByUserId(userId);
 	}
 
+	// @Override
+	// public Optional<Subscriber> findByUserIdForUpdate(Long userId) {
+	// 	return subscriberJpaRepository.findByUserIdForUpdate(userId);
+	// }
+
 	@Override
 	public Optional<Subscriber> findByUserIdAndFirebaseToken(Long userId, String firebaseToken) {
 		return subscriberJpaRepository.findByUserIdAndFirebaseToken(userId, firebaseToken);
@@ -42,8 +47,8 @@ public class SubscriberRepositoryImpl implements SubscriberRepository {
 		return subscriberJpaRepository.findAllByUserId(receiverIds);
 	}
 
-	@Override
-	public void update(Long userId, String firebaseToken) {
-		subscriberJpaRepository.update(userId, firebaseToken);
+
+	public void saveOrUpdate(Long userId, String firebaseToken) {
+		subscriberJpaRepository.saveOrUpdate(userId, firebaseToken);
 	}
 }
