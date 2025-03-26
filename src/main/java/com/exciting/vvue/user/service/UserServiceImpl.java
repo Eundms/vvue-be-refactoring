@@ -1,5 +1,7 @@
 package com.exciting.vvue.user.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.exciting.vvue.auth.model.OAuthUserInfo;
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getByProviderAndProviderId(String provider, String providerId) {
+	public Optional<User> getByProviderAndProviderId(String provider, String providerId) {
 		return userRepository.findByProviderAndProviderId(provider, providerId);
 	}
 

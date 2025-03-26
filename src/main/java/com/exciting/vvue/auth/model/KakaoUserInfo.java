@@ -1,6 +1,8 @@
 package com.exciting.vvue.auth.model;
 
 import com.exciting.vvue.auth.dto.OAuthUserInfoDto;
+import com.exciting.vvue.auth.model.OAuthProvider;
+import com.exciting.vvue.auth.model.OAuthUserInfo;
 
 import lombok.RequiredArgsConstructor;
 

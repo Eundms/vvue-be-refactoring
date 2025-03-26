@@ -1,5 +1,7 @@
 package com.exciting.vvue.user.repository.jpa;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,6 +13,6 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
 	User findByNickname(String nickname);
 
 	@Query("select u from User u where u.provider = :provider and u.providerId = :providerId")
-	User findByProviderAndProviderId(String provider, String providerId);
+	Optional<User> findByProviderAndProviderId(String provider, String providerId);
 
 }

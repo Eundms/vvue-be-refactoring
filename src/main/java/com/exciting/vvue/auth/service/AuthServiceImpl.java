@@ -63,4 +63,17 @@ public class AuthServiceImpl implements AuthService {
 		authRepository.save(saved);
 	}
 
+	@Override
+	public JwtDto issueTokens(User user) {
+		JwtDto jwtDto = createTokens(user);
+		Auth authEntity = getSavedTokenByUserId(user.getId());
+		if (authEntity == null) {
+			saveTokens(jwtDto);
+		} else {
+			authEntity.setRefreshToken(jwtDto.getRefreshToken());
+			updateTokens(authEntity);
+		}
+		return jwtDto;
+	}
+
 }
