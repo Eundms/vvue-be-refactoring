@@ -1,5 +1,7 @@
 package com.exciting.vvue.user;
 
+import java.util.Optional;
+
 import com.exciting.vvue.auth.model.OAuthUserInfo;
 import com.exciting.vvue.user.exception.UserNotFoundException;
 import com.exciting.vvue.user.model.User;
@@ -11,7 +13,7 @@ public interface UserService {
 
 	UserDto getUserDto(Long userId) throws UserNotFoundException;
 
-	User getByProviderAndProviderId(String provider, String providerId);
+	Optional<User> getByProviderAndProviderId(String provider, String providerId);
 
 	User addOAuthUser(OAuthUserInfo oauthUser);
 
@@ -20,4 +22,5 @@ public interface UserService {
 	void delete(Long userId) throws UserNotFoundException;
 
 	User getUserById(Long userId);
+
 }

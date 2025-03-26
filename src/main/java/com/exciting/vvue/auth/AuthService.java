@@ -19,4 +19,6 @@ public interface AuthService {
 	void saveTokens(JwtDto jwtDto);
 
 	void updateTokens(Auth saved);
+
+	JwtDto issueTokens(User saved);
 }
