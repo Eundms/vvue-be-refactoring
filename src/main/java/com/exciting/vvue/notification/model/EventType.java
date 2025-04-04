@@ -43,11 +43,42 @@ public enum EventType {
 	}
 
 	public String getTitle(String... titleArgs) {
-		return String.format(title, (Object[]) titleArgs);
+		return safeFormat(title, titleArgs);
 	}
 
-	public String getBody(String[] bodyArgs) {
-		return String.format(body,  (Object[]) bodyArgs);
+	public String getBody(String... bodyArgs) {
+		return safeFormat(body, bodyArgs);
 	}
 
+	private String safeFormat(String format, String[] args) {
+		if (format == null) return "";
+
+		int expected = countFormatSpecifiers(format);
+		String[] actualArgs = Optional.ofNullable(args).orElse(new String[0]);
+
+		// 부족한 경우 N/A로 채우기
+		if (actualArgs.length < expected) {
+			String[] filled = new String[expected];
+			for (int i = 0; i < expected; i++) {
+				filled[i] = (i < actualArgs.length) ? actualArgs[i] : "N/A";
+			}
+			actualArgs = filled;
+		}
+
+		try {
+			return String.format(format, (Object[]) actualArgs);
+		} catch (Exception e) {
+			return "[포맷 오류]";
+		}
+	}
+
+	private int countFormatSpecifiers(String format) {
+		int count = 0;
+		int idx = 0;
+		while ((idx = format.indexOf("%s", idx)) != -1) {
+			count++;
+			idx += 2;
+		}
+		return count;
+	}
 }
