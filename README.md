@@ -1,26 +1,30 @@
-# 🤍쀼 : 보다 나은 우리를 위해🤍 : 백엔드 v2 
+# 🤍쀼 : 보다 나은 우리를 위해🤍 : 백엔드 v2
+
 > 부부일정추억애플리케이션 리팩토링   
 > 기존 : https://github.com/VVUE-EXcITing/VVUE-BE
 
 ## New Features
 
-- 장소별 추억 조회 기능 : 마이 탭에서 확인 가능 
+- 장소별 추억 조회 기능 : 마이 탭에서 확인 가능
 
 ## Changes
 
 - 회원 가입에서 정보 입력까지의 로직 변경
-- 전체적으로 불필요한/비효율적인 조회 개선 
-
+- 전체적으로 불필요한/비효율적인 조회 개선
 
 ## API Docs (Swagger)
+
 `/back/api/swagger-ui/index.html`
 
 ## Run Projects
-### 1. docker-compose.yml로 컨테이너 실행 
+
+### 1. docker-compose.yml로 컨테이너 실행
+
 - MySql 8.0
 - Redis : latest
 
 ### 2. Environment Variables 설정
+
 ```
 1. 공통  
 AWS_IAM_ACCESSKEY=;  
@@ -51,7 +55,9 @@ PROD_REDIS_HOST=;
 PROD_REDIS_PASSWORD=;  
 PROD_REDIS_PORT=;  
 ```
-### 3. 실행  
+
+### 3. 실행
 
 ## Refactored By
+
 - EunjeongPark(Eundms)

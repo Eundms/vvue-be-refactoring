@@ -7,22 +7,24 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ScheduleDailyResDto {
-	private ScheduleResDto scheduleResDto;
-	private Long memoryId;
-	private boolean wroteMemory;
 
-	@Builder
-	public ScheduleDailyResDto(ScheduleResDto scheduleResDto, Long memoryId, boolean wroteMemory) {
-		this.scheduleResDto = scheduleResDto;
-		this.memoryId = memoryId;
-		this.wroteMemory = wroteMemory;
-	}
+  private ScheduleResDto scheduleResDto;
+  private Long memoryId;
+  private boolean wroteMemory;
 
-	public static ScheduleDailyResDto from(ScheduleResDto scheduleResDto, Long memoryId, boolean wroteMemory) {
-		return ScheduleDailyResDto.builder()
-			.scheduleResDto(scheduleResDto)
-			.memoryId(memoryId)
-			.wroteMemory(wroteMemory)
-			.build();
-	}
+  @Builder
+  public ScheduleDailyResDto(ScheduleResDto scheduleResDto, Long memoryId, boolean wroteMemory) {
+    this.scheduleResDto = scheduleResDto;
+    this.memoryId = memoryId;
+    this.wroteMemory = wroteMemory;
+  }
+
+  public static ScheduleDailyResDto from(ScheduleResDto scheduleResDto, Long memoryId,
+      boolean wroteMemory) {
+    return ScheduleDailyResDto.builder()
+        .scheduleResDto(scheduleResDto)
+        .memoryId(memoryId)
+        .wroteMemory(wroteMemory)
+        .build();
+  }
 }

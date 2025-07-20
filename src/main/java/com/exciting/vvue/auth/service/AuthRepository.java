@@ -4,7 +4,7 @@ import com.exciting.vvue.auth.model.Auth;
 
 public interface AuthRepository {
 
-	void save(Auth auth);
+  void save(Auth auth);
 
-	Auth findById(Long userId);
+  Auth findById(Long userId);
 }

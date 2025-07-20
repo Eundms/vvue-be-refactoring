@@ -1,11 +1,12 @@
 package com.exciting.vvue.memory.service;
 
-import java.util.List;
 import com.exciting.vvue.memory.model.PlaceMemoryImage;
+import java.util.List;
 
 public interface PlaceMemoryImageRepository {
-	void save(PlaceMemoryImage build);
 
-	void saveAll(List<PlaceMemoryImage> placeMemoryImages);
+  void save(PlaceMemoryImage build);
+
+  void saveAll(List<PlaceMemoryImage> placeMemoryImages);
 }
 

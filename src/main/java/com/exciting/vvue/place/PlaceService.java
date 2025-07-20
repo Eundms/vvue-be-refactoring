@@ -1,22 +1,23 @@
 package com.exciting.vvue.place;
 
-import java.util.List;
-
 import com.exciting.vvue.place.dto.req.PlaceReqDto;
 import com.exciting.vvue.place.dto.res.PlaceResDto;
 import com.exciting.vvue.place.dto.res.RecommendPlaceListResDto;
+import java.util.List;
 
 public interface PlaceService {
-	PlaceResDto getPlace(Long placeId);
 
-	Long checkPlace(Long placeId);
+  PlaceResDto getPlace(Long placeId);
 
-	long addPlace(PlaceReqDto placeReqDto);
+  Long checkPlace(Long placeId);
 
-	void deletePlace(long placeId);
+  long addPlace(PlaceReqDto placeReqDto);
 
-	List<PlaceResDto> getScrappedPlaces(long userId);
+  void deletePlace(long placeId);
 
-	RecommendPlaceListResDto getRecommendPlaces(Long userId, double lat, double lng, Long distance, Long cursor,
-		Long size);
+  List<PlaceResDto> getScrappedPlaces(long userId);
+
+  RecommendPlaceListResDto getRecommendPlaces(Long userId, double lat, double lng, Long distance,
+      Long cursor,
+      Long size);
 }

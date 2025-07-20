@@ -1,77 +1,76 @@
 package com.exciting.vvue.married.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.exciting.vvue.married.MarriedService;
-import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.dto.MarriedModifyDto;
 import com.exciting.vvue.married.dto.req.MarriedCreateDto;
+import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
 import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.service.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class MarriedServiceImpl implements MarriedService {
-	private final MarriedRepository marriedRepository;
-	private final UserRepository userRepository;
-	private final PictureRepository pictureRepository;
 
-	@Override
-	public Married getMarriedByUserIdWithDetails(Long id) {
-		return marriedRepository.findByUserIdWithDetails(id);
-	}
+  private final MarriedRepository marriedRepository;
+  private final UserRepository userRepository;
+  private final PictureRepository pictureRepository;
 
-	@Override
-	public Long getMarriedIdByUserId(Long userId) {
-		return marriedRepository.findMarriedIdByUserId(userId);
-	}
+  @Override
+  public Married getMarriedByUserIdWithDetails(Long id) {
+    return marriedRepository.findByUserIdWithDetails(id);
+  }
 
-	@Override
-	@Transactional
-	public Long updateMarriedAndReturnId(Long userId, MarriedModifyDto marriedModifyDto) {
-		Picture picture = null;
+  @Override
+  public Long getMarriedIdByUserId(Long userId) {
+    return marriedRepository.findMarriedIdByUserId(userId);
+  }
 
-		if (marriedModifyDto.getPictureId() > 0) {
-			picture = pictureRepository.findById(marriedModifyDto.getPictureId()).orElse(null);
-		}
+  @Override
+  @Transactional
+  public Long updateMarriedAndReturnId(Long userId, MarriedModifyDto marriedModifyDto) {
+    Picture picture = null;
 
-		return marriedRepository.updateAndReturnId(userId, marriedModifyDto.getMarriedDay(), picture);
-	}
+    if (marriedModifyDto.getPictureId() > 0) {
+      picture = pictureRepository.findById(marriedModifyDto.getPictureId()).orElse(null);
+    }
 
-	@Override
-	public Long createMarried(Long id, MarriedCreateDto marriedCreateDto) {
-		User me = userRepository.findById(id).get();
-		User partner = userRepository.findById(marriedCreateDto.getPartnerId()).get();
-		Married married = Married.builder()
-			.marriedDay(marriedCreateDto.getMarriedDay())
-			.picture(null)
-			.first(me)
-			.second(partner)
-			.build();
-		Married created = marriedRepository.save(married);
-		return created.getId();
-	}
+    return marriedRepository.updateAndReturnId(userId, marriedModifyDto.getMarriedDay(), picture);
+  }
 
-	@Override
-	public int countByUserId(Long id) {
-		return marriedRepository.countByUserId(id);
-	}
+  @Override
+  public Long createMarried(Long id, MarriedCreateDto marriedCreateDto) {
+    User me = userRepository.findById(id).get();
+    User partner = userRepository.findById(marriedCreateDto.getPartnerId()).get();
+    Married married = Married.builder()
+        .marriedDay(marriedCreateDto.getMarriedDay())
+        .picture(null)
+        .first(me)
+        .second(partner)
+        .build();
+    Married created = marriedRepository.save(married);
+    return created.getId();
+  }
 
-	@Override
-	public void deleteByUserId(Long userId) {
-		marriedRepository.deleteByUserId(userId);
-	}
+  @Override
+  public int countByUserId(Long id) {
+    return marriedRepository.countByUserId(id);
+  }
 
-	@Override
-	public Long getSpouseId(Long userId) {
-		return marriedRepository.findSpouseIdByUserId(userId);
-	}
+  @Override
+  public void deleteByUserId(Long userId) {
+    marriedRepository.deleteByUserId(userId);
+  }
+
+  @Override
+  public Long getSpouseId(Long userId) {
+    return marriedRepository.findSpouseIdByUserId(userId);
+  }
 
 }

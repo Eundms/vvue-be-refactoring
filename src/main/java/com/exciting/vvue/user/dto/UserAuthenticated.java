@@ -8,5 +8,6 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 public class UserAuthenticated {
-	private boolean isAuthenticated;
+
+  private boolean isAuthenticated;
 }

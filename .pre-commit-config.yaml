@@ -5,5 +5,5 @@ repos:
         name: google-java-format
         entry: java -jar tools/google-java-format-1.25.2-all-deps.jar
         language: system
-        types: [java]
+        types: [ java ]
 #        args: ["--replace"]

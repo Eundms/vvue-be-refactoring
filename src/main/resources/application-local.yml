@@ -37,8 +37,8 @@ cloud:
     firebase:
       service-account-path: firebase-service-account.json
   aws:
-    cloudfront :
-      private-key-path : private_key.pem
+    cloudfront:
+      private-key-path: private_key.pem
 cookie:
   domain: localhost
 
@@ -47,4 +47,4 @@ logging:
     com.exciting.vvue: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.hibernate.orm.jdbc.bind : TRACE
+    org.hibernate.orm.jdbc.bind: TRACE

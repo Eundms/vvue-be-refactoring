@@ -6,5 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SubscribeReqDto {
-	private String firebaseToken;
+
+  private String firebaseToken;
 }

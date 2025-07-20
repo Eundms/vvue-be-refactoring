@@ -1,21 +1,21 @@
 package com.exciting.vvue.user.service;
 
+import com.exciting.vvue.user.model.User;
 import java.util.Optional;
 
-import com.exciting.vvue.user.model.User;
-
 public interface UserRepository {
-	User findByNickname(String nickname);
 
-	Optional<User> findByProviderAndProviderId(String provider, String providerId);
+  User findByNickname(String nickname);
 
-	Optional<User> findById(Long id);
+  Optional<User> findByProviderAndProviderId(String provider, String providerId);
 
-	User getReferenceById(long userId);
+  Optional<User> findById(Long id);
 
-	User save(User prev);
+  User getReferenceById(long userId);
 
-	void delete(User user);
+  User save(User prev);
 
-	boolean existsById(Long userId);
+  void delete(User user);
+
+  boolean existsById(Long userId);
 }

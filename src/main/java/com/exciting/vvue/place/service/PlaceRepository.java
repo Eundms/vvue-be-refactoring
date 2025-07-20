@@ -1,20 +1,20 @@
 package com.exciting.vvue.place.service;
 
+import com.exciting.vvue.place.model.Place;
 import java.util.List;
 import java.util.Optional;
 
-import com.exciting.vvue.place.model.Place;
-
 public interface PlaceRepository {
-	List<Place> findByUser_Id(long userId);
 
-	Place getReferenceById(long placeId);
+  List<Place> findByUser_Id(long userId);
 
-	Optional<Place> findById(Long placeId);
+  Place getReferenceById(long placeId);
 
-	Place save(Place place);
+  Optional<Place> findById(Long placeId);
 
-	void delete(Place place);
+  Place save(Place place);
 
-	List<Place> findAllById(List<Long> placeIds) ;
+  void delete(Place place);
+
+  List<Place> findAllById(List<Long> placeIds);
 }

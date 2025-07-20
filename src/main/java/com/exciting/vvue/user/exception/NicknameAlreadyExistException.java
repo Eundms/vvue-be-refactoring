@@ -4,7 +4,7 @@ import com.exciting.vvue.common.exception.BadRequestException;
 
 public class NicknameAlreadyExistException extends BadRequestException {
 
-	public NicknameAlreadyExistException(String reason) {
-		super(reason);
-	}
+  public NicknameAlreadyExistException(String reason) {
+    super(reason);
+  }
 }

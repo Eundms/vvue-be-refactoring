@@ -1,20 +1,20 @@
 package com.exciting.vvue.notification.service;
 
+import com.exciting.vvue.notification.model.Subscriber;
 import java.util.List;
 import java.util.Optional;
 
-import com.exciting.vvue.notification.model.Subscriber;
-
 public interface SubscriberRepository {
-	Optional<Subscriber> findByUserId(Long userId);
 
-	Optional<Subscriber> findByUserIdAndFirebaseToken(Long userId, String firebaseToken);
+  Optional<Subscriber> findByUserId(Long userId);
 
-	void save(Subscriber subscriber);
+  Optional<Subscriber> findByUserIdAndFirebaseToken(Long userId, String firebaseToken);
 
-	void delete(Subscriber subscriber);
+  void save(Subscriber subscriber);
 
-	List<Subscriber> findByUserIdIn(List<Long> receiverIds);
+  void delete(Subscriber subscriber);
 
-	void saveOrUpdate(Long userId, String firebaseToken);
+  List<Subscriber> findByUserIdIn(List<Long> receiverIds);
+
+  void saveOrUpdate(Long userId, String firebaseToken);
 }

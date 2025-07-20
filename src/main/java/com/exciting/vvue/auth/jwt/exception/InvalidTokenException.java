@@ -4,7 +4,7 @@ import com.exciting.vvue.common.exception.ForbiddenException;
 
 public class InvalidTokenException extends ForbiddenException {
 
-	public InvalidTokenException(String reason) {
-		super(reason);
-	}
+  public InvalidTokenException(String reason) {
+    super(reason);
+  }
 }

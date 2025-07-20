@@ -5,9 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.springframework.data.annotation.Version;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,29 +14,30 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Subscriber {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 
-	private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-	@Column(unique = true)
-	private Long userId;
+  private Long id;
 
-	@Setter
-	private String firebaseToken;
+  @Column(unique = true)
+  private Long userId;
 
-	@Builder
-	public Subscriber(Long id, Long userId, String firebaseToken) {
-		this.id = id;
-		this.userId = userId;
-		this.firebaseToken = firebaseToken;
-	}
+  @Setter
+  private String firebaseToken;
 
-	public static Subscriber from(Long userId, String firebaseToken) {
-		return Subscriber.builder()
-			.userId(userId)
-			.firebaseToken(firebaseToken)
-			.build();
-	}
+  @Builder
+  public Subscriber(Long id, Long userId, String firebaseToken) {
+    this.id = id;
+    this.userId = userId;
+    this.firebaseToken = firebaseToken;
+  }
+
+  public static Subscriber from(Long userId, String firebaseToken) {
+    return Subscriber.builder()
+        .userId(userId)
+        .firebaseToken(firebaseToken)
+        .build();
+  }
 
 }

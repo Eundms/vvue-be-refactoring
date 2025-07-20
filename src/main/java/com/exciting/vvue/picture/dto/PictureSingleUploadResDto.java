@@ -7,12 +7,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class PictureSingleUploadResDto {
-	MetaReqDto meta;
-	Long pictureId;
 
-	@Builder
-	public PictureSingleUploadResDto(MetaReqDto meta, Long id) {
-		this.meta = meta;
-		this.pictureId = id;
-	}
+  MetaReqDto meta;
+  Long pictureId;
+
+  @Builder
+  public PictureSingleUploadResDto(MetaReqDto meta, Long id) {
+    this.meta = meta;
+    this.pictureId = id;
+  }
 }

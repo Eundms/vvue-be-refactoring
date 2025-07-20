@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class MarriedCodeDto {
-	private String marriedCode;
 
-	@Builder
-	public MarriedCodeDto(String marriedCode) {
-		this.marriedCode = marriedCode;
-	}
+  private String marriedCode;
+
+  @Builder
+  public MarriedCodeDto(String marriedCode) {
+    this.marriedCode = marriedCode;
+  }
 }

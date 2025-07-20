@@ -4,7 +4,7 @@ import com.exciting.vvue.common.exception.NotFoundException;
 
 public class UserNotFoundException extends NotFoundException {
 
-	public UserNotFoundException(String reason) {
-		super(reason);
-	}
+  public UserNotFoundException(String reason) {
+    super(reason);
+  }
 }

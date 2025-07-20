@@ -1,26 +1,26 @@
 package com.exciting.vvue.user;
 
-import java.util.Optional;
-
 import com.exciting.vvue.auth.model.OAuthUserInfo;
-import com.exciting.vvue.user.exception.UserNotFoundException;
-import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.dto.UserDto;
 import com.exciting.vvue.user.dto.UserModifyDto;
+import com.exciting.vvue.user.exception.UserNotFoundException;
+import com.exciting.vvue.user.model.User;
+import java.util.Optional;
 
 public interface UserService {
-	boolean existsById(Long userId);
 
-	UserDto getUserDto(Long userId) throws UserNotFoundException;
+  boolean existsById(Long userId);
 
-	Optional<User> getByProviderAndProviderId(String provider, String providerId);
+  UserDto getUserDto(Long userId) throws UserNotFoundException;
 
-	User addOAuthUser(OAuthUserInfo oauthUser);
+  Optional<User> getByProviderAndProviderId(String provider, String providerId);
 
-	void modifyUser(Long userId, UserModifyDto userModifyDto) throws UserNotFoundException;
+  User addOAuthUser(OAuthUserInfo oauthUser);
 
-	void delete(Long userId) throws UserNotFoundException;
+  void modifyUser(Long userId, UserModifyDto userModifyDto) throws UserNotFoundException;
 
-	User getUserById(Long userId);
+  void delete(Long userId) throws UserNotFoundException;
+
+  User getUserById(Long userId);
 
 }

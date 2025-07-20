@@ -2,12 +2,12 @@ package com.exciting.vvue.auth.model;
 
 public interface OAuthUserInfo {
 
-	String getProviderId();
+  String getProviderId();
 
-	String getProvider();
+  String getProvider();
 
-	String getEmail();
+  String getEmail();
 
-	String getNickName();
+  String getNickName();
 
 }

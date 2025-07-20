@@ -1,36 +1,37 @@
 package com.exciting.vvue.schedule.service;
 
+import com.exciting.vvue.schedule.model.DateType;
+import com.exciting.vvue.schedule.model.Schedule;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import com.exciting.vvue.schedule.model.DateType;
-import com.exciting.vvue.schedule.model.Schedule;
-
 public interface ScheduleRepository {
-	Optional<Schedule> findByIdAndMarriedId(Long id, Long marriedId);
 
-	// 앞으로의 일정 쿼리
-	List<Schedule> findByMarriedAndFuture(Long marriedId, int typeCursor, LocalDate dateCursor, long idCursor,
-		int size);
+  Optional<Schedule> findByIdAndMarriedId(Long id, Long marriedId);
 
-	List<Integer> findByMarried_IdAndYearAndMonth(Long marriedId, int year, int month);
+  // 앞으로의 일정 쿼리
+  List<Schedule> findByMarriedAndFuture(Long marriedId, int typeCursor, LocalDate dateCursor,
+      long idCursor,
+      int size);
 
-	List<Schedule> findByMarried_IdAndScheduleDate(Long marriedId, LocalDate date);
+  List<Integer> findByMarried_IdAndYearAndMonth(Long marriedId, int year, int month);
 
-	List<Schedule> findByScheduleDate(LocalDate date);
+  List<Schedule> findByMarried_IdAndScheduleDate(Long marriedId, LocalDate date);
 
-	Long getScheduleMemoryIdByIdAndScheduleDate(Long scheduleId, LocalDate scheduleDate);
+  List<Schedule> findByScheduleDate(LocalDate date);
 
-	Optional<Schedule> findById(Long scheduleId);
+  Long getScheduleMemoryIdByIdAndScheduleDate(Long scheduleId, LocalDate scheduleDate);
 
-	Schedule save(Schedule from);
+  Optional<Schedule> findById(Long scheduleId);
 
-	void delete(Schedule schedule);
+  Schedule save(Schedule from);
 
-	boolean existsById(Long scheduleId);
+  void delete(Schedule schedule);
 
-	void saveAll(List<Schedule> schedules);
+  boolean existsById(Long scheduleId);
 
-	List<Schedule> findByMarriedIdAndDateTypeIn(long marriedId, List<DateType> checkDateTypes);
+  void saveAll(List<Schedule> schedules);
+
+  List<Schedule> findByMarriedIdAndDateTypeIn(long marriedId, List<DateType> checkDateTypes);
 }

@@ -1,35 +1,35 @@
 package com.exciting.vvue.schedule;
 
+import com.exciting.vvue.married.model.Married;
+import com.exciting.vvue.schedule.dto.req.ScheduleReqDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleDailyResDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleListResDto;
+import com.exciting.vvue.schedule.dto.res.ScheduleResDto;
+import com.exciting.vvue.schedule.model.Schedule;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.exciting.vvue.married.model.Married;
-import com.exciting.vvue.schedule.model.Schedule;
-import com.exciting.vvue.schedule.dto.res.ScheduleDailyResDto;
-import com.exciting.vvue.schedule.dto.res.ScheduleListResDto;
-import com.exciting.vvue.schedule.dto.req.ScheduleReqDto;
-import com.exciting.vvue.schedule.dto.res.ScheduleResDto;
-
 public interface ScheduleService {
-	Schedule addSchedule(Married married, ScheduleReqDto scheduleReqDto);
 
-	void addAnniversaryAndBirthday(long marriedId);
+  Schedule addSchedule(Married married, ScheduleReqDto scheduleReqDto);
 
-	Schedule modifySchedule(Long marriedId, Long scheduleId, ScheduleReqDto scheduleReqDto);
+  void addAnniversaryAndBirthday(long marriedId);
 
-	void deleteSchedule(Long marriedId, Long scheduleId);
+  Schedule modifySchedule(Long marriedId, Long scheduleId, ScheduleReqDto scheduleReqDto);
 
-	ScheduleListResDto getAllSchedule(Married married, long idCursor, int size);
+  void deleteSchedule(Long marriedId, Long scheduleId);
 
-	boolean hasNext(List<ScheduleResDto> scheduleResDtoList, int size);
+  ScheduleListResDto getAllSchedule(Married married, long idCursor, int size);
 
-	List<String> getScheduledDateOnCalendar(Long marriedId, int year, int month);
+  boolean hasNext(List<ScheduleResDto> scheduleResDtoList, int size);
 
-	ScheduleResDto getSchedule(Long scheduleId);
+  List<String> getScheduledDateOnCalendar(Long marriedId, int year, int month);
 
-	List<ScheduleDailyResDto> getScheduleOnDate(Long marriedId, Long userId, LocalDate date);
+  ScheduleResDto getSchedule(Long scheduleId);
 
-	List<Schedule> getAllAfterNDaySchedule(int dayAfter);
+  List<ScheduleDailyResDto> getScheduleOnDate(Long marriedId, Long userId, LocalDate date);
 
-	boolean existsById(Long scheduleId);
+  List<Schedule> getAllAfterNDaySchedule(int dayAfter);
+
+  boolean existsById(Long scheduleId);
 }

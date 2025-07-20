@@ -10,5 +10,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class NotReadNotificationDto {
-	private int notReadCount;
+
+  private int notReadCount;
 }

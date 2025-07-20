@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 public abstract class AuthenticationException extends VvueApiException {
 
-	public AuthenticationException(String reason) {
-		super(HttpStatus.UNAUTHORIZED, reason);
-	}
+  protected AuthenticationException(String reason) {
+    super(HttpStatus.UNAUTHORIZED, reason);
+  }
 }

@@ -12,7 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class NotificationContent {
-	private String title;
-	private String body;
-	private String image;
+
+  private String title;
+  private String body;
+  private String image;
 }
