@@ -5,7 +5,7 @@ aws-sdk = "2.30.16"
 okhttp = "4.12.0"
 jjwt = "0.11.5"
 springdoc = "1.6.11"
-eundms-checkstyle = "1.0.0"
+eundms-checkstyle = "1.0.4"
 
 [libraries]
 # Spring Boot
