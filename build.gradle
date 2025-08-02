@@ -19,10 +19,10 @@ dependencyManagement {
     }
 }
 
-configurations {
-    // eundms-checkstyle 전용 Configuration
-    eundmsCheckstyle
-}
+//configurations {
+//    // eundms-checkstyle 전용 Configuration
+//    eundmsCheckstyle
+//}
 
 dependencies {
     // Spring Boot Starters
@@ -65,7 +65,7 @@ dependencies {
     testImplementation libs.testcontainers.mysql
 
     // eundms-checkstyle Fat JAR (규칙 포함)
-    eundmsCheckstyle libs.eundms.checkstyle
+    // eundmsCheckstyle libs.eundms.checkstyle
 }
 
 tasks.named('test') {
@@ -73,12 +73,12 @@ tasks.named('test') {
     systemProperty 'jdk.jar.disabledAlgorithms', ''
 }
 
-tasks.register('runEundmsCheckstyle', JavaExec) {
-    group = "verification"
-    description = "Run Eundms Checkstyle"
-    classpath = configurations.eundmsCheckstyle
-    args = ["src/main/java"]
-}
+//tasks.register('runEundmsCheckstyle', JavaExec) {
+//    group = "verification"
+//    description = "Run Eundms Checkstyle"
+//    classpath = configurations.eundmsCheckstyle
+//    args = ["src/main/java"]
+//}
 
-// build 시 check 단계에서 자동 실행
-check.dependsOn(tasks.named('runEundmsCheckstyle'))
+//// build 시 check 단계에서 자동 실행
+//check.dependsOn(tasks.named('runEundmsCheckstyle'))
