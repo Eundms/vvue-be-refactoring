@@ -77,6 +77,10 @@ public class ScheduleResDto {
         } while (curLocalDate.getDayOfMonth() != scheduleLocalDate.getDayOfMonth());
         curDate = curLocalDate.toString();
       }
+      default -> {
+        // NONREPEAT case - no action needed
+        curDate = this.scheduleDate;
+      }
     }
 
     return this;
