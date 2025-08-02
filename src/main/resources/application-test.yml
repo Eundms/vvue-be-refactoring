@@ -9,7 +9,7 @@ spring:
   #    username: test
   #    password: test
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: create-drop
     properties:
@@ -30,6 +30,33 @@ spring:
 custom:
   jwt:
     secret: jwtSecretKey # 실제 사용 시 강력한 비밀 키로 변경
+
+cloud:
+  aws:
+    credentials:
+      accessKey: test-access-key
+      secretKey: test-secret-key
+    s3:
+      bucket: test-bucket
+    region:
+      static: us-east-1
+    stack:
+      auto: false
+    cloudfront:
+      key-pair-id: test-key-pair-id
+      domain: test-domain.cloudfront.net
+      private-key-path: /tmp/test-private-key.pem
+  gcp:
+    firebase:
+      service-account-path: /tmp/test-service-account.json
+
+auth:
+  google:
+    client-id: test-google-client-id
+    client-secret: test-google-client-secret
+  kakao:
+    client-id: test-kakao-client-id
+    client-secret: test-kakao-client-secret
 
 logging:
   level:
