@@ -20,7 +20,7 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
     log.error("VvueApiException({}) 발생 :  {}", exception.getClass().getName(),
         exception.getMessage());
     return handleExceptionInternal(exception, null, new HttpHeaders(),
-        exception.getStatus(), request);
+        exception.getStatusCode(), request);
   }
 
   @ExceptionHandler(Exception.class)

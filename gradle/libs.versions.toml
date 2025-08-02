@@ -1,11 +1,25 @@
 [versions]
+spring-boot = "3.5.4"
+spring-dependency-management = "1.1.7"
 aws-sdk = "2.30.16"
 okhttp = "4.12.0"
 jjwt = "0.11.5"
 bouncycastle = "1.80"
 springdoc = "1.6.11"
+eundms-checkstyle = "1.0.0"
 
 [libraries]
+# Spring Boot
+spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-websocket = { module = "org.springframework.boot:spring-boot-starter-websocket" }
+spring-boot-starter-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+
 # AWS
 aws-s3 = { module = "software.amazon.awssdk:s3", version.ref = "aws-sdk" }
 aws-cloudfront = { module = "software.amazon.awssdk:cloudfront", version.ref = "aws-sdk" }
@@ -27,3 +41,21 @@ springdoc-openapi = { module = "org.springdoc:springdoc-openapi-ui", version.ref
 
 # Firebase
 firebase-admin = { module = "com.google.firebase:firebase-admin", version = "9.2.0" }
+
+# Database
+mysql-connector-j = { module = "com.mysql:mysql-connector-j" }
+
+# Lombok
+lombok = { module = "org.projectlombok:lombok" }
+
+# Testcontainers
+testcontainers = { module = "org.testcontainers:testcontainers", version = "1.20.4" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version = "1.20.4" }
+testcontainers-mysql = { module = "org.testcontainers:mysql", version = "1.20.4" }
+
+# Eundms Checkstyle
+eundms-checkstyle = { module = "com.eundms:eundms-checkstyle", version.ref = "eundms-checkstyle" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }

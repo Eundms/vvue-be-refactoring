@@ -1,1 +1,18 @@
 rootProject.name = 'vvue'
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+
+        // Nexus Private Repository
+        maven {
+            url = uri("http://localhost:8081/repository/maven-public/")
+            allowInsecureProtocol = true
+            credentials {
+                username = providers.gradleProperty("nexusUsername").getOrElse("")
+                password = providers.gradleProperty("nexusPassword").getOrElse("")
+            }
+        }
+    }
+}

@@ -1,5 +1,8 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
-    id 'org.springframework.boot' version '3.5.4'
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
     id 'java'
 }
 
@@ -10,18 +13,20 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
 }
 
-repositories {
-    mavenCentral()
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
 }
 
 dependencies {
     // Spring Boot Starters
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation libs.spring.boot.starter.data.jpa
+    implementation libs.spring.boot.starter.web
+    implementation libs.spring.boot.starter.websocket
+    implementation libs.spring.boot.starter.data.redis
+    implementation libs.spring.boot.starter.validation
+    implementation libs.spring.boot.starter.actuator
 
     // AWS SDK
     implementation libs.aws.s3
@@ -35,9 +40,6 @@ dependencies {
     // OkHttp
     implementation libs.okhttp
 
-    // BouncyCastle
-    implementation libs.bouncycastle.bcprov
-    implementation libs.bouncycastle.bcpkix
 
     // SpringDoc (Swagger)
     implementation libs.springdoc.openapi
@@ -46,19 +48,21 @@ dependencies {
     implementation libs.firebase.admin
 
     // MySQL Connector
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly libs.mysql.connector.j
 
+    implementation libs.eundms.checkstyle
     // Dev & Test
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    compileOnly 'org.project.lombok:lombok'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.project.lombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation "org.testcontainers:testcontainers:1.20.4"
-    testImplementation "org.testcontainers:junit-jupiter:1.20.4"
-    testImplementation "org.testcontainers:mysql:1.20.4"
+    developmentOnly libs.spring.boot.devtools
+    compileOnly libs.lombok
+    annotationProcessor libs.spring.boot.configuration.processor
+    annotationProcessor libs.lombok
+    testImplementation libs.spring.boot.starter.test
+    testImplementation libs.testcontainers
+    testImplementation libs.testcontainers.junit.jupiter
+    testImplementation libs.testcontainers.mysql
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    systemProperty 'jdk.jar.disabledAlgorithms', ''
 }
