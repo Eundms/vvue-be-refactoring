@@ -4,7 +4,6 @@ spring-dependency-management = "1.1.7"
 aws-sdk = "2.30.16"
 okhttp = "4.12.0"
 jjwt = "0.11.5"
-bouncycastle = "1.80"
 springdoc = "1.6.11"
 eundms-checkstyle = "1.0.0"
 
@@ -31,10 +30,6 @@ jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 
 # OkHttp
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
-
-# BouncyCastle
-bouncycastle-bcprov = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
-bouncycastle-bcpkix = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
 
 # SpringDoc (Swagger)
 springdoc-openapi = { module = "org.springdoc:springdoc-openapi-ui", version.ref = "springdoc" }

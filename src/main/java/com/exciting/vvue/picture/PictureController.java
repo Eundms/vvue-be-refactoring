@@ -8,8 +8,11 @@ import com.exciting.vvue.picture.dto.PictureMultiUploadResDto;
 import com.exciting.vvue.picture.dto.PictureSingleUploadResDto;
 import com.exciting.vvue.picture.exception.FileDeleteFailException;
 import com.exciting.vvue.picture.exception.FileUploadFailException;
+import com.exciting.vvue.picture.exception.PictureNotFoundException;
 import com.exciting.vvue.picture.model.FileUrlGenerator;
+import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.model.PictureUsedFor;
+import com.exciting.vvue.picture.service.CloudFrontService;
 import com.exciting.vvue.picture.service.PictureService;
 import com.exciting.vvue.picture.util.FileManageUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +46,7 @@ public class PictureController {
   private final PictureService pictureService;
   private final MarriedService marriedService;
   private final FileManageUtil fileManageUtil;
+  private final CloudFrontService cloudFrontService;
 
   // 사진 여러 장 업로드
   @Transactional
@@ -153,6 +158,35 @@ public class PictureController {
     }
     pictureService.deleteMulti(pictureIdList.getPictureIds());
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  // 사진 서명된 URL 조회
+  @GetMapping("/signed/{pictureId}")
+  @Operation(description = "Get signed URL for picture access", summary = "Secure picture access")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Signed URL generated successfully"),
+      @ApiResponse(responseCode = "404", description = "Picture not found")
+  })
+  public ResponseEntity<String> getSignedPictureUrl(@PathVariable("pictureId") Long pictureId) {
+    Picture picture = pictureService.getSingle(pictureId);
+    if (picture == null) {
+      throw new PictureNotFoundException("Picture not found");
+    }
+    
+    // Extract the S3 key from the stored URL
+    String s3Key = extractS3KeyFromUrl(picture.getUrl());
+    
+    String signedUrl = cloudFrontService.generateSignedUrl(s3Key);
+    return ResponseEntity.ok(signedUrl);
+  }
+
+  private String extractS3KeyFromUrl(String url) {
+    // If URL is like "https://domain.com/images/user/123/image.jpg"
+    // Extract just "images/user/123/image.jpg"
+    if (url.contains("/images/")) {
+      return url.substring(url.indexOf("/images/") + 1);
+    }
+    return url; // fallback
   }
 
   private Long getKeyOfDirectory(PictureUsedFor usedFor, Long userId) {
