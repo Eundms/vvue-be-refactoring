@@ -1,6 +1,6 @@
 package com.exciting.vvue.auth.model;
 
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

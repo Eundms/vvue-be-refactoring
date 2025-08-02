@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PlaceMemoryToMapDto {
 
-  List<MemoryAtPlaceDto> memoryAtPlaceDtos;
   private PlaceResDto place; // 장소 정보
+  List<MemoryAtPlaceDto> memoryAtPlaceDtos;
 
 }

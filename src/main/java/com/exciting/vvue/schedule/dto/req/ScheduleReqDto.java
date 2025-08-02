@@ -2,8 +2,8 @@ package com.exciting.vvue.schedule.dto.req;
 
 import com.exciting.vvue.schedule.model.RepeatCycle;
 import java.time.LocalDate;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

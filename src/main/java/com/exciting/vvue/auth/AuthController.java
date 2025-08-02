@@ -17,7 +17,7 @@ import com.exciting.vvue.user.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

@@ -3,7 +3,7 @@ package com.exciting.vvue.married.dto;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.picture.dto.PictureDto;
 import com.exciting.vvue.user.dto.UserDto;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

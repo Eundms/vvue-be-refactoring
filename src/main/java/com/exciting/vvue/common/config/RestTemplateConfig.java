@@ -1,6 +1,5 @@
 package com.exciting.vvue.common.config;
 
-import java.nio.charset.Charset;
 import kotlin.text.Charsets;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

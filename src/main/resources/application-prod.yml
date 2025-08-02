@@ -48,9 +48,9 @@ spring:
 management:
   endpoint:
     metrics:
-      enabled: true  # endpoint를 활성화한다.
+      access: unrestricted  # endpoint를 활성화한다.
     prometheus:
-      enabled: true
+      access: unrestricted
 
   endpoints: # Actuator가 제공하는 endpoint를 열어준다.
     web:

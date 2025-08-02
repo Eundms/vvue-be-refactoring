@@ -55,4 +55,4 @@ management:
         include: "prometheus"
   endpoint:
     prometheus:
-      enabled: true
+      access: unrestricted

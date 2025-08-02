@@ -30,21 +30,21 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
         request);
   }
 
-  @Override
-  protected ResponseEntity<Object> handleExceptionInternal(
-      Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+//  @Override
+//  protected ResponseEntity<Object> handleExceptionInternal(
+//      Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+//
+//    return ResponseEntity.status(status).headers(headers)
+//        .body("{\"message\":\"" + ex.getMessage() + "\"}");
+//  }
 
-    return ResponseEntity.status(status).headers(headers)
-        .body("{\"message\":\"" + ex.getMessage() + "\"}");
-  }
-
-  @Override
-  protected ResponseEntity<Object> handleMethodArgumentNotValid(
-      MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status,
-      WebRequest request) {
-    log.error("Exception 처리 : 입력값 검증 예외 처리" + ex.getBindingResult().getFieldErrors().get(0)
-        .getDefaultMessage());
-    String message = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"" + message + "\"}");
-  }
+//  @Override
+//  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+//      MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status,
+//      WebRequest request) {
+//    log.error("Exception 처리 : 입력값 검증 예외 처리" + ex.getBindingResult().getFieldErrors().get(0)
+//        .getDefaultMessage());
+//    String message = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+//    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"" + message + "\"}");
+//  }
 }
