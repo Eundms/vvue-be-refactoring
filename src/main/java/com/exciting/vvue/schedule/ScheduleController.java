@@ -5,7 +5,8 @@ import static com.exciting.vvue.notification.model.EventType.SCHEDULE_UPDATED;
 
 import com.exciting.vvue.auth.AuthContext;
 import com.exciting.vvue.common.exception.married.MarriedInfoNotFoundException;
-import com.exciting.vvue.common.exception.schedule.ScheduleNotFoundException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.model.Married;
@@ -61,8 +62,7 @@ public class ScheduleController {
 
     ScheduleResDto scheduleResDto = scheduleService.getSchedule(scheduleId);
     if (scheduleResDto.getMarriedId() != marriedId) {
-      throw new UserUnAuthorizedException(
-          "[유저]는 해당 [일정]을 볼 권한이 없습니다." + userId + " " + scheduleId);
+      throw new VvueException(ErrorCode.FORBIDDEN_ACCESS);
     }
 
     return new ResponseEntity<>(scheduleResDto, HttpStatus.OK);
@@ -152,7 +152,7 @@ public class ScheduleController {
 
     boolean isExists = scheduleService.existsById(scheduleId);
 		if (!isExists) {
-			throw new ScheduleNotFoundException("스케줄 없음");
+			throw new VvueException(ErrorCode.SCHEDULE_NOT_FOUND);
 		}
 
     scheduleService.deleteSchedule(marriedId, scheduleId);
@@ -222,7 +222,7 @@ public class ScheduleController {
   private Married getMarriedIdWith(Long userId) {
     Married married = marriedService.getMarriedByUserIdWithDetails(userId);
     if (married == null) {
-      throw new MarriedInfoNotFoundException("결혼한 정보가 없습니다");
+      throw new VvueException(ErrorCode.MARRIED_INFO_NOT_FOUND);
     }
     return married;
   }

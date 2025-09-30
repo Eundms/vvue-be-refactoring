@@ -1,9 +1,7 @@
 package com.exciting.vvue.memory.service;
 
-import com.exciting.vvue.common.exception.memory.MemoryNotFoundException;
-import com.exciting.vvue.common.exception.memory.UserMemoryAlreadyExists;
-import com.exciting.vvue.common.exception.schedule.ScheduleNotFoundException;
-import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.memory.MemoryService;
 import com.exciting.vvue.memory.dto.MemoryAlbumDataDto;
@@ -167,10 +165,10 @@ public class MemoryServiceImpl implements MemoryService {
     Optional<ScheduleMemory> scheduleMemory = scheduleMemoryRepository.findById(
         scheduleMemoryId);
     if (scheduleMemory.isEmpty()) {
-      throw new MemoryNotFoundException("[추억ID]가 존재하지 않습니다" + scheduleMemoryId);
+      throw new VvueException(ErrorCode.MEMORY_NOT_FOUND);
     }
     if (!scheduleMemory.get().getMarried().isMarried(userId)) {
-      throw new UserUnAuthorizedException("[유저ID]의 권한이 없는 요청입니다");
+      throw new VvueException(ErrorCode.FORBIDDEN_ACCESS);
     }
     List<UserMemory> userMemories = userMemoryRepository.findByScheduleMemory_Id(scheduleMemoryId);
     List<PlaceMemory> placeMemories = placeMemoryRepository.findByScheduleMemory_Id(
@@ -184,10 +182,10 @@ public class MemoryServiceImpl implements MemoryService {
     Optional<ScheduleMemory> scheduleMemory = scheduleMemoryRepository.findById(
         memoryId);
     if (scheduleMemory.isEmpty()) {
-      throw new MemoryNotFoundException("[추억ID]가 존재하지 않습니다" + memoryId);
+      throw new VvueException(ErrorCode.MEMORY_NOT_FOUND);
     }
     if (!scheduleMemory.get().getMarried().isMarried(userId)) {
-      throw new UserUnAuthorizedException("[유저ID]의 권한이 없는 요청입니다");
+      throw new VvueException(ErrorCode.FORBIDDEN_ACCESS);
     }
     scheduleMemoryRepository.deleteById(memoryId);
   }

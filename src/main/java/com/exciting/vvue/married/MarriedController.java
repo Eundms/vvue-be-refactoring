@@ -1,7 +1,8 @@
 package com.exciting.vvue.married;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.common.exception.married.MarriedInfoNotFoundException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.landing.model.LandingStatus;
 import com.exciting.vvue.married.dto.MarriedDto;
 import com.exciting.vvue.married.dto.MarriedModifyDto;
@@ -44,7 +45,7 @@ public class MarriedController {
     Long userId = AuthContext.getUserId();
     Married marriedInfo = marriedService.getMarriedByUserIdWithDetails(userId);
     if (marriedInfo == null) {
-      throw new MarriedInfoNotFoundException("부부 정보를 가져올 수 없어요.");
+      throw new VvueException(ErrorCode.MARRIED_INFO_NOT_FOUND);
     }
     MarriedDto married = MarriedDto.from(marriedInfo);
     return new ResponseEntity<>(married, HttpStatus.OK);
