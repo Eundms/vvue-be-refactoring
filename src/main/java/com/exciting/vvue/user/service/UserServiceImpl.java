@@ -1,13 +1,13 @@
 package com.exciting.vvue.user.service;
 
 import com.exciting.vvue.auth.model.OAuthUserInfo;
-import com.exciting.vvue.picture.exception.PictureNotFoundException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
 import com.exciting.vvue.user.UserService;
 import com.exciting.vvue.user.dto.UserDto;
 import com.exciting.vvue.user.dto.UserModifyDto;
-import com.exciting.vvue.user.exception.UserNotFoundException;
 import com.exciting.vvue.user.model.User;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +28,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDto getUserDto(Long userId) throws UserNotFoundException {
+  public UserDto getUserDto(Long userId) {
     User user = userRepository.findById(userId).orElseThrow(
-        () -> new UserNotFoundException("" + userId)
+        () -> new VvueException(ErrorCode.USER_NOT_FOUND)
     );
     return UserDto.from(user);
   }
@@ -52,12 +52,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void modifyUser(Long userId, UserModifyDto user) throws UserNotFoundException {
+  public void modifyUser(Long userId, UserModifyDto user) {
     log.debug(
         "modifyUser " + userId + " " + user.getGender() + " " + user.getNickname() + " "
             + user.getBirthday());
     User prev = userRepository.findById(userId).orElseThrow(
-        () -> new UserNotFoundException("" + userId));
+        () -> new VvueException(ErrorCode.USER_NOT_FOUND));
     prev = modifyIfNotnull(prev, user);
     userRepository.save(prev);
   }
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
   private User modifyIfNotnull(User prev, UserModifyDto user) {
     if (user.getPictureId() != null) {
       Picture newProfile = pictureRepository.findById(user.getPictureId())
-          .orElseThrow(() -> new PictureNotFoundException("" + user.getPictureId()));
+          .orElseThrow(() -> new VvueException(ErrorCode.PICTURE_NOT_FOUND));
       prev.setPicture(newProfile);
     }
     if (user.getGender() != null) {
@@ -81,9 +81,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void delete(Long userId) throws UserNotFoundException {
+  public void delete(Long userId) {
     User user = userRepository.findById(userId).orElseThrow(
-        () -> new UserNotFoundException("" + userId));
+        () -> new VvueException(ErrorCode.USER_NOT_FOUND));
 
     userRepository.delete(user);
 
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public User getUserById(Long userId) {
     User user = userRepository.findById(userId).orElseThrow(
-        () -> new UserNotFoundException("" + userId));
+        () -> new VvueException(ErrorCode.USER_NOT_FOUND));
     userRepository.save(user);
     return user;
   }

@@ -2,8 +2,8 @@ package com.exciting.vvue.common.aop;
 
 import com.exciting.vvue.auth.AuthContext;
 import com.exciting.vvue.common.annotation.RequireMarried;
-import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
-import com.exciting.vvue.common.exception.married.MarriedInfoNotFoundException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.model.Married;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +25,12 @@ public class AuthenticationAspect {
     public void validateMarriedUser(JoinPoint joinPoint, RequireMarried requireMarried) {
         Long userId = AuthContext.getUserId();
         if (userId == null) {
-            throw new UserUnAuthorizedException("인증되지 않은 사용자입니다.");
+            throw new VvueException(ErrorCode.UNAUTHORIZED_USER);
         }
 
         Married married = marriedService.getMarriedByUserIdWithDetails(userId);
         if (married == null) {
-            throw new MarriedInfoNotFoundException("결혼 정보가 없습니다.");
+            throw new VvueException(ErrorCode.MARRIED_INFO_NOT_FOUND);
         }
 
         log.debug("Validated married user: userId={}, marriedId={}", userId, married.getId());

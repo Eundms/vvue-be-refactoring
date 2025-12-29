@@ -5,8 +5,8 @@ import com.exciting.vvue.place.dto.req.PlaceReqDto;
 import com.exciting.vvue.place.dto.res.PlaceResDto;
 import com.exciting.vvue.place.dto.res.RecommendPlaceListResDto;
 import com.exciting.vvue.place.dto.res.RecommendPlaceResDto;
-import com.exciting.vvue.place.exception.PlaceNotFoundException;
-import com.exciting.vvue.place.exception.PlaceRequiredException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.place.model.Place;
 import com.exciting.vvue.place.model.PlaceStats;
 import java.util.List;
@@ -26,7 +26,7 @@ public class PlaceServiceImpl implements PlaceService {
   @Override
   public PlaceResDto getPlace(Long placeId) {
     Place place = placeRepository.findById(placeId).orElseThrow(
-        () -> new PlaceNotFoundException("" + placeId)
+        () -> new VvueException(ErrorCode.PLACE_NOT_FOUND)
     );
     return PlaceResDto.from(place);
   }
@@ -35,7 +35,7 @@ public class PlaceServiceImpl implements PlaceService {
   @Override
   public Long checkPlace(Long mapPlaceId) {
     Place place = placeRepository.findById(mapPlaceId).orElseThrow(
-        () -> new PlaceRequiredException("" + mapPlaceId)
+        () -> new VvueException(ErrorCode.PLACE_REQUIRED)
     );
     return place.getId();
   }
@@ -50,7 +50,7 @@ public class PlaceServiceImpl implements PlaceService {
   @Override
   public void deletePlace(long placeId) {
     Place place = placeRepository.findById(placeId).orElseThrow(
-        () -> new PlaceNotFoundException("" + placeId)
+        () -> new VvueException(ErrorCode.PLACE_NOT_FOUND)
     );
 
     placeRepository.delete(place);

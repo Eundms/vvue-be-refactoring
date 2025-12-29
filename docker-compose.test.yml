@@ -1,0 +1,126 @@
+version: '3.8'
+
+services:
+  # MySQL 테스트 데이터베이스
+  mysql-test:
+    image: mysql:8.0
+    container_name: vvue-mysql-test
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: vvue_test
+      MYSQL_USER: vvue_test
+      MYSQL_PASSWORD: test
+    ports:
+      - "3307:3306"
+    networks:
+      - vvue-test-network
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ptest"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Redis 테스트 캐시
+  redis-test:
+    image: redis:7-alpine
+    container_name: vvue-redis-test
+    command: redis-server --requirepass testpassword
+    ports:
+      - "6380:6379"
+    networks:
+      - vvue-test-network
+    tmpfs:
+      - /data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "testpassword", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # LocalStack (AWS 서비스 모킹)
+  localstack:
+    image: localstack/localstack:latest
+    container_name: vvue-localstack
+    environment:
+      - SERVICES=s3,cloudfront
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - EDGE_PORT=4566
+    ports:
+      - "4566:4566"
+    networks:
+      - vvue-test-network
+    volumes:
+      - localstack-data:/tmp/localstack
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Firebase Emulator (Firebase 모킹)
+  firebase-emulator:
+    image: node:18-alpine
+    container_name: vvue-firebase-emulator
+    working_dir: /app
+    command: sh -c "npm install -g firebase-tools && firebase emulators:start --project demo-project --only auth,firestore"
+    ports:
+      - "9099:9099"  # Auth
+      - "8081:8080"  # Emulator UI
+      - "8082:8080"  # Firestore
+    networks:
+      - vvue-test-network
+    volumes:
+      - ./firebase-emulator:/app
+
+  # Spring Boot 테스트 애플리케이션
+  app-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: vvue-app-test
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-test:3306/vvue_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=test
+      - SPRING_REDIS_HOST=redis-test
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_PASSWORD=testpassword
+      # LocalStack AWS 설정
+      - AWS_ENDPOINT=http://localstack:4566
+      - AWS_IAM_ACCESSKEY=test
+      - AWS_IAM_SECRETKEY=test
+      - AWS_REGION=us-east-1
+      # 더미 설정
+      - CLOUDFRONT_KEY_PAIR_ID=test-key-pair-id
+      - CLOUDFRONT_DOMAIN=test.cloudfront.net
+      - PRIVATE_KEY_PATH=/app/test-private-key.pem
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/test-firebase.json
+      - GOOGLE_CLIENT_ID=test-google-client-id
+      - GOOGLE_CLIENT_SECRET=test-google-client-secret
+      - KAKAO_CLIENT_ID=test-kakao-client-id
+      - KAKAO_CLIENT_SECRET=test-kakao-client-secret
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+    networks:
+      - vvue-test-network
+    volumes:
+      - ./test-data:/app/test-data
+      - ./logs:/app/logs
+
+volumes:
+  localstack-data:
+
+networks:
+  vvue-test-network:
+    driver: bridge

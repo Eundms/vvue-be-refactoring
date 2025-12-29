@@ -13,7 +13,6 @@ import com.exciting.vvue.memory.model.PlaceMemory;
 import com.exciting.vvue.memory.model.PlaceMemoryImage;
 import com.exciting.vvue.memory.model.ScheduleMemory;
 import com.exciting.vvue.memory.model.UserMemory;
-import com.exciting.vvue.picture.exception.PictureNotFoundException;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
 import com.exciting.vvue.place.model.Place;
@@ -58,8 +57,7 @@ public class MemoryServiceImpl implements MemoryService {
 
     scheduleRepository.findByIdAndMarriedId(scheduleId, userMarried.getId())
         .orElseThrow(
-            () -> new ScheduleNotFoundException(
-                "[부부ID]에 해당하는 [스케줄ID]가 존재하지 않습니다" + userMarried.getId() + " " + scheduleId));
+            () -> new VvueException(ErrorCode.SCHEDULE_NOT_FOUND));
 
     // ScheduleMemory 저장
     LocalDate day = LocalDate.parse(memoryAddReqDto.getScheduleDate(),
@@ -75,15 +73,12 @@ public class MemoryServiceImpl implements MemoryService {
     UserMemory userMemory = userMemoryRepository.findByUserIdAndScheduleMemoryId(user.getId(),
         scheduleMemory.getId(), scheduleMemory.getScheduleDate());
     if (userMemory != null) {
-      throw new UserMemoryAlreadyExists(
-          "[유저ID]가 작성한 [스케줄ID]에 대한 [추억ID]가 이미 존재합니다" + user.getId() + " " + scheduleId + " "
-              + userMemory.getId());
+      throw new VvueException(ErrorCode.USER_MEMORY_ALREADY_EXISTS);
     }
     String comment = memoryAddReqDto.getComment();
     Picture userMemoryPicture = pictureRepository.findById(memoryAddReqDto.getPictureId())
         .orElseThrow(
-            () -> new PictureNotFoundException(
-                "[사진ID]는 존재하지 않습니다 " + memoryAddReqDto.getPictureId()));
+            () -> new VvueException(ErrorCode.PICTURE_NOT_FOUND));
 
     userMemoryRepository.save(
         UserMemory.with(comment, userMemoryPicture, scheduleMemory, user));
@@ -134,7 +129,7 @@ public class MemoryServiceImpl implements MemoryService {
   }
 
   @Override
-  public MemoryResDto getById(Long scheduleMemoryId, Long userId) throws MemoryNotFoundException {
+  public MemoryResDto getById(Long scheduleMemoryId, Long userId) {
 
     /*
      * {id:, scheduleId:, scheduleName:, scheduleDate:,

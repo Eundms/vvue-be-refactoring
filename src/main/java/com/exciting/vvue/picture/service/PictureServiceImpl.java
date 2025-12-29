@@ -1,7 +1,7 @@
 package com.exciting.vvue.picture.service;
 
-import com.exciting.vvue.picture.exception.FileDeleteFailException;
-import com.exciting.vvue.picture.exception.FileUploadFailException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.picture.model.AccessLevel;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.repository.PictureRepository;
@@ -20,7 +20,7 @@ public class PictureServiceImpl implements PictureService {
 
   @Override
   public List<Long> insertMulti(List<String> filePaths, AccessLevel accessLevel)
-      throws FileUploadFailException {
+       {
     List<Long> imagesIdList = new ArrayList<>();
 
     for (int i = 0; i < filePaths.size(); i++) {
@@ -38,7 +38,7 @@ public class PictureServiceImpl implements PictureService {
 
   @Override
   public Long insertSingle(String filePath, AccessLevel accessLevel)
-      throws FileUploadFailException {
+       {
     Picture newImage = Picture.builder()
         .url(filePath)
         .accessLevel(accessLevel)
@@ -53,13 +53,13 @@ public class PictureServiceImpl implements PictureService {
   }
 
   @Override
-  public void deleteSingle(Long pictureId) throws FileDeleteFailException {
+  public void deleteSingle(Long pictureId)  {
     Picture deletedPicture = pictureRepository.findById(pictureId).get();
     pictureRepository.delete(deletedPicture);
   }
 
   @Override
-  public void deleteMulti(List<Long> imageIdList) throws FileDeleteFailException {
+  public void deleteMulti(List<Long> imageIdList)  {
     for (Long imageId : imageIdList) {
       this.deleteSingle(imageId);
     }

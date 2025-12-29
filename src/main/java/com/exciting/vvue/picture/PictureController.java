@@ -6,9 +6,8 @@ import com.exciting.vvue.picture.dto.MetaReqDto;
 import com.exciting.vvue.picture.dto.PictureIdList;
 import com.exciting.vvue.picture.dto.PictureMultiUploadResDto;
 import com.exciting.vvue.picture.dto.PictureSingleUploadResDto;
-import com.exciting.vvue.picture.exception.FileDeleteFailException;
-import com.exciting.vvue.picture.exception.FileUploadFailException;
-import com.exciting.vvue.picture.exception.PictureNotFoundException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.picture.model.FileUrlGenerator;
 import com.exciting.vvue.picture.model.Picture;
 import com.exciting.vvue.picture.model.PictureUsedFor;
@@ -62,7 +61,7 @@ public class PictureController {
       @RequestPart(value = "meta") MetaReqDto meta,
       @RequestPart(value = "pictures", required = false) List<MultipartFile> multipartFiles) {
     if (multipartFiles.isEmpty()) {
-      throw new FileUploadFailException("업로드 할 이미지가 없어요");
+      throw new VvueException(ErrorCode.FILE_UPLOAD_FAILED);
     }
 
     Long userId = AuthContext.getUserId();
@@ -76,7 +75,7 @@ public class PictureController {
         String filePath = fileManageUtil.uploadFile(file, uploadFilePath); // meta 포함하여 업로드
         filePaths.add(filePath);
       } else {
-        throw new FileUploadFailException("이미지 업로드 중 문제가 발생하였습니다.");
+        throw new VvueException(ErrorCode.FILE_UPLOAD_FAILED);
       }
     }
 
@@ -106,7 +105,7 @@ public class PictureController {
     Long userId = AuthContext.getUserId();
 
     if (multipartFile == null || multipartFile.isEmpty()) {
-      throw new FileUploadFailException("이미지 업로드 중 문제가 발생하였습니다.");
+      throw new VvueException(ErrorCode.FILE_UPLOAD_FAILED);
     }
 
     // 사진 업로드
@@ -136,7 +135,7 @@ public class PictureController {
   })
   public ResponseEntity<?> delete(@PathVariable("pictureId") Long id) {
     if (pictureService.getSingle(id) == null) {
-      throw new FileDeleteFailException("없거나 이미 삭제한 이미지입니다");
+      throw new VvueException(ErrorCode.FILE_DELETE_FAILED);
     }
     pictureService.deleteSingle(id);
     return new ResponseEntity<>(HttpStatus.OK);
@@ -154,7 +153,7 @@ public class PictureController {
   public ResponseEntity<?> deleteMulti(@RequestBody PictureIdList pictureIdList) {
 
     if (pictureIdList.getPictureIds() == null || pictureIdList.getPictureIds().isEmpty()) {
-      throw new FileDeleteFailException("삭제할 파일이 없어요.");
+      throw new VvueException(ErrorCode.FILE_DELETE_FAILED);
     }
     pictureService.deleteMulti(pictureIdList.getPictureIds());
     return new ResponseEntity<>(HttpStatus.OK);
@@ -170,7 +169,7 @@ public class PictureController {
   public ResponseEntity<String> getSignedPictureUrl(@PathVariable("pictureId") Long pictureId) {
     Picture picture = pictureService.getSingle(pictureId);
     if (picture == null) {
-      throw new PictureNotFoundException("Picture not found");
+      throw new VvueException(ErrorCode.PICTURE_NOT_FOUND);
     }
     
     // Extract the S3 key from the stored URL

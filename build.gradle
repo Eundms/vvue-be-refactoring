@@ -48,6 +48,9 @@ dependencies {
     // SpringDoc (Swagger)
     implementation libs.springdoc.openapi
 
+    // Micrometer (Metrics)
+    implementation libs.micrometer.registry.prometheus
+
     // Firebase
     implementation libs.firebase.admin
 

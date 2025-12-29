@@ -1,9 +1,8 @@
 package com.exciting.vvue.marriage;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.common.exception.married.AlreadyMarriedException;
-import com.exciting.vvue.common.exception.married.MarriedCodeNotGeneratedException;
-import com.exciting.vvue.common.exception.married.MarriedWithSameIdException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.landing.model.LandingStatus;
 import com.exciting.vvue.marriage.dto.MarriedCodeDto;
 import com.exciting.vvue.married.MarriedService;
@@ -54,7 +53,7 @@ public class MarriedCodeController {
     String code = marriedCodeService.generateCode(CODE_LENGTH, REGENERATE_COUNT);
 
     if (code == null) {
-      throw new MarriedCodeNotGeneratedException("인증 코드 생성에 실패했어요.");
+      throw new VvueException(ErrorCode.MARRIED_CODE_NOT_GENERATED);
     }
 
     marriedCodeService.addMarriedCode(userId, code);
@@ -82,7 +81,7 @@ public class MarriedCodeController {
     Long userId = AuthContext.getUserId();
     String code = marriedCodeService.generateCode(CODE_LENGTH, REGENERATE_COUNT);
     if (code == null) {
-      throw new MarriedCodeNotGeneratedException("인증 코드 생성에 실패했어요.");
+      throw new VvueException(ErrorCode.MARRIED_CODE_NOT_GENERATED);
     }
 
     if (marriedCodeService.isCodeExists(marriedCode)) {
@@ -104,17 +103,17 @@ public class MarriedCodeController {
   public ResponseEntity<?> connectMarriedCode(@RequestBody MarriedCodeDto marriedCodeDto) {
     Long userId = AuthContext.getUserId();
     if (!marriedCodeService.isCodeExists(marriedCodeDto.getMarriedCode())) {
-      throw new MarriedCodeNotGeneratedException("인증 코드가 존재하지 않아요.");
+      throw new VvueException(ErrorCode.MARRIED_CODE_NOT_GENERATED);
     }
 
     Long targetId = marriedCodeService.getIdFromMarriedCode(marriedCodeDto.getMarriedCode());
 
     if (targetId == userId) {
-      throw new MarriedWithSameIdException("혼자선 부부가 될 수 없어요!");
+      throw new VvueException(ErrorCode.MARRIED_WITH_SAME_ID);
     }
 
     if (marriedService.countByUserId(targetId) > 0 && marriedService.countByUserId(userId) > 0) {
-      throw new AlreadyMarriedException("상대방은 이미 가입중이에요.");
+      throw new VvueException(ErrorCode.ALREADY_MARRIED);
     }
 
     // 코드 있다면 redis에서 지우기

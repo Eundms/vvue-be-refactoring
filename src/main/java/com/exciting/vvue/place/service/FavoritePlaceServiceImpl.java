@@ -1,7 +1,8 @@
 package com.exciting.vvue.place.service;
 
 import com.exciting.vvue.place.FavoritePlaceService;
-import com.exciting.vvue.place.exception.FavoritePlaceNotFoundException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.place.model.FavoritePlace;
 import com.exciting.vvue.place.model.Place;
 import com.exciting.vvue.user.model.User;
@@ -37,7 +38,7 @@ public class FavoritePlaceServiceImpl implements FavoritePlaceService {
   public void deleteScrap(long userId, long placeId) {
     FavoritePlace favoritePlace = favoritePlaceRepository.findByUser_IdAndPlaceId(userId, placeId)
         .orElseThrow(
-            () -> new FavoritePlaceNotFoundException("" + placeId)
+            () -> new VvueException(ErrorCode.FAVORITE_PLACE_NOT_FOUND)
         );
 
     favoritePlaceRepository.delete(favoritePlace);

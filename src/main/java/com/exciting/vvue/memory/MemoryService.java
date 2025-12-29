@@ -1,6 +1,5 @@
 package com.exciting.vvue.memory;
 
-import com.exciting.vvue.common.exception.memory.MemoryNotFoundException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.memory.dto.req.MemoryAddReqDto;
 import com.exciting.vvue.memory.dto.res.MemoryAlbumResDto;
@@ -11,7 +10,7 @@ public interface MemoryService {
 
   Long add(MemoryAddReqDto memoryAddReqDto, User user, Married userMarried);
 
-  MemoryResDto getById(Long memoryId, Long userId) throws MemoryNotFoundException;
+  MemoryResDto getById(Long memoryId, Long userId);
 
   void deleteById(Long memoryId, Long userId);
 

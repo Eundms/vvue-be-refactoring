@@ -1,6 +1,7 @@
 package com.exciting.vvue.picture.util;
 
-import com.exciting.vvue.picture.exception.FileUploadFailException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -31,7 +32,7 @@ public class FileManageUtil {
    * S3로 파일 업로드
    */
   public String uploadFile(MultipartFile multipartFile, String uploadFilePath)
-      throws FileUploadFailException {
+ {
     // 업로드하는 파일 경로 만들기
 
     log.debug("uploadFilePath :" + uploadFilePath);
@@ -57,7 +58,7 @@ public class FileManageUtil {
 
     } catch (IOException e) {
       log.error("File upload failed", e);
-      throw new FileUploadFailException("File upload failed");
+      throw new VvueException(ErrorCode.FILE_UPLOAD_FAILED);
     }
 
     return CLOUDFRONT_DOMAIN + "/" + keyName;

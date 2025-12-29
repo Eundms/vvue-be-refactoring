@@ -5,7 +5,8 @@ import com.exciting.vvue.auth.jwt.exception.InvalidTokenException;
 import com.exciting.vvue.auth.jwt.util.JwtUtil;
 import com.exciting.vvue.common.annotation.NoAuth;
 import com.exciting.vvue.user.UserService;
-import com.exciting.vvue.user.exception.UserNotFoundException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import io.jsonwebtoken.JwtException;
 import java.lang.reflect.Method;
 import jakarta.servlet.http.HttpServletRequest;
@@ -103,7 +104,7 @@ public class AccessTokenInterceptor implements HandlerInterceptor {
         AuthContext.setUserId(Long.valueOf(userId));
       }
       log.info("Valid User Set : userId={}", userId);
-    } catch (UserNotFoundException e) {
+    } catch (VvueException e) {
       log.error("Not Valid User: userId={}", userId, e);
       throw new InvalidTokenException("Not Valid User");
     }

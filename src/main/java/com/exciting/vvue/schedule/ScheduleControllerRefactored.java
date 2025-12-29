@@ -6,8 +6,8 @@ import static com.exciting.vvue.notification.model.EventType.SCHEDULE_UPDATED;
 import com.exciting.vvue.common.annotation.AuthenticatedMarried;
 import com.exciting.vvue.common.annotation.AuthenticatedUser;
 import com.exciting.vvue.common.annotation.RequireMarried;
-import com.exciting.vvue.common.exception.schedule.ScheduleNotFoundException;
-import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.notification.NotificationService;
 import com.exciting.vvue.schedule.dto.req.ScheduleReqDto;
@@ -59,7 +59,7 @@ public class ScheduleControllerRefactored {
 
     ScheduleResDto scheduleResDto = scheduleService.getSchedule(scheduleId);
     if (!scheduleResDto.getMarriedId().equals(married.getId())) {
-      throw new UserUnAuthorizedException("해당 일정을 볼 권한이 없습니다.");
+      throw new VvueException(ErrorCode.UNAUTHORIZED_USER);
     }
 
     return ResponseEntity.ok(scheduleResDto);
@@ -150,7 +150,7 @@ public class ScheduleControllerRefactored {
       @AuthenticatedMarried Married married) {
 
     if (!scheduleService.existsById(scheduleId)) {
-      throw new ScheduleNotFoundException("해당 일정이 존재하지 않습니다.");
+      throw new VvueException(ErrorCode.SCHEDULE_NOT_FOUND);
     }
 
     scheduleService.deleteSchedule(married.getId(), scheduleId);

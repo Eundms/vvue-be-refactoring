@@ -4,8 +4,8 @@ import com.exciting.vvue.notification.NotificationService;
 import com.exciting.vvue.notification.dto.NotReadNotificationDto;
 import com.exciting.vvue.notification.dto.VvueNotificationListDto;
 import com.exciting.vvue.notification.dto.VvueNotificationResDto;
-import com.exciting.vvue.notification.exception.NotificationFailException;
-import com.exciting.vvue.notification.exception.UserNotAddedToNotifyException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.notification.model.EventType;
 import com.exciting.vvue.notification.model.NotificationContent;
 import com.exciting.vvue.notification.model.Subscriber;
@@ -50,7 +50,7 @@ public class NotificationServiceImpl implements NotificationService {
 
   public void sendByToken(List<Long> receiverIds, EventType eventType, String[] titleArgs,
       String[] bodyArgs)
-      throws UserNotAddedToNotifyException, NotificationFailException {
+ {
 
     List<Subscriber> subscribers = subscriberRepository.findByUserIdIn(receiverIds);
 
@@ -74,7 +74,7 @@ public class NotificationServiceImpl implements NotificationService {
         String response = result.getSecond();
         if (response.contains("Error")) {
           // TODO : 메시지 다시 보낼 수 있도록 에러 처리
-          throw new NotificationFailException("Notification sending failed");
+          throw new VvueException(ErrorCode.NOTIFICATION_FAILED);
         }
         vvueNotificationRepository.save(VvueNotification.builder()
             .notificationType(eventType.getType())
@@ -88,7 +88,7 @@ public class NotificationServiceImpl implements NotificationService {
             .build());
       } catch (Exception e) {
         log.error("Error sending notification: ", e);
-        throw new NotificationFailException("Error sending notification");
+        throw new VvueException(ErrorCode.NOTIFICATION_FAILED);
       }
     }
   }

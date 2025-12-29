@@ -1,7 +1,7 @@
 package com.exciting.vvue.schedule.service;
 
-import com.exciting.vvue.common.exception.schedule.ScheduleNotFoundException;
-import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.married.service.MarriedRepository;
 import com.exciting.vvue.memory.service.UserMemoryRepository;
@@ -52,7 +52,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     Schedule schedule =
         scheduleRepository
             .findById(scheduleId)
-            .orElseThrow(() -> new ScheduleNotFoundException("" + scheduleId));
+            .orElseThrow(() -> new VvueException(ErrorCode.SCHEDULE_NOT_FOUND));
     ScheduleResDto scheduleResDto = ScheduleResDto.from(schedule);
     scheduleResDto.setCommingDate(); // curDate에 가장 최근 날짜를 보내줘야 한다.
     return scheduleResDto;
@@ -71,7 +71,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     Married married =
         marriedRepository
             .findByMarriedIdWithDetails(marriedId)
-            .orElseThrow(() -> new ScheduleNotFoundException("" + marriedId));
+            .orElseThrow(() -> new VvueException(ErrorCode.MARRIED_INFO_NOT_FOUND));
 
     List<DateType> checkDateTypes = List.of(
         DateType.WEDDINGANNIVERSARY,
@@ -115,9 +115,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     Schedule schedule =
         scheduleRepository
             .findById(scheduleId)
-            .orElseThrow(() -> new ScheduleNotFoundException("" + scheduleId));
+            .orElseThrow(() -> new VvueException(ErrorCode.SCHEDULE_NOT_FOUND));
     if (schedule.getMarried().getId() != marriedId) {
-      throw new UserUnAuthorizedException("[유저]는 해당 [일정]을 수정할 권한이 없습니다.");
+      throw new VvueException(ErrorCode.FORBIDDEN_ACCESS);
     }
     // 받아온 schedule의 일정명, 날짜, 반복 여부를 바꿔준다.
     schedule.updateSchedule(scheduleReqDto);
@@ -131,9 +131,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     Schedule schedule =
         scheduleRepository
             .findById(scheduleId)
-            .orElseThrow(() -> new ScheduleNotFoundException("" + scheduleId));
+            .orElseThrow(() -> new VvueException(ErrorCode.SCHEDULE_NOT_FOUND));
     if (schedule.getMarried().getId() != marriedId) {
-      throw new UserUnAuthorizedException("[유저]는 해당 [일정]을 삭제할 권한이 없습니다.");
+      throw new VvueException(ErrorCode.FORBIDDEN_ACCESS);
     }
     scheduleRepository.delete(schedule);
   }

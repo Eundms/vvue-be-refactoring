@@ -25,7 +25,8 @@ import com.exciting.vvue.schedule.dto.res.ScheduleResDto;
 import com.exciting.vvue.schedule.model.RepeatCycle;
 import com.exciting.vvue.schedule.model.Schedule;
 import com.exciting.vvue.user.UserService;
-import com.exciting.vvue.user.exception.UserNotFoundException;
+import com.exciting.vvue.common.exception.ErrorCode;
+import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.user.model.Gender;
 import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.service.UserRepository;
@@ -341,7 +342,7 @@ public class DevelopController {
   @PostMapping("/dump-place-data")
   public ResponseEntity<?> dumpPlaceData(@RequestHeader("authUserId") Long userId) {
     User user = userRepository.findById(userId).orElseThrow(
-        () -> new UserNotFoundException("" + userId)
+        () -> new VvueException(ErrorCode.USER_NOT_FOUND)
     );
     Married married = marriedService.getMarriedByUserIdWithDetails(userId);
     Picture picture = pictureRepository.save(Picture.builder()
@@ -424,7 +425,7 @@ public class DevelopController {
       @RequestParam("x") Double x,
       @RequestParam("y") Double y, @RequestParam("code") String categoryCode) {
     User user = userRepository.findById(userId).orElseThrow(
-        () -> new UserNotFoundException("" + userId)
+        () -> new VvueException(ErrorCode.USER_NOT_FOUND)
     );
     Married married = marriedService.getMarriedByUserIdWithDetails(userId);
     Picture picture = pictureRepository.save(Picture.builder()

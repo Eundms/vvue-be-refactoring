@@ -2,8 +2,6 @@ package com.exciting.vvue.notification;
 
 import com.exciting.vvue.notification.dto.NotReadNotificationDto;
 import com.exciting.vvue.notification.dto.VvueNotificationListDto;
-import com.exciting.vvue.notification.exception.NotificationFailException;
-import com.exciting.vvue.notification.exception.UserNotAddedToNotifyException;
 import com.exciting.vvue.notification.model.EventType;
 import java.util.List;
 
@@ -14,8 +12,7 @@ public interface NotificationService {
   boolean unsubscribe(Long userId, String firebaseToken);
 
   void sendByToken(List<Long> receiverIds, EventType eventType, String[] titleArgs,
-      String[] bodyArgs)
-      throws UserNotAddedToNotifyException, NotificationFailException;
+      String[] bodyArgs);
 
   VvueNotificationListDto getAllNotificationBy(Long userId, Long nextCursor, int size);
 

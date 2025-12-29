@@ -4,10 +4,8 @@ import static com.exciting.vvue.notification.model.EventType.SCHEDULE_CREATE;
 import static com.exciting.vvue.notification.model.EventType.SCHEDULE_UPDATED;
 
 import com.exciting.vvue.auth.AuthContext;
-import com.exciting.vvue.common.exception.married.MarriedInfoNotFoundException;
 import com.exciting.vvue.common.exception.ErrorCode;
 import com.exciting.vvue.common.exception.VvueException;
-import com.exciting.vvue.common.exception.user.UserUnAuthorizedException;
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.model.Married;
 import com.exciting.vvue.notification.NotificationService;
