@@ -2,6 +2,7 @@ package com.exciting.vvue.memory;
 
 import com.exciting.vvue.auth.AuthContext;
 import com.exciting.vvue.memory.dto.MemoryPlaceFindDto;
+import com.exciting.vvue.memory.dto.res.PlaceMemoryMapResDto;
 import com.exciting.vvue.memory.dto.res.PlaceMemoryToMapDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +23,11 @@ public class MemoryPlaceController implements MemoryPlaceApi {
 
   @GetMapping
   @Override
-  public List<PlaceMemoryToMapDto> searchMemoryPlace(
+  public PlaceMemoryMapResDto searchMemoryPlace(
       @RequestParam(required = false) MemoryPlaceFindDto findCondition) {
     Long userId = AuthContext.getUserId();
-    return memoryPlaceService.getMemoriablePlaceByMarriedId(userId, findCondition);
+    List<PlaceMemoryToMapDto> placeMemories = memoryPlaceService.getMemoriablePlaceByMarriedId(userId, findCondition);
+    return PlaceMemoryMapResDto.of(placeMemories);
   }
 
   @Deprecated

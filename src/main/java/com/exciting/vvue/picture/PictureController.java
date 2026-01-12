@@ -6,6 +6,7 @@ import com.exciting.vvue.picture.dto.MetaReqDto;
 import com.exciting.vvue.picture.dto.PictureIdList;
 import com.exciting.vvue.picture.dto.PictureMultiUploadResDto;
 import com.exciting.vvue.picture.dto.PictureSingleUploadResDto;
+import com.exciting.vvue.picture.dto.SignedUrlResDto;
 import com.exciting.vvue.common.exception.ErrorCode;
 import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.picture.model.FileUrlGenerator;
@@ -122,15 +123,16 @@ public class PictureController implements PictureApi {
 
   @GetMapping("/signed/{pictureId}")
   @Override
-  public String getSignedPictureUrl(@PathVariable("pictureId") Long pictureId) {
+  public SignedUrlResDto getSignedPictureUrl(@PathVariable("pictureId") Long pictureId) {
     Picture picture = pictureService.getSingle(pictureId);
     if (picture == null) {
       throw new VvueException(ErrorCode.PICTURE_NOT_FOUND);
     }
 
     String s3Key = extractS3KeyFromUrl(picture.getUrl());
+    String signedUrl = cloudFrontService.generateSignedUrl(s3Key);
 
-    return cloudFrontService.generateSignedUrl(s3Key);
+    return SignedUrlResDto.of(pictureId, signedUrl);
   }
 
   private String extractS3KeyFromUrl(String url) {

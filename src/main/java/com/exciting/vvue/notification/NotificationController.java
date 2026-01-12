@@ -5,6 +5,7 @@ import com.exciting.vvue.common.exception.ErrorCode;
 import com.exciting.vvue.common.exception.VvueException;
 import com.exciting.vvue.notification.dto.NotReadNotificationDto;
 import com.exciting.vvue.notification.dto.SubscribeReqDto;
+import com.exciting.vvue.notification.dto.UnsubscribeResDto;
 import com.exciting.vvue.notification.dto.VvueNotificationListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,9 +51,10 @@ public class NotificationController implements NotificationApi {
 
   @PostMapping("/unsubscribe")
   @Override
-  public boolean unsubscribe(@RequestBody SubscribeReqDto subscribeReqDto) {
+  public UnsubscribeResDto unsubscribe(@RequestBody SubscribeReqDto subscribeReqDto) {
     Long userId = AuthContext.getUserId();
-    return notificationService.unsubscribe(userId, subscribeReqDto.getFirebaseToken());
+    boolean result = notificationService.unsubscribe(userId, subscribeReqDto.getFirebaseToken());
+    return UnsubscribeResDto.of(result);
   }
 
   @GetMapping("/all-read")

@@ -4,6 +4,7 @@ import com.exciting.vvue.auth.AuthContext;
 import com.exciting.vvue.auth.AuthService;
 import com.exciting.vvue.auth.jwt.model.JwtDto;
 import com.exciting.vvue.auth.model.Auth;
+import com.exciting.vvue.common.dto.MessageResDto;
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.dto.req.MarriedCreateDto;
 import com.exciting.vvue.married.model.Married;
@@ -79,7 +80,7 @@ public class DevelopController implements DevelopApi {
 
   @PostMapping("/force-marry/{spouseId}")
   @Override
-  public String forceMarry(@PathVariable Long spouseId) {
+  public MessageResDto forceMarry(@PathVariable Long spouseId) {
     Long userId = AuthContext.getUserId();
 
     User user = userService.getUserById(userId);
@@ -94,15 +95,15 @@ public class DevelopController implements DevelopApi {
     }
     marriedService.createMarried(userId,
         MarriedCreateDto.builder().partnerId(spouseId).build());
-    return "결혼 요청:userId " + userId + " " + spouseId + " 결혼 완료";
+    return MessageResDto.of("결혼 요청:userId " + userId + " " + spouseId + " 결혼 완료");
   }
 
   @DeleteMapping("/divorce")
   @Override
-  public String divorce() {
+  public MessageResDto divorce() {
     Long userId = AuthContext.getUserId();
     marriedService.deleteByUserId(userId);
-    return "이혼 요청:userId " + userId + " 이혼 완료";
+    return MessageResDto.of("이혼 요청:userId " + userId + " 이혼 완료");
   }
 
   @Deprecated
@@ -327,7 +328,7 @@ public class DevelopController implements DevelopApi {
 
   @PostMapping("/dump-place-data")
   @Override
-  public String dumpPlaceData(@RequestHeader("authUserId") Long userId) {
+  public MessageResDto dumpPlaceData(@RequestHeader("authUserId") Long userId) {
     User user = userRepository.findById(userId).orElseThrow(
         () -> new VvueException(ErrorCode.USER_NOT_FOUND)
     );
@@ -373,7 +374,7 @@ public class DevelopController implements DevelopApi {
       throw new VvueException(ErrorCode.BAD_REQUEST);
     }
 
-    return "덤프 데이터 생성 완료";
+    return MessageResDto.of("덤프 데이터 생성 완료");
   }
 
   private String requestToKakaoMap(String code) {
@@ -408,7 +409,7 @@ public class DevelopController implements DevelopApi {
 
   @PostMapping("/dump-place-data-param")
   @Override
-  public String selectDumpPlaceData(@RequestHeader("authUserId") Long userId,
+  public MessageResDto selectDumpPlaceData(@RequestHeader("authUserId") Long userId,
       @RequestParam("x") Double x,
       @RequestParam("y") Double y, @RequestParam("code") String categoryCode) {
     User user = userRepository.findById(userId).orElseThrow(
@@ -454,7 +455,7 @@ public class DevelopController implements DevelopApi {
       throw new VvueException(ErrorCode.BAD_REQUEST);
     }
 
-    return "위치, 코드 지정 덤프 데이터 생성 완료";
+    return MessageResDto.of("위치, 코드 지정 덤프 데이터 생성 완료");
   }
 
   private String requestToKakaoMapByParams(String code, Double x, Double y) {

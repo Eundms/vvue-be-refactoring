@@ -1,6 +1,8 @@
 package com.exciting.vvue.place;
 
+import com.exciting.vvue.common.dto.MessageResDto;
 import com.exciting.vvue.place.dto.req.PlaceReqDto;
+import com.exciting.vvue.place.dto.res.ScrapStatusResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,7 +19,7 @@ public interface FavoritePlaceApi {
       @ApiResponse(responseCode = "401", description = "로그인되지 않은 사용자"),
       @ApiResponse(responseCode = "500", description = "DB 서버 에러")
   })
-  boolean changeScrap(@RequestParam Long mapPlaceId);
+  ScrapStatusResDto changeScrap(@RequestParam Long mapPlaceId);
 
   @Operation(summary = "장소 등록 및 즐겨찾기 하기", description = "장소를 등록하고 즐겨찾기한 상태로 변경.")
   @ApiResponses({
@@ -26,5 +28,5 @@ public interface FavoritePlaceApi {
       @ApiResponse(responseCode = "401", description = "로그인되지 않은 사용자"),
       @ApiResponse(responseCode = "500", description = "DB 서버 에러")
   })
-  String scrapAndAdd(@RequestBody PlaceReqDto placeReqDto);
+  MessageResDto scrapAndAdd(@RequestBody PlaceReqDto placeReqDto);
 }

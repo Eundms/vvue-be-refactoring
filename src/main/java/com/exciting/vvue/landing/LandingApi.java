@@ -1,5 +1,6 @@
 package com.exciting.vvue.landing;
 
+import com.exciting.vvue.landing.dto.LandingStageResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -12,5 +13,5 @@ public interface LandingApi {
       @ApiResponse(responseCode = "401", description = "로그인되지 않은 사용자"),
       @ApiResponse(responseCode = "500", description = "서버 에러")
   })
-  String getLandingState();
+  LandingStageResDto getLandingState();
 }

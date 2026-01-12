@@ -2,6 +2,7 @@ package com.exciting.vvue.notification;
 
 import com.exciting.vvue.notification.dto.NotReadNotificationDto;
 import com.exciting.vvue.notification.dto.SubscribeReqDto;
+import com.exciting.vvue.notification.dto.UnsubscribeResDto;
 import com.exciting.vvue.notification.dto.VvueNotificationListDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,7 +40,7 @@ public interface NotificationApi {
       @ApiResponse(responseCode = "204", description = "취소할 구독이 없음"),
       @ApiResponse(responseCode = "401", description = "로그인되지 않은 사용자")
   })
-  boolean unsubscribe(@RequestBody SubscribeReqDto subscribeReqDto);
+  UnsubscribeResDto unsubscribe(@RequestBody SubscribeReqDto subscribeReqDto);
 
   @Operation(summary = "안 읽은 알림 한번에 다 읽음 처리", description = "모든 알림을 읽음 처리")
   @ApiResponses({

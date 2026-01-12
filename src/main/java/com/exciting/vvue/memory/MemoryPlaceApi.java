@@ -1,11 +1,10 @@
 package com.exciting.vvue.memory;
 
 import com.exciting.vvue.memory.dto.MemoryPlaceFindDto;
-import com.exciting.vvue.memory.dto.res.PlaceMemoryToMapDto;
+import com.exciting.vvue.memory.dto.res.PlaceMemoryMapResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,7 +15,7 @@ public interface MemoryPlaceApi {
       @ApiResponse(responseCode = "200", description = "요청 성공"),
       @ApiResponse(responseCode = "401", description = "로그인되지 않은 사용자")
   })
-  List<PlaceMemoryToMapDto> searchMemoryPlace(
+  PlaceMemoryMapResDto searchMemoryPlace(
       @RequestParam(required = false) MemoryPlaceFindDto findCondition);
 
   @Deprecated

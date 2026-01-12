@@ -1,6 +1,7 @@
 package com.exciting.vvue.landing;
 
 import com.exciting.vvue.auth.AuthContext;
+import com.exciting.vvue.landing.dto.LandingStageResDto;
 import com.exciting.vvue.landing.model.LandingStatus;
 import com.exciting.vvue.landing.model.dto.LandingInfos;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +20,12 @@ public class LandingController implements LandingApi {
 
   @GetMapping("/stage")
   @Override
-  public String getLandingState() {
+  public LandingStageResDto getLandingState() {
     Long userId = AuthContext.getUserId();
 
     LandingInfos landingInfos = landingService.getAllRelatedInfo(userId);
     LandingStatus stage = LandingStatus.from(landingInfos);
 
-    return stage.toString().toLowerCase();
+    return LandingStageResDto.of(stage.toString().toLowerCase());
   }
 }

@@ -4,6 +4,7 @@ import com.exciting.vvue.picture.dto.MetaReqDto;
 import com.exciting.vvue.picture.dto.PictureIdList;
 import com.exciting.vvue.picture.dto.PictureMultiUploadResDto;
 import com.exciting.vvue.picture.dto.PictureSingleUploadResDto;
+import com.exciting.vvue.picture.dto.SignedUrlResDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -59,5 +60,5 @@ public interface PictureApi {
       @ApiResponse(responseCode = "200", description = "Signed URL generated successfully"),
       @ApiResponse(responseCode = "404", description = "Picture not found")
   })
-  String getSignedPictureUrl(@PathVariable("pictureId") Long pictureId);
+  SignedUrlResDto getSignedPictureUrl(@PathVariable("pictureId") Long pictureId);
 }
