@@ -31,6 +31,14 @@ cloud:
   gcp:
     firebase:
       service-account-path: ${GOOGLE_APPLICATION_CREDENTIALS}
+jwt:
+  access-token-expiration: 3600000   # 1시간 (밀리초)
+  refresh-token-expiration: 36000000 # 10시간 (밀리초)
+
+married-code:
+  length: 8
+  max-regenerate-attempts: 10
+
 auth:
   google:
     client-id: ${GOOGLE_CLIENT_ID}

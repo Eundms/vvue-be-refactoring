@@ -7,13 +7,20 @@ import com.exciting.vvue.auth.model.Auth;
 import com.exciting.vvue.user.model.User;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-  private JwtUtil jwtUtil;
-  private AuthRepository authRepository;
+  private final JwtUtil jwtUtil;
+  private final AuthRepository authRepository;
+
+  @Value("${jwt.access-token-expiration}")
+  private long accessTokenExpiration;
+
+  @Value("${jwt.refresh-token-expiration}")
+  private long refreshTokenExpiration;
 
   public AuthServiceImpl(JwtUtil jwtUtil, AuthRepository authRepository) {
     this.jwtUtil = jwtUtil;
@@ -24,11 +31,9 @@ public class AuthServiceImpl implements AuthService {
   public JwtDto createTokens(User user) {
     Map<String, Object> claims = new HashMap<>();
     claims.put("id", user.getId());
-    //claims.put("email", user.getEmail());
     claims.put("nickname", user.getNickname());
-    String accessToken = jwtUtil.generateToken("access-token", claims, 1000 * 60 * 60 * 1);//1시간
-    String refreshToken = jwtUtil.generateToken("refresh-token", claims,
-        1000 * 60 * 60 * 10); // DB에 넣어서 관리
+    String accessToken = jwtUtil.generateToken("access-token", claims, accessTokenExpiration);
+    String refreshToken = jwtUtil.generateToken("refresh-token", claims, refreshTokenExpiration);
     return new JwtDto(user.getId(), accessToken, refreshToken);
   }
 
@@ -44,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public String createAccessToken(Map<String, Object> claims) {
-    return jwtUtil.generateToken("access-token", claims, 1000 * 60 * 60 * 1);
+    return jwtUtil.generateToken("access-token", claims, accessTokenExpiration);
   }
 
   @Override

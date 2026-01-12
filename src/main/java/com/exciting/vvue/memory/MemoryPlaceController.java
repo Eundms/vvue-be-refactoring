@@ -8,7 +8,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,12 +27,5 @@ public class MemoryPlaceController implements MemoryPlaceApi {
     Long userId = AuthContext.getUserId();
     List<PlaceMemoryToMapDto> placeMemories = memoryPlaceService.getMemoriablePlaceByMarriedId(userId, findCondition);
     return PlaceMemoryMapResDto.of(placeMemories);
-  }
-
-  @Deprecated
-  @GetMapping("/{placeId}")
-  @Override
-  public void searchMemoryPlace(@PathVariable Long placeId) {
-    // TODO: implement
   }
 }
