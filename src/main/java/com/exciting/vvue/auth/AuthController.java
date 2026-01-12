@@ -14,15 +14,12 @@ import com.exciting.vvue.landing.LandingService;
 import com.exciting.vvue.landing.model.LandingStatus;
 import com.exciting.vvue.picture.service.CloudFrontService;
 import com.exciting.vvue.user.model.User;
-import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.Map;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -33,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthApi {
 
   private final AuthService authService;
   private final LandingService landingService;
@@ -41,10 +38,10 @@ public class AuthController {
   private final OAuthUserInfoFactory oauthUserInfoFactory;
   private final OAuthUserRegistrationService oAuthUserRegistrationService;
 
-  @Operation(summary = "로그인/회원 가입", description = "토큰 발급 됨")
   @NoAuth
   @PostMapping
-  public ResponseEntity<AuthResDto> loginOrRegister(@RequestBody SocialUserReqDto socialUserReqDto,
+  @Override
+  public AuthResDto loginOrRegister(@RequestBody SocialUserReqDto socialUserReqDto,
       HttpServletResponse response) {
     OAuthUserInfoDto userInitialInfo = OAuthUserInfoDto.builder()
         .email(socialUserReqDto.getEmail())
@@ -66,25 +63,24 @@ public class AuthController {
       response.addHeader(HttpHeaders.SET_COOKIE, cookie);
     }
 
-    return new ResponseEntity<>(AuthResDto.from(jwtDto, status), HttpStatus.OK);
+    return AuthResDto.from(jwtDto, status);
   }
 
-  @Operation(summary = "accessToken 재발급")
   @PostMapping("/refresh-access-token")
   @NoAuth
-  public ResponseEntity<JwtDto> refreshToken(@RequestHeader("refresh-token") String refreshToken)
+  @Override
+  public JwtDto refreshToken(@RequestHeader("refresh-token") String refreshToken)
       throws InvalidTokenException {
     Map<String, Object> claims = authService.getClaimsFromToken(refreshToken);
     Auth saved = authService.getSavedTokenByUserId(Long.valueOf(claims.get("id").toString()));
     if (refreshToken.equals(saved.getRefreshToken())) {
       String accessToken = authService.createAccessToken(claims);
       authService.updateTokens(saved);
-      JwtDto generated = JwtDto.builder()
+      return JwtDto.builder()
           .userId(saved.getUserId())
           .refreshToken(saved.getRefreshToken())
           .accessToken(accessToken)
           .build();
-      return new ResponseEntity<>(generated, HttpStatus.OK);
     }
     throw new InvalidTokenException("RefreshToken 이상함");
   }

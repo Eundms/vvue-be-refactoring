@@ -14,18 +14,11 @@ import com.exciting.vvue.picture.model.PictureUsedFor;
 import com.exciting.vvue.picture.service.CloudFrontService;
 import com.exciting.vvue.picture.service.PictureService;
 import com.exciting.vvue.picture.util.FileManageUtil;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,24 +33,17 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/pictures")
 @RequiredArgsConstructor
-public class PictureController {
+public class PictureController implements PictureApi {
 
   private final PictureService pictureService;
   private final MarriedService marriedService;
   private final FileManageUtil fileManageUtil;
   private final CloudFrontService cloudFrontService;
 
-  // 사진 여러 장 업로드
   @Transactional
   @PostMapping("/upload/multi")
-  @Operation(description = "사진 여러장 업로드", summary = "장소 추억 전용")
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "업로드 성공", content = {
-          @Content(schema = @Schema(implementation = PictureMultiUploadResDto.class))}),
-      @ApiResponse(responseCode = "400", description = "업로드 실패"),
-      @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
-  })
-  public ResponseEntity<?> uploadMulti(
+  @Override
+  public PictureMultiUploadResDto uploadMulti(
       @RequestPart(value = "meta") MetaReqDto meta,
       @RequestPart(value = "pictures", required = false) List<MultipartFile> multipartFiles) {
     if (multipartFiles.isEmpty()) {
@@ -72,7 +58,7 @@ public class PictureController {
     for (MultipartFile file : multipartFiles) {
       if (file != null && !file.isEmpty()) {
         String uploadFilePath = FileUrlGenerator.generate("image", meta.getUsedFor(), id);
-        String filePath = fileManageUtil.uploadFile(file, uploadFilePath); // meta 포함하여 업로드
+        String filePath = fileManageUtil.uploadFile(file, uploadFilePath);
         filePaths.add(filePath);
       } else {
         throw new VvueException(ErrorCode.FILE_UPLOAD_FAILED);
@@ -83,23 +69,15 @@ public class PictureController {
         meta.getUsedFor().getAccessLevel());
     log.debug("[POST] /pictures/upload/multi : image IDs " + imagesIdList.toString());
 
-    PictureMultiUploadResDto pictureMultiUploadResDto = PictureMultiUploadResDto.builder()
+    return PictureMultiUploadResDto.builder()
         .meta(meta)
         .pictureIdList(imagesIdList).build();
-    return new ResponseEntity<>(pictureMultiUploadResDto, HttpStatus.OK);
   }
 
-  // 사진 1장 업로드
   @Transactional
   @PostMapping("/upload/single")
-  @Operation(description = "사진 1장 업로드", summary = "프로필 변경, 부부공유 사진 변경")
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "업로드 성공", content = {
-          @Content(schema = @Schema(implementation = PictureSingleUploadResDto.class))}),
-      @ApiResponse(responseCode = "400", description = "업로드 실패"),
-      @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
-  })
-  public ResponseEntity<?> uploadSingle(
+  @Override
+  public PictureSingleUploadResDto uploadSingle(
       @RequestPart(value = "meta") MetaReqDto meta,
       @RequestPart(value = "picture", required = false) MultipartFile multipartFile) {
     Long userId = AuthContext.getUserId();
@@ -108,7 +86,6 @@ public class PictureController {
       throw new VvueException(ErrorCode.FILE_UPLOAD_FAILED);
     }
 
-    // 사진 업로드
     Long id = getKeyOfDirectory(meta.getUsedFor(), userId);
 
     String uploadFilePath = FileUrlGenerator.generate("image", meta.getUsedFor(), id);
@@ -117,66 +94,43 @@ public class PictureController {
 
     Long pictureId = pictureService.insertSingle(filePath, meta.getUsedFor().getAccessLevel());
 
-    PictureSingleUploadResDto pictureSingleUploadResDto = PictureSingleUploadResDto.builder()
+    return PictureSingleUploadResDto.builder()
         .meta(meta)
         .id(pictureId)
         .build();
-    return new ResponseEntity<>(pictureSingleUploadResDto, HttpStatus.OK);
   }
 
-  // 사진 1장 삭제
   @Transactional
   @DeleteMapping("/single/{pictureId}")
-  @Operation(description = "사진 1장 삭제", summary = "사진 삭제")
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "삭제 성공"),
-      @ApiResponse(responseCode = "400", description = "삭제 실패"),
-      @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
-  })
-  public ResponseEntity<?> delete(@PathVariable("pictureId") Long id) {
+  @Override
+  public void delete(@PathVariable("pictureId") Long id) {
     if (pictureService.getSingle(id) == null) {
       throw new VvueException(ErrorCode.FILE_DELETE_FAILED);
     }
     pictureService.deleteSingle(id);
-    return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  // 여러 장 사진 삭제
   @Transactional
   @DeleteMapping("/multi")
-  @Operation(description = "사진 여러장 삭제", summary = "사진 삭제")
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "삭제 성공"),
-      @ApiResponse(responseCode = "404", description = "삭제 실패"),
-      @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음")
-  })
-  public ResponseEntity<?> deleteMulti(@RequestBody PictureIdList pictureIdList) {
-
+  @Override
+  public void deleteMulti(@RequestBody PictureIdList pictureIdList) {
     if (pictureIdList.getPictureIds() == null || pictureIdList.getPictureIds().isEmpty()) {
       throw new VvueException(ErrorCode.FILE_DELETE_FAILED);
     }
     pictureService.deleteMulti(pictureIdList.getPictureIds());
-    return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  // 사진 서명된 URL 조회
   @GetMapping("/signed/{pictureId}")
-  @Operation(description = "Get signed URL for picture access", summary = "Secure picture access")
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "Signed URL generated successfully"),
-      @ApiResponse(responseCode = "404", description = "Picture not found")
-  })
-  public ResponseEntity<String> getSignedPictureUrl(@PathVariable("pictureId") Long pictureId) {
+  @Override
+  public String getSignedPictureUrl(@PathVariable("pictureId") Long pictureId) {
     Picture picture = pictureService.getSingle(pictureId);
     if (picture == null) {
       throw new VvueException(ErrorCode.PICTURE_NOT_FOUND);
     }
-    
-    // Extract the S3 key from the stored URL
+
     String s3Key = extractS3KeyFromUrl(picture.getUrl());
-    
-    String signedUrl = cloudFrontService.generateSignedUrl(s3Key);
-    return ResponseEntity.ok(signedUrl);
+
+    return cloudFrontService.generateSignedUrl(s3Key);
   }
 
   private String extractS3KeyFromUrl(String url) {

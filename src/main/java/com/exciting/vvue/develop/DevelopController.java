@@ -32,7 +32,6 @@ import com.exciting.vvue.user.model.User;
 import com.exciting.vvue.user.service.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Operation;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,7 +48,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +63,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class DevelopController {
+public class DevelopController implements DevelopApi {
 
   private final UserService userService;
   private final AuthService authService;
@@ -79,47 +77,38 @@ public class DevelopController {
   @Value("${auth.kakao.client-id}")
   String api_key;
 
-  @Operation(summary = "강제 결혼(코드인증까지만 완료/추가 정보 입력 필요함)")
   @PostMapping("/force-marry/{spouseId}")
-  public ResponseEntity<?> forceMarry(
-      @PathVariable Long spouseId) {
+  @Override
+  public String forceMarry(@PathVariable Long spouseId) {
     Long userId = AuthContext.getUserId();
 
     User user = userService.getUserById(userId);
     User spouse = userService.getUserById(spouseId);
     if (user.getId() == spouse.getId()) {
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-          "결혼 요청:userId " + userId + spouseId
-              + " 결혼 실패");
+      throw new VvueException(ErrorCode.BAD_REQUEST);
     }
     Married userMarriedInfo = marriedService.getMarriedByUserIdWithDetails(user.getId());
     Married spouseMarriedInfo = marriedService.getMarriedByUserIdWithDetails(spouse.getId());
     if (userMarriedInfo != null || spouseMarriedInfo != null) {
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-          "결혼 요청:userId " + userId + " (결혼ID" + userMarriedInfo.getId() + ") " + spouseId
-              + " (결혼ID" + spouseMarriedInfo.getId() + ") 결혼 실패");
+      throw new VvueException(ErrorCode.BAD_REQUEST);
     }
     marriedService.createMarried(userId,
         MarriedCreateDto.builder().partnerId(spouseId).build());
-    return ResponseEntity.ok().body(
-        "결혼 요청:userId " + userId + " " + spouseId + " 결혼 완료");
+    return "결혼 요청:userId " + userId + " " + spouseId + " 결혼 완료";
   }
 
-  @Operation(summary = "강제 이혼 (스케줄/추억이 없는 경우만 가능)")
   @DeleteMapping("/divorce")
-  public ResponseEntity<?> divorce() {
+  @Override
+  public String divorce() {
     Long userId = AuthContext.getUserId();
     marriedService.deleteByUserId(userId);
-
-    return ResponseEntity.ok().body(
-        "이혼 요청:userId " + userId
-            + " 이혼 완료");
+    return "이혼 요청:userId " + userId + " 이혼 완료";
   }
 
   @Deprecated
-  @Operation(summary = "데이터 입력 : 개발 테스트", description = "[사진만 DB에 미리 업로드하기]유저(1-8),결혼 1~4, 결혼일정/일반달반복일정/반복없음(1-9, 각 유저마다3가지), 추억(스케줄에 대해 홀수번 유저만 작성), 알림(1-6 유저의 결혼/달반복/반복없음에 존재)")
   @PostMapping("/for-test")
-  public ResponseEntity<?> testGenearte() {
+  @Override
+  public void testGenearte() {
     //TODO
     for (int i = 1; i <= 10; i++) {
       pictureRepository.save(Picture.builder().url(
@@ -302,13 +291,11 @@ public class DevelopController {
         memoryService.add(memory2, user, married);
       }
     }
-
-    return ResponseEntity.ok().build();
   }
 
-  @Operation(summary = "테스트 JWT 토큰 발급 (유저정보 확인하기): providerId = {providerId}")
   @GetMapping("/test-token-gen/{providerId}")
-  public ResponseEntity<JwtDto> testTokenGen(@PathVariable Long providerId) {
+  @Override
+  public JwtDto testTokenGen(@PathVariable Long providerId) {
     Long TEST_USER_ID = providerId;
     Optional<User> testUser = userRepository.findById(TEST_USER_ID);
     if (testUser.isEmpty()) {
@@ -329,18 +316,18 @@ public class DevelopController {
 
     JwtDto jwtDto = authService.createTokens(testUser.get());
     Auth authEntity = authService.getSavedTokenByUserId(testUser.get().getId());
-    if (authEntity == null) { // 기존 유저 하지만, 만료됨
+    if (authEntity == null) {
       authService.saveTokens(jwtDto);
-    } else { // 기존 유저 -> Auth 테이블의 Token update
+    } else {
       authEntity.setRefreshToken(jwtDto.getRefreshToken());
       authService.updateTokens(authEntity);
     }
-    return new ResponseEntity<>(jwtDto, HttpStatus.OK);
+    return jwtDto;
   }
 
-  @Operation(summary = "덤프 장소 데이터 추가")
   @PostMapping("/dump-place-data")
-  public ResponseEntity<?> dumpPlaceData(@RequestHeader("authUserId") Long userId) {
+  @Override
+  public String dumpPlaceData(@RequestHeader("authUserId") Long userId) {
     User user = userRepository.findById(userId).orElseThrow(
         () -> new VvueException(ErrorCode.USER_NOT_FOUND)
     );
@@ -383,10 +370,10 @@ public class DevelopController {
         }
       }
     } catch (JsonProcessingException e) {
-      return new ResponseEntity<>("jackson 에러" + e.getMessage(), HttpStatus.BAD_REQUEST);
+      throw new VvueException(ErrorCode.BAD_REQUEST);
     }
 
-    return new ResponseEntity<>("덤프 데이터 생성 완료", HttpStatus.OK);
+    return "덤프 데이터 생성 완료";
   }
 
   private String requestToKakaoMap(String code) {
@@ -419,9 +406,9 @@ public class DevelopController {
     return responseEntity.getBody();
   }
 
-  @Operation(summary = "덤프 장소 데이터 추가(param 추가)")
   @PostMapping("/dump-place-data-param")
-  public ResponseEntity<?> selectDumpPlaceData(@RequestHeader("authUserId") Long userId,
+  @Override
+  public String selectDumpPlaceData(@RequestHeader("authUserId") Long userId,
       @RequestParam("x") Double x,
       @RequestParam("y") Double y, @RequestParam("code") String categoryCode) {
     User user = userRepository.findById(userId).orElseThrow(
@@ -464,10 +451,10 @@ public class DevelopController {
             .build(), user, married);
       }
     } catch (JsonProcessingException e) {
-      return new ResponseEntity<>("jackson 에러" + e.getMessage(), HttpStatus.BAD_REQUEST);
+      throw new VvueException(ErrorCode.BAD_REQUEST);
     }
 
-    return new ResponseEntity<>("위치, 코드 지정 덤프 데이터 생성 완료", HttpStatus.OK);
+    return "위치, 코드 지정 덤프 데이터 생성 완료";
   }
 
   private String requestToKakaoMapByParams(String code, Double x, Double y) {

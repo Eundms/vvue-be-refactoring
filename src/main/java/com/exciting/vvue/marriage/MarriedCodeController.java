@@ -7,16 +7,8 @@ import com.exciting.vvue.landing.model.LandingStatus;
 import com.exciting.vvue.marriage.dto.MarriedCodeDto;
 import com.exciting.vvue.married.MarriedService;
 import com.exciting.vvue.married.dto.req.MarriedCreateDto;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,25 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/married-code")
 @RequiredArgsConstructor
-public class MarriedCodeController {
+public class MarriedCodeController implements MarriedCodeApi {
 
   private final MarriedCodeService marriedCodeService;
   private final MarriedService marriedService;
   private final SimpMessagingTemplate messagingTemplate;
 
-
   private final int REGENERATE_COUNT = 10;
   private final int CODE_LENGTH = 8;
 
-  // 부부 인증 코드 발급
   @GetMapping("/generate")
-  @Operation(summary = "부부 인증 코드 발급 (자신 id로)", description = "부부 인증 코드를 발급한다")
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "성공", content = {
-          @Content(schema = @Schema(implementation = MarriedCodeDto.class))}),
-      @ApiResponse(responseCode = "404", description = "인증코드 생성실패"),
-  })
-  public ResponseEntity<?> getMarriedAuthCode() {
+  @Override
+  public MarriedCodeDto getMarriedAuthCode() {
     Long userId = AuthContext.getUserId();
 
     String code = marriedCodeService.generateCode(CODE_LENGTH, REGENERATE_COUNT);
@@ -58,26 +43,12 @@ public class MarriedCodeController {
 
     marriedCodeService.addMarriedCode(userId, code);
 
-    MarriedCodeDto marriedCodeDto = new MarriedCodeDto(code);
-
-    return new ResponseEntity<>(marriedCodeDto, HttpStatus.OK);
+    return new MarriedCodeDto(code);
   }
 
   @GetMapping("/regenerate")
-  @Operation(summary = "부부 인증 코드 재발급", description = "인증 코드 시간 만료 시 자동 호출 + 버튼 눌렀을 때 호출")
-  @Parameter(name = "marriedCode", description = "전에 발급된 부부인증코드", required = true)
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "성공", content = {
-          @Content(schema = @Schema(implementation = MarriedCodeDto.class))}),
-      @ApiResponse(responseCode = "404", description = "인증코드 생성실패"),
-  })
-  public ResponseEntity<?> regenerateAuthCode(@RequestParam String marriedCode) {
-    /**
-     * todo
-     * 인증코드 재발급
-     * 인증코드 중복처리 - redis
-     * 인증방식 논의 필요
-     */
+  @Override
+  public MarriedCodeDto regenerateAuthCode(@RequestParam String marriedCode) {
     Long userId = AuthContext.getUserId();
     String code = marriedCodeService.generateCode(CODE_LENGTH, REGENERATE_COUNT);
     if (code == null) {
@@ -89,18 +60,12 @@ public class MarriedCodeController {
     }
 
     marriedCodeService.addMarriedCode(userId, code);
-    return new ResponseEntity<>(new MarriedCodeDto(code), HttpStatus.OK);
+    return new MarriedCodeDto(code);
   }
 
   @PostMapping("/connect")
-  @Operation(summary = "인증 코드 일치 확인", description = "인증 코드 발급한 유저와 부부 정보 생성")
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "성공", content = {
-          @Content(schema = @Schema(implementation = Long.class))}),
-      @ApiResponse(responseCode = "400", description = "자신 인증코드 입력, 이미 부부 정보가 있는 사람과 연동 시도"),
-      @ApiResponse(responseCode = "404", description = "redis에 인증 코드 없음"),
-  })
-  public ResponseEntity<?> connectMarriedCode(@RequestBody MarriedCodeDto marriedCodeDto) {
+  @Override
+  public void connectMarriedCode(@RequestBody MarriedCodeDto marriedCodeDto) {
     Long userId = AuthContext.getUserId();
     if (!marriedCodeService.isCodeExists(marriedCodeDto.getMarriedCode())) {
       throw new VvueException(ErrorCode.MARRIED_CODE_NOT_GENERATED);
@@ -108,7 +73,7 @@ public class MarriedCodeController {
 
     Long targetId = marriedCodeService.getIdFromMarriedCode(marriedCodeDto.getMarriedCode());
 
-    if (targetId == userId) {
+    if (targetId.equals(userId)) {
       throw new VvueException(ErrorCode.MARRIED_WITH_SAME_ID);
     }
 
@@ -116,19 +81,15 @@ public class MarriedCodeController {
       throw new VvueException(ErrorCode.ALREADY_MARRIED);
     }
 
-    // 코드 있다면 redis에서 지우기
     if (marriedCodeService.isCodeExists(marriedCodeDto.getMarriedCode())) {
       marriedCodeService.deleteMarriedCode(marriedCodeDto.getMarriedCode());
     }
 
-    // 부부 정보 연결
-    Long marriedId = marriedService.createMarried(userId, MarriedCreateDto.builder()
+    marriedService.createMarried(userId, MarriedCreateDto.builder()
         .partnerId(targetId)
         .build());
     sendMarriedStatus(userId);
     sendMarriedStatus(targetId);
-
-    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   public void sendMarriedStatus(Long targetUserId) {
